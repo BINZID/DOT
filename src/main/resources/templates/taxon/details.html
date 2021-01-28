@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, team-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE&nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy" />
+    <!-- animate -->
+    <link rel="stylesheet" th:href="@{/plugins/animate.css/animate.min.css}">
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <th:block th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1> 分类单元详情
+                <small> 在这里您可以查看您所选中的分类单元的详细信息</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/toTaxasetPage/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/show/}+${thisTaxon.taxaset.id}">
+                        <i class="fa fa-cubes"></i> <span th:text="${#strings.length(thisTaxon.taxaset.tsname)<13} ? ${thisTaxon.taxaset.tsname} : ${#strings.substring(thisTaxon.taxaset.tsname,0,10)+'...'}" th:title="${thisTaxon.taxaset.tsname}">数据集名称</span></a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-cube"></i> <span th:text="${thisTaxon.scientificname}"></span>
+                </li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="panel panel-default taxon-details">
+                <div class="panel-heading" role="tab">
+                    <div class="user-block">
+                        <!--<img class="img-circle" src="../dist/img/user1-128x128.jpg" alt="User Image">-->
+                        <i class="fa fa-cube" style="width: 40px;height: 40px;float: left;font-size: 40px;"></i>
+                        <i class="username" th:text="${thisTaxon.scientificname}"></i>
+                        <span class="description" th:text="${thisTaxon.taxaset.tsname}"></span>
+                    </div>
+                </div>
+                <div class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal col-md-6">
+                            <th:block th:if="${not #lists.isEmpty(thisTaxon.scientificname)}">
+                                <dt>学名:</dt>
+                                <dd><i><small th:text="${thisTaxon.scientificname}"></small></i></dd>
+                            </th:block>
+                            <th:block th:if="${not #lists.isEmpty(thisTaxon.authorstr)}">
+                                <dt>命名信息:</dt>
+                                <dd><small th:text="${thisTaxon.authorstr}"></small></dd>
+                            </th:block>
+                            <th:block th:if="${not #lists.isEmpty(thisTaxon.epithet)}">
+                                <dt>种加词/亚种加词:</dt>
+                                <dd><small th:text="${thisTaxon.epithet}"></small></dd>
+                            </th:block>
+                            <th:block th:if="${not #lists.isEmpty(thisTaxon.nomencode)}">
+                                <dt>命名法规:</dt>
+                                <dd><small th:text="${thisTaxon.nomencode}"></small></dd>
+                            </th:block>
+                            <th:block th:if="${not #lists.isEmpty(thisTaxon.rank.enname)}">
+                                <dt>分类等级:</dt>
+                                <dd><small th:text="${thisTaxon.rank.enname}"></small></dd>
+                            </th:block>
+                        </dl>
+                        <div class="col-md-6">
+                            <dl class="dl-horizontal">
+                                <th:block th:if="${not #lists.isEmpty(thisSources.title)}">
+                                    <dt>数据源:</dt>
+                                    <dd><small th:text="${thisSources.title}"></small></dd>
+                                </th:block>
+                                <th:block th:if="${not #lists.isEmpty(thisTaxon.tci)}">
+                                    <dt>tci:</dt>
+                                    <dd><small th:text="${thisTaxon.tci}"></small></dd>
+                                </th:block>
+                                <th:block th:if="${not #lists.isEmpty(thisTaxon.taxaset.tsname)}">
+                                    <dt>所属分类单元集:</dt>
+                                    <dd><small th:text="${thisTaxon.taxaset.tsname}"></small></dd>
+                                </th:block>
+                                <th:block th:if="${not #lists.isEmpty(thisTaxon.remark)}">
+                                    <dt>备注:</dt>
+                                    <dd><span th:text="${thisTaxon.remark}"></span></dd>
+                                </th:block>
+                                <th:block th:if="${not #lists.isEmpty(thisTaxon.refjson)}">
+                                    <dt>参考文献:</dt>
+                                    <dd>
+                                        <button type="button" class="btn btn-default btn-xs"
+                                                th:attr="onclick='showRef('+${thisTaxon.refjson}+');'">
+                                            <i class="fa fa-list-ol"></i> 查看参考文献
+                                        </button>
+                                    </dd>
+                                </th:block>
+                            </dl>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        <li class="list-group-item"></li>
+                    </ul>
+                </div>
+                <!-- 引证信息 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">引证信息</span>
+                            <span class="description" id="showCountCitation"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showCitationFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- 描述信息 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">描述信息</span>
+                            <span class="description" id="showCountDescription"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showDescriptionFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- 分布数据 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">分布数据</span>
+                            <span class="description" id="showCountDistributiondata"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showDistributiondataFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- 物种数据-->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">物种数据</span>
+                            <span class="description" id="showCountDescriptionInfo"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#protection"
+                                                           id="tab-protection" aria-controls="protection"
+                                                           role="tab" data-toggle="tab">保护数据</a></li>
+                                <li role="presentation"><a href="#taxkey" id="tab-taxkey"
+                                                           aria-controls="taxkey" role="tab" data-toggle="tab">检索表</a></li>
+                                <li role="presentation"><a href="#traitdata" id="tab-traitdata"
+                                                           aria-controls="traitdata" role="tab" data-toggle="tab">特征数据</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <!-- 保护数据面板 -->
+                                <div role="tabpanel" class="tab-pane active" id="protection">
+                                    <h4>
+                                        <small>&nbsp;该物种的保护信息</small>
+                                        <p>&nbsp;</p>
+                                    </h4>
+                                    <div id="showProtectionFrame">
+                                        <i class="fa fa-refresh fa-spin"></i>
+                                    </div>
+                                </div>
+                                <!-- 检索表面板 -->
+                                <div role="tabpanel" class="tab-pane fade" id="taxkey">
+                                    <h4>
+                                        <small>&nbsp;该阶元相关的检索表</small>
+                                        <p>&nbsp;</p>
+                                    </h4>
+                                    <div id="showTaxkeyFrame">
+                                        <i class="fa fa-refresh fa-spin"></i>
+                                    </div>
+                                </div>
+                                <!-- 特征数据面板 -->
+                                <div role="tabpanel" class="tab-pane fade" id="traitdata">
+                                    <h4>
+                                        <small>&nbsp;该分类单元的特征数据</small>
+                                        <p>&nbsp;</p>
+                                    </h4>
+                                    <div id="showTraitdataFrame">
+                                        <i class="fa fa-refresh fa-spin"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 俗名信息 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">俗名信息</span>
+                            <span class="description" id="showCountCommonname"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showCommonnameFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- 观测记录 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">观测记录</span>
+                            <span class="description" id="showCountOccurrence"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showOccurrenceFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- 多媒体信息 -->
+                <div class="box box-widget">
+                    <div class="box-header with-border">
+                        <div class="user-block">
+                            <div class="box-tools">
+                                <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                                    <i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <span class="username">多媒体信息</span>
+                            <span class="description" id="showCountMultimedia"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div id="showMultimediaFrame">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="box-footer">
+							<div class="pull-right">
+								<a class="btn btn-app" th:href="@{/console/taxon/review/disapprove(tid=${thisTaxon.id})}"
+									type="submit"> <i class="fa fa-times"></i> 审核不通过
+								</a> 
+                        	</div>
+							<div class="pull-right">
+								<a class="btn btn-app" th:href="@{/console/taxon/review/approve(tid=${thisTaxon.id})}"
+									type="submit"> <i class="fa fa-check"></i> 审核通过
+								</a> 
+							</div>
+					</div>
+            </div>
+        </section>
+    </div>
+    <!-- 引入参考文献模态框 -->
+    <th:block th:replace="reference/showModal :: copy" />
+    <!-- 引入特征信息列表模态框 -->
+    <th:block th:replace="traitdata/showModal :: copy" />
+    <!-- 引入检索表详情模态框 -->
+    <th:block th:replace="taxkey/showModal :: copy" />
+    <!-- 引入 Left side column. contains the sidebar -->
+    <th:block th:replace="pageFrame/basicsMenu :: copy" />
+    <footer class="main-footer">
+        <th:block th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <th:block th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<th:block th:replace="pageFrame/basicsJs :: copy" />
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<script th:src="@{/js/taxon/showCitation.js}"></script>
+<script th:src="@{/js/taxon/showDescription.js}"></script>
+<script th:src="@{/js/taxon/showDistributiondata.js}"></script>
+<script th:src="@{/js/taxon/showProtection.js}"></script>
+<script th:src="@{/js/taxon/showTaxkey.js}"></script>
+<script th:src="@{/js/taxon/showTraitdata.js}"></script>
+<script th:src="@{/js/taxon/showCommonname.js}"></script>
+<script th:src="@{/js/taxon/showOccurrence.js}"></script>
+<script th:src="@{/js/taxon/showMultimedia.js}"></script>
+<!-- page_script -->
+<!-- 加载状态提示 -->
+<script id="loading" type="text/x-jquery-tmpl">
+    <i class="fa fa-refresh fa-spin"></i>
+</script>
+<!-- 引入引证模板 -->
+<th:block th:replace="citation/showTmpl :: copy" />
+<!-- 引入文本描述模板 -->
+<th:block th:replace="description/showTmpl :: copy" />
+<!-- 引入分布数据模板 -->
+<th:block th:replace="distributiondata/showTmpl :: copy" />
+<!-- 引入保护数据模板 -->
+<th:block th:replace="protection/showTmpl :: copy" />
+<!-- 引入检索表模板 -->
+<th:block th:replace="taxkey/showTmpl :: copy" />
+<!-- 引入特征数据模板 -->
+<th:block th:replace="traitdata/showTmpl :: copy" />
+<!-- 引入俗名模板 -->
+<th:block th:replace="commonname/showTmpl :: copy" />
+<!-- 引入观测记录模板 -->
+<th:block th:replace="occurrence/showTmpl :: copy" />
+<!-- 引入多媒体信息模板 -->
+<th:block th:replace="multimedia/showTmpl :: copy" />
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var taxonId= [[${thisTaxon.id}]];
+    /*]]>*/
+    $(document).ready(function () {
+        showCitation(taxonId,0,'first');
+        showDescription(taxonId,0,'first');
+        showDistributiondata(taxonId,0,'first');
+        showProtection(taxonId,0,'first');
+        showCommonname(taxonId,0,'first');
+        showOccurrence(taxonId,0,'first');
+        showMultimedia(taxonId,0,'first');
+        $("#tab-protection").click(function(){
+            showProtection(taxonId,0,'first');
+        });
+        $("#tab-taxkey").click(function(){
+            showTaxkey(taxonId,0,'first');
+        });
+        $("#tab-traitdata").click(function(){
+            showTraitdata(taxonId,0,'first');
+        });
+    });
+
+    //显示参考文献模态框
+    function showRef(refjson) {
+        $('#showRefTable').bootstrapTable('load', "[]");
+        $("#refModalTable").modal({
+            keyboard:true,//当按下esc键时，modal框消失
+        });
+        $.get("/console/ref/rest/buildRef",
+            {
+                "refjson":JSON.stringify(refjson)
+            },
+            function(result){
+                $('#showRefTable').bootstrapTable('load',result);
+            });
+    };
+</script>
+</body>
+</html>

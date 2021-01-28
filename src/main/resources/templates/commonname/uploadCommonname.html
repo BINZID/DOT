@@ -1,0 +1,82 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<!-- 模态框（Modal） -->
+	<div class="modal fade bs-model-lg" id="uploadCommonnames" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg=primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title">俗名信息导入</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form id="ffImport" method="post">
+	                    <div title="Excel导入操作" style="padding: 5px">
+							<input id="uploadCommonname" name="uploadCommonname" type="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></input>
+	                    </div>
+	                </form>
+					<div id="uploadCommonname-alert-area"></div>
+                    <div class="table table-responsive"><table id="uploadCommonname-table-errorData"></table></div>
+				</div>
+				
+				<div class="modal-footer">
+					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="SaveImport()">下载</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- table -->
+	<div class="table table-responsive">
+		<!-- 俗名信息 -->
+		<h4>
+            <b>俗名信息</b>
+            <small>俗名信息</small>
+        </h4>
+        <!-- 文件操作 -->
+        <h4>
+	        <b>文件操作</b>
+	        <a class="btn btn-primary btn" data-toggle="modal" onclick="initFileInputForCommonname('uploadCommonname', '/console/commonname/rest/upload', 'commonname_table', '/console/commonname/rest/uploaded/')" data-target="#uploadCommonnames">
+		        <i class="fa fa-upload"></i> <span>上传</span>
+		    </a>
+		    
+		    <a class="btn btn-primary btn hidden"  th:href="@{/console/commonname/export}">
+		        <i class="fa fa-download"></i> <span>下载</span>
+		    </a>
+	    </h4>
+	    <!-- 本次上传的俗名信息 -->
+		<h4>
+			<b>本次上传的俗名信息：</b>
+		</h4>
+	    <table
+	            id="commonname_table"
+	            data-locale="zh-CN"
+	            data-classes="table table-hover table-condensed"
+	            data-toggle="table"
+	            th:attr="data-url=@{/console/commonname/rest/uploaded/}"
+	            data-pagination="true"
+	            data-side-pagination="server"
+	            data-page-list="[10, 20, 30, 50, 100]"
+	            data-search="true"
+	            data-show-columns="true"
+	            data-show-toggle="true"
+	            data-toolbar="#toolbar"
+	            data-show-export="false"
+	            data-show-refresh="true"
+	            data-export-types="['excel', 'txt']">
+	        <thead>
+	        <tr>
+	            <!-- <th data-field="select" data-align="center" data-sortable="false"></th> -->
+	            <th data-field="commonname" data-align="center" data-sortable="true">别名</th>
+	            <th data-field="language" data-align="center" data-sortable="true">俗名语言</th>
+	            <th data-field="expert" data-align="center" data-sortable="true">审核专家</th>
+	            <th data-field="inputer" data-align="center" data-sortable="true">创建人</th>
+	            <th data-field="inputtime" data-align="center" data-sortable="true">创建时间</th>
+	            <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+	            <!-- <th data-field="edit" data-align="center" data-sortable="false">操作</th> -->
+	        </tr>
+	        </thead>
+	    </table>
+	</div>
+</th:block>
+</html>

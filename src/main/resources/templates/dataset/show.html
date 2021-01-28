@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <span th:text="${thisDataset.dsname}">团队名称</span>
+                <small><span th:text = "${thisDataset.dsabstract}">团队备注</span></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-database"></i> <span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="row">
+            <div class="col-md-12">
+                <p>
+                    <b>创建者:</b>
+                    <span th:text="${thisDataset.creator.nickname}"></span>
+                </p>
+                <p>
+                    <b>创建时间:</b>
+                    <span th:text="${#dates.format(thisDataset.createdDate, 'yyyy-MM-dd HH:mm:ss')}"></span>
+                </p>
+            </div>
+            <div class="col-md-12">
+                <div class="nav-tabs-custom">
+                    <ul class="nav nav-tabs">
+                        <li class="pull-left header"><i class="fa fa-hdd-o"></i>集合</li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab"><i class="fa fa-cubes"></i> 分类单元集</a></li>
+                        <li><a href="#tab_2" data-toggle="tab"><i class="fa fa-sitemap"></i> 分类树</a></li>
+                        <li><a href="javascript:void(0)" onclick="building();" data-toggle="tab"><i class="fa fa-code-fork"></i> 进化树</a></li>
+
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_1">
+                            <h3><b><i class="fa fa-cubes"></i> 分类单元集</b></h3>
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">操作</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- box-body -->
+                                <div class="box-body">
+                                    <a class="btn btn-app" onclick="addTaxaset();">
+                                        <i class="fa fa-plus"></i> <span>新建</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="editSelectObject('taxaset');">
+                                        <i class="fa fa-edit"></i> <span>修改</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="removeSelectObject('taxaset');">
+                                        <i class="fa fa-remove"></i> <span>删除</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- table -->
+                            <div class="table table-responsive">
+                                <!-- 个人taxaset列表展示 -->
+                                <table
+                                        id="taxaset_table"
+                                        data-locale="zh-CN"
+                                        data-classes="table table-hover table-condensed"
+                                        data-toggle="table"
+                                        th:attr="data-url=@{/console/taxaset/rest/list}"
+                                        data-pagination="true"
+                                        data-side-pagination="server"
+                                        data-page-list="[10, 20, 30, 50, 100]"
+                                        data-search="true"
+                                        data-show-columns="true"
+                                        data-show-toggle="true"
+                                        data-toolbar="#toolbar"
+                                        data-show-export="false"
+                                        data-show-refresh="true"
+                                        data-sort-name="synchdate"
+                                        data-sort-order="desc"
+                                        data-export-types="['excel', 'txt']">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="select" data-align="center" data-sortable="false"></th>
+                                        <th data-field="tsname" data-align="center" data-sortable="true">分类单元集名称</th>
+                                        <th data-field="tsinfo" data-align="center" data-sortable="false">描述</th>
+                                        <th data-field="createdDate" data-align="center" data-sortable="true">建立时间</th>
+                                        <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+                                        <th data-field="edit" data-align="center" data-sortable="false">操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_2">
+                            <h3><b><i class="fa fa-sitemap"></i> 分类树</b></h3>
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">操作</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- box-body -->
+                                <div class="box-body">
+                                    <a class="btn btn-app" onclick="addTaxtree();">
+                                        <i class="fa fa-plus"></i> <span>新建</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="editSelectObject('taxtree','dataset');">
+                                        <i class="fa fa-edit"></i> <span>修改</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="removeSelectObject('taxtree');">
+                                        <i class="fa fa-remove"></i> <span>删除</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- table -->
+                            <div class="table table-responsive">
+                                <!-- 个人taxaset列表展示 -->
+                                <table
+                                        id="taxtree_table"
+                                        data-locale="zh-CN"
+                                        data-classes="table table-hover table-condensed"
+                                        data-toggle="table"
+                                        th:attr="data-url=@{/console/taxtree/rest/list}"
+                                        data-pagination="true"
+                                        data-side-pagination="server"
+                                        data-page-list="[10, 20, 30, 50, 100]"
+                                        data-search="true"
+                                        data-show-columns="true"
+                                        data-show-toggle="true"
+                                        data-toolbar="#toolbar"
+                                        data-show-export="false"
+                                        data-show-refresh="true"
+                                        data-sort-name="synchdate"
+                                        data-sort-order="desc"
+                                        data-export-types="['excel', 'txt']">
+                                    <thead>
+                                    <tr>
+                                        <th data-field="select" data-align="center" data-sortable="false"></th>
+                                        <th data-field="treename" data-align="center" data-sortable="true">分类树名称</th>
+                                        <th data-field="treeinfo" data-align="center" data-sortable="false">描述</th>
+                                        <th data-field="inputtime" data-align="center" data-sortable="true">建立时间</th>
+                                        <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+                                        <th data-field="edit" data-align="center" data-sortable="false">操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                        <div class="tab-pane" id="tab_3">
+                            <h3><b><i class="fa fa-code-fork"></i> 进化树</b></h3>
+                            <div class="box box-default box-solid">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">操作</h3>
+
+                                    <div class="box-tools pull-right">
+                                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- box-body -->
+                                <div class="box-body">
+                                    <a class="btn btn-app" onclick="addTaxaset();">
+                                        <i class="fa fa-plus"></i> <span>新建</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="editSelectObject('taxaset','dataset');">
+                                        <i class="fa fa-edit"></i> <span>修改</span>
+                                    </a>
+                                    <a class="btn btn-app" onclick="removeSelectObject('taxaset');">
+                                        <i class="fa fa-remove"></i> <span>删除</span>
+                                    </a>
+                                </div>
+                            </div>
+                            <!-- table -->
+                            <div class="table table-responsive">
+                                <!-- 个人taxaset列表展示 -->
+                                <!--<table-->
+                                        <!--id="results_table"-->
+                                        <!--data-locale="zh-CN"-->
+                                        <!--data-classes="table table-hover table-condensed"-->
+                                        <!--data-toggle="table"-->
+                                        <!--th:attr="data-url=@{/console/taxaset/rest/list}"-->
+                                        <!--data-pagination="true"-->
+                                        <!--data-side-pagination="server"-->
+                                        <!--data-page-list="[10, 20, 30, 50, 100]"-->
+                                        <!--data-search="true"-->
+                                        <!--data-show-columns="true"-->
+                                        <!--data-show-toggle="true"-->
+                                        <!--data-toolbar="#toolbar"-->
+                                        <!--data-show-export="false"-->
+                                        <!--data-show-refresh="true"-->
+                                        <!--data-export-types="['excel', 'txt']">-->
+                                    <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th data-field="select" data-align="center" data-sortable="false"></th>-->
+                                        <!--<th data-field="tsname" data-align="center" data-sortable="true">分类单元集名称</th>-->
+                                        <!--<th data-field="tsinfo" data-align="center" data-sortable="false">描述</th>-->
+                                        <!--<th data-field="inputtime" data-align="center" data-sortable="true">建立时间</th>-->
+                                        <!--<th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>-->
+                                        <!--<th data-field="edit" data-align="center" data-sortable="false">操作</th>-->
+                                    <!--</tr>-->
+                                    <!--</thead>-->
+                                <!--</table>-->
+                            </div>
+                        </div>
+                        <!-- /.tab-pane -->
+                    </div>
+                    <!-- /.tab-content -->
+                </div>
+            </div>
+            </div>
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+
+<script th:src="@{/js/tableScript.js}"></script>
+<script type="text/javascript">
+    $(function() {
+        $('#taxaset_table').bootstrapTable('hideColumn', 'createdDate');
+        $('#taxtree_table').bootstrapTable('hideColumn', 'synchdate');
+    });
+
+    var width=$(window).width();
+    var height=$(window).height();
+    var layer_width="90%";
+    var layer_height="90%";
+    if(width>760){
+        layer_width="500px";
+        layer_height="500px";
+    }
+    function addTaxaset(){
+        layer.open({
+            type: 2,
+            title:'<h4>添加分类单元集</h4>',
+            fixed: false, //不固定
+            area: [layer_width, layer_height],
+            content: '/console/taxaset/addNew?type=dataset'
+        });
+    }
+    function addTaxtree(){
+        layer.open({
+            type: 2,
+            title:'<h4>添加分类树</h4>',
+            fixed: false, //不固定
+            area: [layer_width, layer_height],
+            content: '/console/taxtree/addNew?type=dataset'
+        });
+    }
+
+    //显示/编辑Taxtree
+    function manageTaxtree(id) {
+        //询问框
+        layer.confirm('请选择操作', {
+                title: false, //不显示标题
+                scrollbar: false,//屏蔽浏览器滚动条
+                skin: 'layui-layer-lan',
+                btn: ['查看详情','编辑树'] //按钮
+            },
+            function(){
+                layer.closeAll();
+                window.open("console/taxtree/show/"+id);
+            },
+            function(){
+                layer.closeAll();
+                window.open("console/taxtree/build/"+id);
+            });
+    }
+</script>
+<!-- countUp -->
+<!--<script th:src="@{/plugins/countUp/countUp.min.js}"></script>-->
+<!--<script>-->
+    <!--//计算数量统计-->
+    <!--$(document).ready(function () {-->
+<!--//                $.get("/",-->
+<!--//                    {},-->
+<!--//                    function(data,status){-->
+<!--//                        if(status){-->
+<!--//                            countNumber('countRecord',data.record);-->
+<!--//                            countNumber('countSpecies',data.species);-->
+<!--//                        }-->
+<!--//                        else{-->
+<!--//                            countNumber('countRecord',987654);-->
+<!--//                            countNumber('countSpecies',1234);-->
+<!--//                        }-->
+<!--//                    });-->
+        <!--countNumber('countTaxaset',987654);-->
+        <!--countNumber('countTaxtree',1234);-->
+        <!--countNumber('countTraitset',543);-->
+        <!--countNumber('countTaxon',66451234);-->
+        <!--countNumber('countCitation',7754111);-->
+        <!--countNumber('countDescription',5545241);-->
+        <!--countNumber('countSpecimendata',100024);-->
+        <!--countNumber('countDistributiondata',75542);-->
+        <!--countNumber('countProtection',54552);-->
+        <!--countNumber('countTaxkey',66354);-->
+        <!--countNumber('countTraitdata',1254);-->
+        <!--countNumber('countMolecular',5437);-->
+        <!--countNumber('countMultimedia',7543);-->
+        <!--countNumber('countCommoname',5453);-->
+        <!--countNumber('countOccurrence',5543);-->
+        <!--countNumber('countRefs',544443);-->
+        <!--countNumber('countDatasources',554);-->
+        <!--countNumber('countLicense',15);-->
+    <!--});-->
+    <!--function countNumber(id,number) {-->
+        <!--var options = {-->
+            <!--useEasing: true,-->
+            <!--useGrouping: true,-->
+            <!--separator: ',',-->
+            <!--decimal: '.',-->
+        <!--};-->
+        <!--var countNumber = new CountUp(id, 0, number, 0, 2.0, options);-->
+        <!--if (!countNumber.error) {-->
+            <!--countNumber.start();-->
+        <!--} else {-->
+            <!--console.error(countNumber.error);-->
+        <!--}-->
+    <!--};-->
+<!--</script>-->
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                <span>术语表管理</span><br/>
+                <small>在这里您可以对您的术语表进行管理</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/dataset/show/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li class="active"><i class="fa fa-cubes"></i> 术语表管理</li>
+            </ol>
+        </section>
+        <!-- 内容区 -->
+        <section class="content">
+            <div class="box box-default box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">操作</h3>
+                    
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- box-body -->
+                <div class="box-body">
+                    <a class="btn btn-app" href="javascript:void(0)">
+                        <i class="fa fa-plus"></i> <span>新建</span>
+                    </a>
+                    <a class="btn btn-app" href="javascript:void(0)">
+                        <i class="fa fa-edit"></i> <span>修改</span>
+                    </a>
+                    <a class="btn btn-app" href="javascript:void(0)">
+                        <i class="fa fa-remove"></i> <span>删除</span>
+                    </a>
+                </div>
+            </div>
+            <!-- table -->
+            <div class="table table-responsive">
+            <!-- 个人taxaset列表展示 -->
+                <table
+                        id="results_table"
+                        data-locale="zh-CN"
+                        data-classes="table table-hover table-condensed"
+                        data-toggle="table"
+                        th:attr="data-url=@{/console/traitontology/rest/list}"	
+                        data-pagination="true"
+                        data-side-pagination="server"
+                        data-page-list="[10, 20, 30, 50, 100]"
+                        data-search="true"
+                        data-show-columns="true"
+                        data-show-toggle="true"
+                        data-toolbar="#toolbar"
+                        data-show-export="false"
+                        data-show-refresh="true"
+                        data-export-types="['excel', 'txt']">
+                    <thead>
+                    <tr>
+                        <th data-field="select" data-align="center" data-sortable="false"></th>
+                        <th data-field="enterm" data-align="center" data-sortable="true">术语名称</th>
+                        <th data-field="group" data-align="center" data-sortable="false">类群</th>
+                        <th data-field="inputer" data-align="center" data-sortable="true">创建人</th>
+                        <th data-field="inputtime" data-align="center" data-sortable="true">创建时间</th>
+                        <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+                        <th data-field="edit" data-align="center" data-sortable="false">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <th:block th:replace="pageFrame/basicsFooter :: copy"></th:block>
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+</body>
+<script type="text/javascript">
+	$(function() {
+		$('#results_table').bootstrapTable('hideColumn', 'inputtime');
+	});
+</script>
+</html>

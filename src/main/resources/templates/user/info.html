@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:控制台首页
+    Description：控制台首页
+    Author：BINZI
+    Created date: 2018/04/11 10:54
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>    
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <!-- Bootstrap-table 1.10.1 -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-table/css/bootstrap-table.css}" type="text/css"/>
+</head>
+
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- 主界面区 -->
+<div class="wrapper">
+    <!-- 引入Header -->
+    <header id="header" class="main-header">
+        <th:block th:replace="pageFrame/basicsHeader :: copy"></th:block>
+    </header>
+    <!-- 引入左侧用户操作菜单-->
+    <th:block th:replace="pageFrame/basicsMenu :: copy"></th:block>
+    <!-- 显示区 -->
+    <div class="content-wrapper">
+        <!-- 内容区 -->
+        <section class="container content-header">
+            <h3>
+                <span>我的数据</span><br/>
+                <small>在这里您可以管理您自己的相关数据</small>
+            </h3>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> <span>Home</span></a></li>
+                <li class="active"><i class="fa fa-user"></i> <span>我的数据</span></li>
+            </ol>
+        </section>
+        <!-- 内容区 -->
+        <section class="container content-header">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="box box-leaf">
+                        <div class="box-body box-leaf">
+                            <img th:if="${not #lists.isEmpty(thisUser.profilePicture)}" class="quadrate profile-user-img img-responsive img-circle" th:src="${thisUser.profilePicture}" alt="User profile picture">
+                            <img th:if="${#lists.isEmpty(thisUser.profilePicture)}" class="profile-user-img img-responsive img-circle" th:src="@{/img/user-none-160x160.jpg}" alt="User profile picture">
+                            <h3 th:text="${thisUser.nickname}" class="profile-username text-center">昵称</h3>
+                            <p th:text="${thisUser.email}" class="text-muted text-center">邮箱</p>
+                            <hr/>
+                            <a href="javascript:void(0);" class="btn btn-leaf btn-block"><b>查看个人主页</b></a>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+ 
+    </div>
+        <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var chart1_name= [[#{my_uploadmedia}]];
+    /*]]>*/
+</script>
+<!-- echarts-3.1.10 -->
+<script th:src="@{/plugins/echarts/echarts.min.js}"></script>
+<!-- page_script -->
+<!-- countUp -->
+<script th:src="@{/plugins/countUp/countUp.min.js}" src="PACE/PACE/pace.min.js"></script>
+
+</body>
+</html>

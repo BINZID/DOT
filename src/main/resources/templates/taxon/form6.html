@@ -1,0 +1,122 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_6" class="form-horizontal" th:action="@{/}" method="post">
+    <div>
+      <div id="newCommonname"></div>
+      <a class="btn btn-app" onclick="addCommonname ();">
+        <i class="fa fa-plus"></i>添加新俗名</a>
+    </div>
+    <input class="hidden" id="countCommonname" name="countCommonname" value="0"></input>
+    <script id="commonnameForm" type="text/x-jquery-tmpl">
+      <form class="panel panel-default" id="commonnameForm_${num}" th:action="@{/}" method="post">
+    	<input class="hidden" id="commonnameId_${num}" name="commonnameId_${num}" readonly="readonly"></input>
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <i class="fa fa-check-circle hidden" id="commonnameStatus_${num}"></i>
+            <a id="commonnameCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#commonnameCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">
+              <i id="commonnameName_${num}">新的俗名</i>
+              <span id="commonnameAuthor_${num}"></span>
+            </a>
+            <a role="button" class="pull-right" onclick="removeCommonname(${num});">
+              <i class="fa fa-remove"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="commonnameCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="commonname_${num}" class="col-sm-4 control-label">* 俗名:</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="commonname_${num}" name="commonname_${num}" placeholder="分类单元的俗名" /></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="commonnameLanguage_${num}" class="col-sm-4 control-label">描述语言:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="commonnameLanguage_${num}" name="commonnameLanguage_${num}" style="width: 100%;">
+						<option selected value =""></option>
+						<option value ="1">中文</option>
+                     	<option value ="2">英语</option>
+                     	<option value ="3">法语</option>
+                     	<option value ="4">俄罗斯语</option>
+                     	<option value ="5">西班牙语</option>
+                     	<option value ="6">其他</option>              		
+    			  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="commonnameSourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="commonnameSourcesid_${num}" name="commonnameSourcesid_${num}" style="width: 100%;">
+                  </select>
+                </div>
+              </div>
+            </div>
+			<input class="hidden" id="descCommReferences_${num}" name="descCommReferences_${num}" value="0"></input>
+            <input class="hidden" id="countCommonnameReferences_${num}" name="countCommonnameReferences_${num}" value="0"></input>
+			<input class="hidden" id="countCommReferences_${num}" name="countCommReferences_${num}" value="0"></input>
+
+			<div class="col-md-12">
+	            <div class="form-group">
+	                <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					<div class="col-sm-2 col-md-2">
+		      			<select class="form-control select2" id="commonnameSearchPara_${num}" name="commonnameSearchPara_${num}" style="width: 100%;">
+							<option selected="selected"></option>
+							<option value="refstr">完整题录</option>
+							<option value="pyear">发表年代</option>
+							<option value="title">题目</option>
+							<option value="author">作者</option>
+						</select>
+	          		</div>
+	                <div class="col-sm-4 col-md-4">
+	        	  <input type="text" class="form-control" id="commonamePyear_${num}" name="commonamePyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	                </div>
+	            </div>
+	        </div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="refjson" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10 col-md-10 table-responsive">
+                  <table class="table table-hover table-condensed">
+                    <tbody id="newCommonnameReferences_${num}"></tbody>
+                  </table>
+                  <button type="button" class="btn btn-default btn-sm" onclick="addCommonnameReferences (${num});">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary pull-right" onclick="submitCommonname(${num});">确认</button></div>
+        </div>
+      </form>
+    </script>
+    <script id="commonnameReferencesForm" type="text/x-jquery-tmpl">
+      <tr id="commonnameReferencesForm_${cnnum}_${num}">
+        <td><label class="control-label">[${num}]</label><td>
+        <div class="form-group">
+          <div class="col-sm-8 col-md-8 col-xs-12">
+            <div class="input-group">
+              <select class="form-control select2" id="commonnameReferences_${cnnum}_${num}" name="commonnameReferences_${cnnum}_${num}" style="width: 100%;"></select>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" onclick="removeCommonnameReferences(${cnnum},${num});">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="commonnameReferencesPageS_${cnnum}_${num}" name="commonnameReferencesPageS_${cnnum}_${num}" placeholder="起始页" /></div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="commonnameReferencesPageE_${cnnum}_${num}" name="commonnameReferencesPageE_${cnnum}_${num}" placeholder="终止页" /></div>
+        </td>
+      </tr>
+    </script>
+  </form>
+</th:block>
+
+</html>

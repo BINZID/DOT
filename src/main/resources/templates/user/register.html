@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:登录页
+    Description：登录页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title>D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy"/>
+</head>
+<body class="hold-transition register-page">
+
+<div class="register-box">
+    <div class="register-logo">
+        <b>Bio</b>IDE
+        <p><h4>物种数据采集系统</h4></p>
+    </div>
+
+    <div class="register-box-body">
+        <p class="login-box-msg">用户注册</p>
+
+        <form id="register_form" th:action="@{/register/new}" action="register/new" method="post"
+              th:object="${newUser}">
+            <input id="errorMsg" th:value="${errorMsg}" class="hidden" readonly="readonly"></input>
+            <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+            <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{role}" readonly="readonly"></input>
+            <div th:if="${not #strings.isEmpty(newUser.adddate)}">
+                <input class="hidden" th:field="*{adddate}" readonly="readonly"></input>
+            </div>
+            <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{score}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{level}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{uploadnum}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{idnum}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{avatar}" readonly="readonly"></input>
+            <input class="hidden" th:field="*{mark}" readonly="readonly"></input>
+            <input class="hidden" id="tid" name="tid" th:value="${tid}" readonly="readonly"></input>
+            
+            <div class="form-group has-feedback">
+                <input th:field="*{userName}" id="r_username" name="userName" type="text" class="form-control"
+                       placeholder="用户名，用于登录">
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input th:field="*{email}" id="r_email" name="email" type="text" class="form-control"
+                       placeholder="邮箱，用来激活和找回密码">
+                <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input th:field="*{password}" id="pwd" name="password" type="password" class="form-control"
+                       placeholder="输入密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input id="repassword" type="password" name="repassword" class="form-control" placeholder="确认密码">
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input th:field="*{mobile}" id="r_mobile" name="mobile" type="text" class="form-control"
+                       placeholder="手机号">
+                <span class="glyphicon glyphicon-phone form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input th:field="*{nickname}" id="r_nickname" name="nickname" type="text" class="form-control"
+                       placeholder="昵称">
+                <span class="fa fa-smile-o form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="text" class="form-control" id="r_token" name="token" autocomplete="off" placeholder="输入下方验证码">
+                <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
+                <p></p>
+                <div>
+                    <i>
+                        <img style="height:32px;" id="codeImg_register" th:src="@{/captchaImg}" src="/captchaImg"/>
+                        <a href="javascript:void(0);" onclick="reImg();">看不清，换一张</a>
+                    </i>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="col-md-8">
+                    <div class="checkbox icheck">
+                        <div class="form-group">
+                            <label>
+                                <input id="agreeTerms" name="agreeTerms" type="checkbox"> <span>我同意这些</span>
+                                <a href="#" class="dropdown-toggle" data-toggle="modal"
+                                   data-target="#modal-terms">协议</a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group pull-right">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat" disabled="disabled">注册</button>
+                </div>
+            </div>
+            <div class="row">
+            </div>
+        </form>
+        <div class="social-auth-links text-center">
+            <p>- OR -</p>
+            <a th:href="@{/login}" href="/" class="text-center dropdown-toggle">我已有账号</a>
+        </div>
+
+        <div class="modal fade" id="modal-terms">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="closeTerms" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">协议</h4>
+                    </div>
+                    <div class="modal-body">
+	                    <p><b>1、关于物种采集系统（D-Taxon）</b></p>
+	                    <p>&nbsp;&nbsp;&nbsp;&nbsp;目的是通过公民科学积累物种相关数据，支持生物多样性研究。<br/>
+	                        &nbsp;&nbsp;&nbsp;&nbsp;D-Taxon提供数据管理、共享及交流平台，不进行数据交易。数据用户可以联系数据提供者获取质量更高的数据。</p>
+	                    <p><b>2、数据共享</b></p>
+	                    <p>&nbsp;&nbsp;&nbsp;&nbsp;所有多媒体数据根据CC协议进行共享标注，数据提供者在上传数据时都要指定自己数据的共享方式。<br/>
+	                        &nbsp;&nbsp;&nbsp;&nbsp;数据用户必须遵守数据共享政策，违反数据共享政策者，一旦发现将依法追究其侵犯版权的行为。</p>
+	                    <p><b>3、数据所有权人权利</b></p>
+	                    <p>&nbsp;&nbsp;&nbsp;&nbsp;数据版权归数据所有权人所有，数据上传者必须上传自己拥有版权的数据，如果自己不拥有版权，必须符合原始数据的CC共享协议。</p>
+	                    <p><b>4、用户权利及义务：</b></p>
+	                    <p>&nbsp;&nbsp;&nbsp;&nbsp;所有用户在D-Taxon网站提交的数据必须跟生物物种相关，无关的数据将被管理员删除。所有用户必须遵守国家相关法律规定，不得传播违反法律禁止的内容。</p>
+                	</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" data-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" onclick="agreeTerms();">我同意</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.form-box -->
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy"/>
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<script>
+    var warning_rename = "用户名不可用";
+    var warning_remeail = "邮箱不可用";
+    function agreeTerms() {
+        $('#agreeTerms').attr("checked", true);
+        $('#closeTerms').click();
+    };
+    function reImg() {
+        var src = 'captchaImg?code=' + Math.random();
+        document.getElementById('codeImg_register').src = src;
+    };
+
+    $(document).ready(function () {
+        //错误提示
+        if ($('#errorMsg').val().length > 0)
+            layer.msg($('#errorMsg').val(), function () {
+            });
+        //获取host
+        $("#base_url").val(window.location.host);
+        $('#register_form').bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon ',
+                invalid: 'glyphicon ',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                rename: {
+                    selector: '#r_username',
+                    validators: {
+                        notEmpty: {},
+                        stringLength: {
+                            min: 2,
+                            max: 30,
+                        },
+                      /*   regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: warning_rename
+                        }, */
+                        callback: {
+                            message: warning_rename,
+                            callback: function (value, validator) {
+                                $.ajax({
+                                    url: 'register/rest/isReName',
+                                    data: {
+                                        name: $('#r_username').val()
+                                    },
+                                    cache: false,
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (!data) {
+                                            validator.updateStatus('rename', 'VALID', 'callback');
+                                            return true;
+                                        }else {
+                                            return false;
+                                        }
+                                    },
+                                    error: function () {
+                                        //alert("error");
+                                        return false;
+                                    }
+                                });
+                                return false;
+                            }
+                        },
+                    }
+                },
+                reemail: {
+                    selector: '#r_email',
+                    validators: {
+                        notEmpty: {},
+                        emailAddress: {},
+                        stringLength: {
+                            min: 6,
+                            max: 70,
+                        },
+                        callback: {
+                            message: warning_remeail,
+                            callback: function (value, validator) {
+                                validator_email = 'register/rest/isReEmail';
+                                $.ajax({
+                                    url: 'register/rest/isReEmail',
+                                    data: {
+                                        email: $('#r_email').val()
+                                    },
+                                    cache: false,
+                                    dataType: "json",
+                                    success: function (data) {
+                                        if (!data) {
+                                            validator.updateStatus('reemail', 'VALID', 'callback');
+                                            return true;
+                                        }
+                                        else {
+                                            return false;
+                                        }
+                                    },
+                                    error: function () {
+                                        //alert("error");
+                                        return false;
+                                    }
+                                });
+                                return false;
+                            }
+                        },
+                    }
+                },
+                pwd: {
+                    selector: '#pwd',
+                    validators: {
+                        notEmpty: {},
+                        stringLength: {
+                            min: 6,
+                            max: 30,
+                        },
+                        identical: {
+                            field: 'repassword',
+                        }
+                    }
+                },
+                repassword: {
+                    selector: '#repassword',
+                    validators: {
+                        notEmpty: {},
+                        identical: {
+                            field: 'pwd',
+                        }
+                    }
+                },
+                'mobile': {
+                    validators: {
+                        notEmpty: {},
+                        stringLength: {
+                            min: 11,
+                            max: 11,
+                        },
+                        regexp: {
+                            regexp: /^1[3|4|5|7|8]\d{9}$/,
+                            message: '输入不合法'
+                        },
+                    }
+                },
+                'nickname': {
+                    validators: {
+                        notEmpty: {},
+                        stringLength: {
+                            min: 1,
+                            max: 15,
+                        },
+                    }
+                },
+                token: {
+                    selector: '#r_token',
+                    validators: {
+                        notEmpty: {},
+                        stringLength: {
+                            min: 4,
+                            max: 4,
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_\.]+$/,
+                            message: warning_rename
+                        },
+                    }
+                },
+                'agreeTerms': {
+                    validators: {
+                        notEmpty: {},
+                    }
+                },
+            }
+        });
+    });
+</script>
+<script>
+    $("#register_form").submit(function (e) {
+        if ($("#register_form").data('bootstrapValidator').isValid()) {
+            layer.load(2);
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<th:block th:fragment="copy">
+<section>
+    <aside class="main-sidebar">
+        <!-- sidebar-->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <div class="pull-left image">
+                    <img th:src="@{/img/user-none-160x160.jpg}" src="/img/user-none-160x160.jpg" class="img-circle" alt="User Image">
+                </div>
+                <div class="pull-left info">
+                    <p sec:authentication="name">Name</p>
+                    <p><i class="fa fa-circle text-success"></i> 当前用户</p>
+                </div>
+            </div>
+            <!-- sidebar menu -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <!-- 团队操作选项 -->
+                <li class="header">团队操作选项</li>
+                    <li class="treeview">
+                        <a href="#">
+		                	<i class="fa fa-users"></i> <span>团队</span>
+		                	<span class="pull-right-container">
+		                    	<i class="fa fa-angle-left pull-right"></i>
+		                    </span>
+		                </a>
+                        <ul class="treeview-menu">
+                        	<li>
+                        		<a href="javascript:void(0)">
+		                            <i class="fa fa-users"></i> <span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span>
+		                        </a>
+                        	</li>    
+                            <li><a th:href="@{/select/team}" href="team"><i class="fa fa-exchange"></i> <span>团队切换</span></a></li>
+                        </ul>
+                    </li>
+                <!-- 操作选项 -->
+                <li class="header">操作选项</li>
+                    <li class="treeview">
+                        <a href="#" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" >
+                            <i class="fa fa-hdd-o"></i><span>数据集</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="hidden" th:if="${not #lists.isEmpty(session.datasetID)}"><a th:href = "@{/console/taxaset}" href = "/console/taxaset"><i class="fa fa-cubes"></i> 分类单元集管理</a></li>
+                            <li class="hidden" th:if="${not #lists.isEmpty(session.datasetID)}"><a th:href = "@{/console/taxtree}" href="console/taxtree"><i class="fa fa-sitemap"></i> 分类树管理</a></li>
+                            <li class="hidden" th:if="${not #lists.isEmpty(session.datasetID)}"><a href="javascript:void(0)" onclick="building();"><i class="fa fa-code-fork"></i> 进化树管理</a></li>
+                            
+                            <li>
+                            	<a href="javascript:void(0)" style='overflow: hidden;text-overflow: ellipsis;white-space: nowrap;' >
+		                            <i class="fa fa-hdd-o"></i>
+		                                <span th:if="${#lists.isEmpty(session.datasetID)}">未选择数据集</span>
+		                                <span th:if="${not #lists.isEmpty(session.datasetID)}" th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span>
+		                        </a>
+                            </li>
+                            
+                            <li><a th:href="@{/select/dataset}" href="dataset/index.html"><i class="fa fa-exchange"></i> 数据集切换</a></li>
+                        </ul>
+                    </li>
+                    <li th:if="${not #lists.isEmpty(session.datasetID)}" class="treeview hidden">
+                        <a href="#">
+                            <i class="fa fa-cube"></i> <span> 分类单元管理</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="#" th:href="@{/console/taxon}"><i class="fa fa-cube"></i> 分类单元管理</a></li>
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-list-alt"></i> 描述管理
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-left pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="javascript:void(0)" onclick="building();"><i class="fa fa-bug"></i> 标本管理</a></li>
+                                    <li><a th:href="@{/console/distributiondata}"><i class="fa fa-globe"></i> 分布信息管理</a></li>
+                                    <li><a th:href="@{/console/protection}"><i class="fa fa-flag"></i> 保护信息管理</a></li>
+                                    <li><a th:href="@{/console/taxkey}"><i class="fa fa-key"></i> 检索表管理</a></li>
+                                    <li class="treeview">
+                                        <a href="#"><i class="fa fa-book"></i> 术语管理
+                                            <span class="pull-right-container">
+                                                 <i class="fa fa-angle-left pull-right"></i>
+                                            </span>
+                                        </a>
+                                        <ul class="treeview-menu">
+                                            <li><a th:href="@{console/traitset}"><i class="fa fa-book"></i> 术语集管理</a></li>
+                                            <li><a th:href="@{console/traitontology}"><i class="fa fa-book"></i> 术语表管理</a></li>
+                                            <li><a th:href="@{console/traitdescription}"><i class="fa fa-book"></i> 术语信息管理</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:void(0)" onclick="building();"><i class="fa fa-barcode"></i> 分子数据管理</a></li>
+                            <li><a th:href="@{/console/multimedia}"><i class="fa fa-photo"></i> 媒体数据管理</a></li>
+                            <li><a th:href="@{/console/commonname}"><i class="fa fa-circle-o"></i> 别名管理</a></li>
+                            <li><a th:href="@{/console/occurrence}"><i class="fa fa-map-marker"></i> 观测记录管理</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="#">
+                            <i class="fa fa-file-text-o"></i> <span>公共数据管理</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a th:href="@{/console/ref}"><i class="fa fa-list-ol"></i> 参考文献管理</a></li>
+                            <li><a th:href="@{/console/datasource}"><i class="fa fa-database"></i> 数据源管理</a></li>
+                            <li><a th:href="@{/console/license}"><i class="fa fa-copyright"></i> 版权许可证管理</a></li>
+                            <li><a th:href="@{/console/expert}"><i class="fa fa-users"></i> 专家信息管理</a></li>
+                        </ul>
+                    </li>
+                <!-- 系统操作选项 -->
+                <li class="header">系统操作选项</li>
+                <li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-user"></i> <span> 账户管理</span>
+                        <span class="pull-right-container">
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a th:href="@{/console/user/info}" href="team"><i class="fa fa-user"></i> <span>个人信息</span></a></li>
+                        <li><a th:href="@{/console/message}" href="team"><i class="fa fa-envelope-o"></i> <span>消息管理</span></a></li>
+                    </ul>
+                </li>
+                <!-- 管理员操作选项 -->
+                	<li sec:authorize="hasRole('ROLE_SUPER')" class="header">管理员操作选项</li>
+                    <li sec:authorize="hasRole('ROLE_SUPER')" ><a th:href="@{/super/user}" href="user"><i class="fa fa-user"></i> <span> 用户管理</span></a></li>
+                    <li sec:authorize="hasRole('ROLE_SUPER')" ><a th:href="@{/super/team}" href="team"><i class="fa fa-users"></i> <span> 团队管理</span></a></li>
+                    <li sec:authorize="hasRole('ROLE_SUPER')" ><a th:href="@{/super/message}" href="user"><i class="fa fa-envelope"></i> <span> 消息管理</span></a></li>
+                    <li sec:authorize="hasRole('ROLE_SUPER')" ><a th:href="@{/super/dataset}" href="dataset"><i class="fa fa-users"></i> <span> 数据集管理</span></a></li>
+                <!-- 关于我们 -->
+                <li class="header">关于我们</li>
+                    <li><a href="#"><i class="fa fa-users text-blue"></i> <span>开发团队</span></a></li>
+                    <li><a th:href="@{/console/user/manual}"><i class="fa fa-file-pdf-o"></i> <span>用户手册</span></a></li>
+            </ul>
+        </section>
+    </aside>
+</section>
+</th:block>
+</html>

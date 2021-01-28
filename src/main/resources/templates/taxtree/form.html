@@ -1,0 +1,35 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy" >
+
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{bgurl}" readonly="readonly"></input>
+    <input class="hidden" id="editdsname" name="editdsname" readonly="readonly" th:value="${editdsname}"></input>
+    <input id="errorMsg" class="hidden" th:value="${errorMsg}" readonly="readonly"></input>
+ 	<div th:if="${not #strings.isEmpty(thisTaxtree.inputtime)}">
+        <input class="hidden" th:field="*{inputtime}" readonly="readonly"></input>
+    </div>
+ 	<div th:if="${not #strings.isEmpty(thisTaxtree.synchdate)}">
+        <input class="hidden" th:field="*{synchdate}" readonly="readonly"></input>
+    </div>
+    <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{synchstatus}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisTaxtree.dataset)}">
+	    <input class="hidden" th:field="*{dataset.id}" value="${thisTaxtree.dataset.id}" readonly="readonly"></input>
+    </div>
+    
+    <div class="form-group">
+        <label for="treename" class="col-sm-2 control-label">分类树名称:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{treename}" type="text" class="form-control" id="treename" name="treename" placeholder="1~30个字符"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="treeinfo" class="col-sm-2 control-label">说明/备注:</label>
+        <div class="col-sm-10 col-md-10">
+            <textarea th:field="*{treeinfo}" id="treeinfo" name="treeinfo" class="form-control" placeholder="0~500个字符" rows="10"></textarea>
+        </div>
+    </div>
+</th:block>
+</html>

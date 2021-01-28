@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- bootstrap-datepicker-->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css"/>
+    <!-- bootstrap-fileinput -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-fileinput/css/fileinput.min.css}" type="text/css"/>
+</head>
+
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <th:block th:replace="pageFrame/basicsHeader :: copy"></th:block>
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <th:block th:replace="pageFrame/basicsMenu :: copy"></th:block>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>文件上传
+                <small>分类单元文件上传</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/toTaxasetPage/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/show/}+${thisTaxaset.id}">
+                        <i class="fa fa-cubes"></i> <span th:text="${#strings.length(thisTaxaset.tsname)<13} ? ${thisTaxaset.tsname} : ${#strings.substring(thisTaxaset.tsname,0,10)+'...'}" th:title="${thisTaxaset.tsname}">数据集名称</span></a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-plus"></i>新建
+                </li>
+            </ol>
+        </section>
+        <section class="content">
+            <input class="hidden" id="refFileMark" name="refFileMark" readonly/>
+            <input class="hidden" id="dsFileMark" name="dsFileMark" readonly/>
+            <input class="hidden" id="expFileMark" name="expFileMark" readonly/>
+            <input class="hidden" id="timestamp" name="timestamp" th:value="*{timestamp}" readonly/>
+            <input class="hidden" id="taxonId" name="taxonId" th:value="*{thisTaxon.id}" readonly/>
+            <input class="hidden" id="taxasetId" name="taxasetId" th:value="*{thisTaxaset.id}" readonly/>
+            <div class="nav-tabs-custom">
+                <ul id="addSteps" class="nav nav-tabs">
+                	<li class="active">
+                        <a id="label_1" href="#tab_1" data-toggle="tab" aria-expanded="true">
+                            <span id="label_title_1">1&nbsp;专家信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_1" class="fa fa-angle-right"></i></a>
+                    </li>
+                
+                    <li class="">
+                        <a id="label_2" href="#tab_2" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_2">2&nbsp;参考文献</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_2" class="fa fa-angle-right"></i></a>
+                    </li>
+                    
+                    <li class="">
+                        <a id="label_3" href="#tab_3" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_3">3&nbsp;数据源</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_3" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_4" href="#tab_4" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_4">4&nbsp;分类单元信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_4" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_5" href="#tab_5" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_5">5&nbsp;引证信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_5" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_6" href="#tab_6" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_6">6&nbsp;描述信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_6" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_7" href="#tab_7" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_7">7&nbsp;分布数据</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_7" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_8" href="#tab_8" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_8">8&nbsp;保护数据</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_8" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_9" href="#tab_9" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_9">9&nbsp;特征数据</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_9" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_10" href="#tab_10" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_10">10&nbsp;俗名信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_10" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_11" href="#tab_11" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_11">11&nbsp;多媒体信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_11" class="fa fa-angle-right"></i></a>
+                    </li>
+                    
+                    <li class="">
+                        <a id="label_12" onclick="subgo();" data-toggle="tab" aria-expanded="false">
+                  <span id="label_title_12">
+                    <i class="fa fa-calendar-check-o"></i>&nbsp;提交确认</span>
+                        </a>
+                    </li>
+                </ul>
+                
+                <div id="addStepsTab" class="tab-content">
+                    <div class="tab-pane fade in active" id="tab_1">
+	                	<th:block th:replace="expert/uploadExpert :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                	<div class="tab-pane" id="tab_2">
+                    	<th:block th:replace="reference/uploadRef :: copy"></th:block>
+	                	<p>&nbsp;</p>
+	                	<p>&nbsp;</p>
+	                </div>
+	                    
+                    <div class="tab-pane fade" id="tab_3">
+	                 	<th:block th:replace="datasource/uploadDatasource :: copy"></th:block>
+	                 	<p>&nbsp;</p>
+	                 	<p>&nbsp;</p>
+	                </div>
+                    
+                    <div class="tab-pane fade" id="tab_4">
+	                    <th:block th:replace="taxon/uploadTaxon :: copy"></th:block>
+	                    <p>&nbsp;</p>
+	                    <p>&nbsp;</p>
+	                </div>
+	                
+                    <div class="tab-pane fade" id="tab_5">
+	                    <th:block th:replace="citation/uploadCitation :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="tab_6">
+	                    <th:block th:replace="description/uploadDescription :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane fade" id="tab_7">
+	                    <th:block th:replace="distributiondata/uploadDistributiondata :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="tab_8">
+	                    <th:block th:replace="protection/uploadProtection :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="tab_9">
+	                    <th:block th:replace="traitdata/uploadTraitdata :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="tab_10">
+	                    <th:block th:replace="commonname/uploadCommonname :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="tab_11">
+	                    <th:block th:replace="multimedia/uploadMultimedia :: copy"></th:block>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+                    <div class="tab-pane" id="tab_12">
+                        <h4>
+                            <b>提交确认</b>
+                            <small>提交确认</small>
+                        </h4>
+                        <th:block th:replace="taxon/form8 :: copy"></th:block>
+                        <p></p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(7);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <a class="btn btn-app" th:href="@{/console/taxon/review/submit(tid=${thisTaxon.id})}"
+                               type="submit"> <i class="fa fa-check"></i> 提交审核
+                            </a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <th:block th:replace="pageFrame/basicsFooter :: copy"></th:block>
+    </footer>
+    <!-- Control Sidebar -->
+    <th:block th:replace="pageFrame/basicsControl :: copy"></th:block>
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<!-- bootstrap-fileinput -->
+<script th:src="@{/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/themes/fa/theme.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- 引入Script -->
+<script th:src="@{/js/upload/uploadRef.js}"></script>
+<script th:src="@{/js/upload/uploadDatasource.js}"></script>
+<script th:src="@{/js/upload/uploadExpert.js}"></script>
+<script th:src="@{/js/upload/uploadTaxon.js}"></script>
+<script th:src="@{/js/upload/uploadCitation.js}"></script>
+<script th:src="@{/js/upload/uploadDescription.js}"></script>
+<script th:src="@{/js/upload/uploadDistributiondata.js}"></script>
+<script th:src="@{/js/upload/uploadCommonname.js}"></script>
+<script th:src="@{/js/upload/uploadProtection.js}"></script>
+<script th:src="@{/js/upload/uploadTraitdata.js}"></script>
+<script th:src="@{/js/upload/uploadMultimedia.js}"></script>
+
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var taxonId= [[${thisTaxon.id}]];
+    /*]]>*/
+</script>
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script th:src="@{/js/formatRefTableScript.js}"></script>
+<th:block th:if="not ${#strings.isEmpty(thisTaxon.taxaset.id)}">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $("#taxaset").prepend("<option value='" + [[*{thisTaxon.taxaset.id}]] + "' selected='selected'>" + [[*{thisTaxon.taxaset.tsname}]]+"</option>");
+        /*]]>*/
+    </script>
+</th:block>
+</body>
+
+<script type="text/javascript">
+	$(function() {
+		$('#ref_table').bootstrapTable('hideColumn', 'inputer');
+		$('#ref_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#ref_table').bootstrapTable('hideColumn', 'volume');
+		$('#ref_table').bootstrapTable('hideColumn', 'period');
+		$('#ref_table').bootstrapTable('hideColumn', 'press');
+		$('#ref_table').bootstrapTable('hideColumn', 'version');
+		$('#ref_table').bootstrapTable('hideColumn', 'ptype');
+		$('#ref_table').bootstrapTable('hideColumn', 'synchdate');
+		$('#ref_table').bootstrapTable('hideColumn', 'journal');
+		
+		$('#datasource_table').bootstrapTable('hideColumn', 'inputer');
+		$('#datasource_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#datasource_table').bootstrapTable('hideColumn', 'createtime');
+		$('#datasource_table').bootstrapTable('hideColumn', 'dAbstract');
+		$('#datasource_table').bootstrapTable('hideColumn', 'dKeyword');
+		$('#datasource_table').bootstrapTable('hideColumn', 'dLink');
+		
+		$('#expert_table').bootstrapTable('hideColumn', 'enName');
+		$('#expert_table').bootstrapTable('hideColumn', 'enCompany');
+		$('#expert_table').bootstrapTable('hideColumn', 'enAddress');
+		$('#expert_table').bootstrapTable('hideColumn', 'enHomePage');
+		$('#expert_table').bootstrapTable('hideColumn', 'expInfo');
+		
+        $('#taxon_table').bootstrapTable('hideColumn', 'nomencode');
+        $('#taxon_table').bootstrapTable('hideColumn', 'inputer');
+        $('#taxon_table').bootstrapTable('hideColumn', 'authorstr');
+        $('#taxon_table').bootstrapTable('hideColumn', 'epithet');
+        $('#taxon_table').bootstrapTable('hideColumn', 'synchdate');
+        $('#taxon_table').bootstrapTable('hideColumn', 'orderNum');
+		
+		$('#citation_table').bootstrapTable('hideColumn', 'nametype');
+		$('#citation_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#citation_table').bootstrapTable('hideColumn', 'inputer');
+		
+		$('#description_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#description_table').bootstrapTable('hideColumn', 'inputer');
+		
+		$('#distribution_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#distribution_table').bootstrapTable('hideColumn', 'inputer');
+		
+		$('#protection_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#protection_table').bootstrapTable('hideColumn', 'inputer');
+		
+		$('#traitdata_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#traitdata_table').bootstrapTable('hideColumn', 'inputer');
+		
+		$('#commonname_table').bootstrapTable('hideColumn', 'inputtime');
+		$('#commonname_table').bootstrapTable('hideColumn', 'inputer');
+/* 		$('#multimedia_table').bootstrapT able('hideColumn', 'inputtime');
+		$('#multimedia_table').bootstrapT able('hideColumn', 'inputer'); */
+	});
+</script>
+
+<!-- 构造错误提示模板 -->
+<script id="tmpl-upload-error" type="text/x-jquery-tmpl">
+<div id="upload-alert" class="alert alert-danger alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-ban"></i> 提示:</h4>
+    {{= message}}
+</div>
+</script>
+<!-- 构造成功模板 -->
+<script id="tmpl-upload-success" type="text/x-jquery-tmpl">
+<div id="upload-alert" class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-check"></i> 提示:</h4>
+    {{= message}}
+</div>
+</script>
+<script type="text/javascript">
+//构造开发提示
+function building() {
+    layer.msg('正在开发', function(){
+    });
+}
+</script>
+</html>

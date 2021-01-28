@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:特征图片上传页面
+    Description：特征图片上传页面
+    Author：BINZI
+    Created date: 2018/08/09 10:43
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- bootstrap-fileinput -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-fileinput/css/fileinput.min.css}" type="text/css"/>
+</head>
+
+<body>
+	<!-- 内容区 -->
+	<section class="container content">
+	<form class="form-horizontal" th:action="@{console/keyitem/rest/batch}" method="post" enctype="multipart/form-data">
+	    <input class="hidden" type="text" id="keyitemId" name="keyitemId" th:value = ${keyitemId}>
+	  	
+	  	<div class="col-md-12">
+          <div class="form-group">
+              <div class="file-loading">
+	    	  	<input class="file-loading" id="input-fa" name="input-fa[]" type="file" multiple>
+	    	  </div>
+          </div>
+        </div>
+	</form>
+	</section>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- bootstrap-fileinput -->
+<script th:src="@{/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/themes/fa/theme.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
+
+</body>
+<script th:inline="javascript">
+
+	//初始化fileinput控件（第一次初始化）
+	function initFileInput(ctrlName) {
+	    var control = $('#' + ctrlName);
+	    control.fileinput({
+	        theme: "fa",
+	        language: "zh",
+	        uploadUrl: "console/keyitem/rest/batch",
+	        allowedFileExtensions: ['jpg', 'gif', 'png', 'img', 'jpeg'],
+	        maxFileCount:100,		//表示允许同时上传的最大文件个数
+	        maxFileSize:50000,		//单位为kb，如果为0表示不限制文件大小
+	        minImageWidth:50,		//图片的最小宽度
+	        maxImageWidth:50000,	//图片的最大宽度
+	        minImageHeight:50,
+	        maxImageHeight:50000,
+	        uploadExtraData: function(previewId, index) {   //额外参数的关键点
+	            var obj = {};
+	            obj._csrf = $('input[name="_csrf"]').val();
+	            obj.keyitemId = $('#keyitemId').val();
+	            console.log(obj); 
+	            return obj;
+	        } 
+	    });
+	}
+	/*<![CDATA[*/
+    var warning_noname= [[#{warning_noname}]];
+    /*]]>*/
+	initFileInput("input-fa");
+	$('#input-fa').on('fileuploaded', function(event, data, previewId, index) {
+  		layer.msg("上传成功！", {time: 2500}, function(){
+  			parent.layer.close(parent.layer.getFrameIndex(window.name));
+  		});
+	});
+</script>
+</html>

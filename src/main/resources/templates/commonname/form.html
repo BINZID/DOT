@@ -1,0 +1,68 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:俗名添加/编辑时的form页
+    Description：俗名添加/编辑时的form页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<div th:fragment="copy" >
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisCommonname.inputtime)}">
+        <input class="hidden" th:field="*{inputtime}" readonly="readonly"></input>
+    </div>
+    <div th:if="${not #strings.isEmpty(thisCommonname.synchdate)}">
+        <input class="hidden" th:field="*{synchdate}" readonly="readonly"></input>
+    </div>
+    <div class="form-group">
+        <label for="taxonid" class="col-sm-2 control-label">taxonid:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{taxonid}" th:attr="placeholder=#{form_message_title_placeholder}" type="text" class="form-control" id="taxonid" name="taxonid" placeholder="Please input the number and letter combination of 3~30 characters" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="commonname" class="col-sm-2 control-label">commonname:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{commonname}" type="text" class="form-control" id="commonname" name="commonname" placeholder="Please input the number and letter combination of 3~30 characters" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="language" class="col-sm-2 control-label">language:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{language}" type="text" class="form-control" id="language" name="language" placeholder="Please input the email" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="sourcesid" class="col-sm-2 control-label">sourcesid:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{sourcesid}" type="text" class="form-control" id="sourcesid" name="sourcesid" placeholder="Please input the phone" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="status" class="col-sm-2 control-label">status:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{status}" type="text" class="form-control" id="status" name="status" placeholder="Please input the phone" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="inputer" class="col-sm-2 control-label">inputer:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{inputer}" type="text" class="form-control" id="inputer" name="inputer" placeholder="Please input the phone" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="synchstatus" class="col-sm-2 control-label">synchstatus:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{synchstatus}" type="text" class="form-control" id="synchstatus" name="synchstatus" placeholder="Please input the phone" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="refjson" class="col-sm-2 control-label">角色:</label>
+        <div class="col-sm-10 col-md-10">
+            <textarea th:field="*{refjson}" id="refjson" name="refjson" class="form-control" rows="10"></textarea>
+        </div>
+    </div>
+</div>
+</html>

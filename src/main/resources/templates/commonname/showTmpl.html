@@ -1,0 +1,47 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 重新加载俗名-->
+    <script id="reLoadCommonname" type="text/x-jquery-tmpl">
+      <button type="button" class="btn btn-default btn-xs" onclick="showCommonname('{{= taxonid}}',{{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+    </script>
+    <!-- 加载更多俗名-->
+    <script id="moreCommonname" type="text/x-jquery-tmpl">
+      <button id="moreCommonnameButton" type="button" class="btn btn-default btn-block btn-xs" onclick="showCommonname('{{= taxonid}}',{{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+    </script>
+    <!-- 构造俗名数据 -->
+    <script id="commonnameList" type="text/x-jquery-tmpl">
+    {{each(i,commonName) rows}}
+        <div class="col-md-6">
+            <div class="panel panel-default" id="commonnameForm_{{= commonName.id}}">
+                <div class="panel-heading" role="tab" id="heading1">
+                    <h4 class="panel-title">
+                        <a id="commonnameCollapseTitle_{{= commonName.id}}" role="button" data-toggle="collapse" data-parent="#accordion" href="#commonnameCollapse_{{= commonName.id}}" aria-expanded="true" aria-controls="collapse1">
+                            <span id="commonnameName_{{= commonName.id}}">{{= commonName.commonname}}</span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="commonnameCollapse_{{= commonName.id}}" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>俗名:</dt>
+                            <dd><small>{{= commonName.commonname}}</small></dd>
+                            <dt>描述语言:</dt>
+                            <dd><small>{{= commonName.language}}</small></dd>
+                            <dt>数据源:</dt>
+                            <dd><small>{{= commonName.sourcesid}}</small></dd>
+                            <dt>参考文献:</dt>
+                            <dd>
+                                <button type="button" class="btn btn-default btn-xs"
+                                        onclick="showRef({{= commonName.refjson}});">
+                                    <i class="fa fa-list-ol"></i> 查看参考文献
+                                </button>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+</th:block>
+</html>

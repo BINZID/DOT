@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:登录页
+    Description：登录页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <style>
+    	.main{float:left;border:1px;  width:100%;}
+    	.left{float:left;border:1px; width:49.8%;}
+    	.right {float:right;border:1px;  width:49.8%;}
+    	.lefts{float:left;border:1px solid #FFFFFF; width:33.3%;} 
+  	</style>
+    
+</head>
+<body class="hold-transition login-page">
+<!-- Site wrapper -->
+<div class="wrapper hold-transition skin-dark fixed sidebar-mini">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+	<div class="container">
+	    <!-- login-logo -->
+	    <!-- <div class="login-logo">
+	        <span>D-<b>TAXON</b></span>
+	    </div> -->
+	    <br/>
+	    <br/>
+		<p>
+	    <div class="col-md-12">
+	        <div class="box box-default">
+	            <div class="box-header with-border">
+	                <i class="fa fa-warning"></i>
+	
+	                <h3 class="box-title">说明</h3>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body">
+	                <h4>
+	                    欢迎使用D-Taxon，请选择您要进入的团队。<br/>
+	                    <small>不同团队间的数据和权限相对独立，进入某个团队后，您的操作仅限于该团队下的内容，如需操作其他团队的数据内容，可在操作菜单切换当前团队。</small>
+	                </h4>
+	            </div>
+	            <!-- /.box-body -->
+	        </div>
+	        <!-- /.box -->
+		</div>
+		
+		<div class="col-md-12">
+			<h3>我的团队：</h3>
+			<div class="col-md-4">
+		        <div class="box box-widget widget-user-2">
+		            <div class="widget-user-header bg-primary">
+		                <div class="widget-user-image">
+		                    <img class="img-circle" th:src="@{/img/user-none-160x160.jpg}" alt="User Avatar">
+		                </div>
+		                <h4 class="widget-user-username">新建团队</h4>
+		                <h5 class="widget-user-desc">&nbsp;</h5>
+		            </div>
+		            <div class="box-body">
+		                <h3 class="text-center"><a href="javascript:void(0)" onclick="createTeam()"><i class="fa fa-plus"></i></a></h3>
+		            </div>
+		            <div class="box-footer no-padding">
+		                <ul class="nav nav-stacked">
+		                    <li><a class="btn btn-block bg-primary" href="javascript:void(0)" onclick="createTeam()" >新建</a></li>
+		                </ul>
+		            </div>
+		        </div>
+		    </div>
+		
+		    <div id="myTeamFrame">
+		        <i class="fa fa-refresh fa-spin"></i>
+		    </div>
+		</div>
+		
+		<div class="col-md-12">
+			<h3>我加入的团队：</h3>
+				<div id="myJoinTeamFrame">
+					<i class="fa fa-refresh fa-spin"></i>
+				</div>
+		</div>
+	</div>   
+</div>	
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script th:src="@{/js/teamScript.js}"></script>
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<script type="text/javascript">
+    //显示我的Team
+    function showMyTeam(offset,type) {
+        if(type=='first')
+            $("#myTeamFrame").empty();
+        else if(type=='more')
+            $("#myMoreFrameButton").remove();
+        $("#loadingMy").tmpl().appendTo("#loadingMyFrame");
+        $.get("console/team/rest/myTeamList/",
+            {
+                limit:10,
+                offset:offset,
+                async:true
+            },
+            function(data,status){
+                if(status){
+                    try {
+                        //配置Team列表
+                        $("#myTeamList").tmpl(data).appendTo("#myTeamFrame").ready(function () {
+                            $("#loadingMyFrame").remove();
+                            //配置下一页
+                            if((offset+10)<data.total)
+                                $("#myMoreFrame").tmpl({ offset: offset+10, type:'more'}).appendTo("#myTeamFrame");
+                        });
+                    } catch (err) {
+                        $("#myReLoadTeam").tmpl({ offset: 0, type:'first'}).appendTo("#myTeamFrame");
+                    }
+                }
+                else{
+                    $("#myReLoadTeam").tmpl({ offset: 0, type:'first'}).appendTo("#myTeamFrame");
+                }
+            });
+    }
+</script>
+
+<script type="text/javascript">
+    //显示我加入的Team
+    function showMyJoinTeam(offset,type) {
+        if(type=='first')
+            $("#myJoinTeamFrame").empty();
+        else if(type=='more')
+            $("#myJoinMoreFrameButton").remove();
+        $("#loadingMyJoin").tmpl().appendTo("#loadingMyJoinFrame");
+        $.get("console/team/rest/myJoinTeamList/",
+            {
+                limit:10,
+                offset:offset,
+                async:true
+            },
+            function(data,status){
+                if(status){
+                    try {
+                        //配置Team列表
+                        $("#myJoinTeamList").tmpl(data).appendTo("#myJoinTeamFrame").ready(function () {
+                            $("#loadingMyJoinFrame").remove();
+                            //配置下一页
+                            if((offset+10)<data.total)
+                                $("#myJoinMoreFrame").tmpl({ offset: offset+10, type:'more'}).appendTo("#myJoinTeamFrame");
+                        });
+                    } catch (err) {
+                        $("#myJoinReLoadTeam").tmpl({ offset: 0, type:'first'}).appendTo("#myJoinTeamFrame");
+                    }
+                }
+                else{
+                    $("#myJoinReLoadTeam").tmpl({ offset: 0, type:'first'}).appendTo("#myJoinTeamFrame");
+                }
+            });
+    }
+</script>
+<!-- 加载状态提示 -->
+<script id="loadingMy" type="text/x-jquery-tmpl">
+    <i class="fa fa-refresh fa-spin"></i>
+</script>
+<script id="loadingMyJoin" type="text/x-jquery-tmpl">
+    <i class="fa fa-refresh fa-spin"></i>
+</script>
+<!-- 重新加载我的Team-->
+<script id="myReLoadTeam" type="text/x-jquery-tmpl">
+  <button type="button" class="btn btn-default btn-xs" onclick="showMyTeam({{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+</script>
+<!-- 重新加载我加入的Team-->
+<script id="myJoinReLoadTeam" type="text/x-jquery-tmpl">
+  <button type="button" class="btn btn-default btn-xs" onclick="showMyJoinTeam({{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+</script>
+<!-- 加载更多我的Team-->
+<script id="myMoreFrame" type="text/x-jquery-tmpl">
+  <button id="myMoreFrameButton" type="button" class="btn btn-default btn-block" onclick="showMyTeam({{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+  <br/>
+</script>
+<!-- 加载更多我加入的Team-->
+<script id="myJoinMoreFrame" type="text/x-jquery-tmpl">
+  <button id="myJoinMoreFrameButton" type="button" class="btn btn-default btn-block" onclick="showMyJoinTeam({{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+  <br/>
+</script>
+<!-- 构造Team -->
+<script id="myTeamList" type="text/x-jquery-tmpl">
+    {{each(i,team) rows}}
+        <div class="col-md-4">
+            <div class="box box-widget widget-user-2">
+                <div id="{{= team.id}}" class="widget-user-header" style="background: url('{{= team.bgurl}}')" onclick="changeBg('{{= team.id}}')">
+                    <div class="widget-user-image" style="min-height: 46px;">
+                        <img class="img-circle" th:src="@{/img/user-none-160x160.jpg}" alt="User Avatar">
+                    </div>
+                    <h4 class="widget-user-username" style="font-size: 25px; color:white; overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{= team.name}}">{{= team.name}}</h4>
+                    <h5 class="widget-user-desc" style="overflow: hidden; color:white; text-overflow: ellipsis;white-space: nowrap;" title="{{= team.note}}">{{= team.note}}</h5>
+                </div>
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked">
+                        <li>
+                        	<div class="main">
+                            	<div class="lefts">
+                                	<a class="btn btn-block bg-navy" href="change/team/{{= team.id}}">进入</a>
+                            	</div>
+								<div class="lefts">
+                                	<a class="btn btn-block bg-navy" onclick="inviteThisObject('{{= team.id}}')">邀请</a>
+                            	</div>
+                            	<div class="lefts">
+                            		<a class="btn btn-block bg-navy" onclick="transObj('{{= team.id}}')">权限</a>
+                                </div>
+                            	<div class="lefts">
+                            		<a class="btn btn-block bg-navy" onclick="editThisObject('{{= team.id}}', 'team')">修改</a>
+                                </div>
+                            	<div class="lefts">
+                            		<a class="btn btn-block bg-navy" onclick="removeObject('{{= team.id}}', 'team')">删除</a>
+                                </div>
+                            	<div class="lefts">
+                                	<a class="btn btn-block bg-navy" href="/console/team/details/{{= team.id}}">详情</a>
+                            	</div>
+                        	</div>
+                        </li>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+
+<!-- 构造Team -->
+<script id="myJoinTeamList" type="text/x-jquery-tmpl">
+    {{each(i,team) rows}}
+        <div class="col-md-4">
+            <div class="box box-widget widget-user-2">
+                <div class="widget-user-header bg-navy">
+                    <div class="widget-user-image">
+                        <img class="img-circle" th:src="@{/img/user-none-160x160.jpg}" alt="User Avatar">
+                    </div>
+                    <h4 class="widget-user-username" style="font-size: 25px;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{= team.name}}">{{= team.name}}</h4>
+                    <h5 class="widget-user-desc" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" title="{{= team.note}}">{{= team.note}}</h5>
+                </div>
+                <div class="box-body" style="min-height: 50px">
+                </div>
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked">
+                        <li>
+                        	<div class="main">
+                            	<div class="left">
+                                	<a class="btn btn-block bg-navy" href="change/team/{{= team.id}}">进入</a>
+                            	</div>
+                            	<div class="right">
+                                	<a class="btn btn-block bg-navy" href="/console/team/details/{{= team.id}}">详情</a>
+                            	</div>
+                            	<div class="lefts hidden">
+                            		<a class="btn btn-block bg-navy" onclick="editThisObject('{{= team.id}}', 'team')">修改</a>
+                                </div>
+                            	<div class="lefts hidden">
+                            		<a class="btn btn-block bg-navy" onclick="removeObject('{{= team.id}}', 'team')">删除</a>
+                                </div>
+                            	<div class="lefts hidden">
+                                	<a class="btn btn-block bg-navy" onclick="inviteThisObject('{{= team.id}}')">邀请</a>
+                            	</div>
+                            	<div class="lefts hidden">
+                            		<a class="btn btn-block bg-navy" onclick="transObj('{{= team.id}}')">权限</a>
+                                </div>
+                        	</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        showMyTeam(0,'first');
+        showMyJoinTeam(0,'first');
+    });
+</script>
+<script type="text/javascript">
+    //AddTeamLayer
+    function createTeam(){
+        var width=$(window).width();
+        var height=$(window).height();
+        var layer_width="90%";
+        var layer_height="90%";
+        if(width>760){
+            layer_width="500px";
+            layer_height="500px";
+        }
+        layer.open({
+            type: 2,
+            title:'<h4>添加团队</h4>',
+            fixed: false, //不固定
+            area: [layer_width, layer_height],
+            content: '/console/team/add/mark'
+        });
+    }
+</script>
+<script type="text/javascript">
+//特征图片的弹出层(管理|上传)
+function changeBg(id) {
+	var width = $(window).width();
+	var height = $(window).height();
+	var layer_width = "90%";
+	var layer_height = "90%";
+	if (width > 760) {
+		layer_width = "700px";
+		layer_height = "500px";
+	}
+
+	layer.confirm('更换团队背景图片', {
+		title : false,
+		scroller : false,
+		skin : 'layui-layer-lan',
+		btn : [ '确认', '取消' ]
+	// 按钮
+	}, function() {
+		layer.closeAll();
+		layer.open({
+			type : 2,
+			title : '<h4>图片选择</h4>',
+			fixed : false, // 不固定
+			area : [ layer_width, layer_height ],
+			content : '/console/team/changeBg/' + id + "/" + 'team'
+		});
+
+	}, function() {
+		layer.closeAll();
+	    layer.msg('操作取消', function(){
+	    });
+	});
+}
+</script>
+</body>
+</html>

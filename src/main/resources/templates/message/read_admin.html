@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:超级管理员查看消息页面
+    Description：超级管理员查看消息页面
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE&nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:substituteby="pageFrame/basicsCss :: copy" />
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                消息查看
+                <small>在这里您可以查看系统内所有的消息记录</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li class=""><a th:href="@{/super/message}" href="/"><i class="fa fa-envelope"></i> 消息管理</a></li>
+                <li class="active"><a th:href="@{/console/message}" href="/"><i class="fa fa-envelope"></i> 消息查看</a></li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="box box-widget">
+                <div class="box-header with-border">
+                    <div class="user-block">
+                        <img class="img-circle" th:src="@{/img/user-none-160x160.jpg}" alt="Sender Image">
+                        <span th:text ="${thisSender}" class="username">Sender</span>
+                        <span th:text ="${#calendars.format(thisMessage.sendtime,'yyyy-MM-dd hh:mm:ss')}" class="description">sendtime</span>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <h4 th:text ="${thisMessage.title}">TITLE</h4>
+                    <div th:utext ="${thisMessage.text}">text</div>
+                </div>
+                <div class="box-footer box-comments hidden">
+                    <div class="box-comment">
+					<div th:if="${thisMessage.mark} == 1">
+						<div class="comment-text">
+	                          	<!--   确认加入团队信息Link
+	                            	判断当前看信人身份 -- 收信人显示按钮 | 写信人不显示
+	                            	后端放置身份标识到request域中，判断身份标识 -- 显示对应按钮 -->
+	                            	
+							<button type="button" class="btn btn-primary" id="accept" name="Accept" onclick="accept()"> 接受</button>
+	                        <button type="button" class="btn btn-primary" id="refuse" name="Refuse" onclick="refuse()"> 拒绝</button>
+	                    </div>
+					</div>
+					<div th:unless="${thisMessage.mark} == 0">
+					</div>
+
+	                    
+	                    <!-- <div th:if="${thisMessage.mark} == 0">
+						</div>
+						<div th:if="${thisMessage.mark} == 1">
+	                        <div class="comment-text">
+	                          	  确认加入团队信息Link
+	                            判断当前看信人身份 -- 收信人显示按钮 | 写信人不显示
+	                            	后端放置身份标识到request域中，判断身份标识 -- 显示对应按钮
+								<button type="button" class="btn btn-primary" id="accept" name="Accept"> 接受</button>
+	                        	<button type="button" class="btn btn-primary" id="refuse" name="Refuse"> 拒绝</button>
+	                        </div>
+	                    </div> -->
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-default pull-right"><i class="fa fa-share"></i> Reply</button>
+                </div>
+            </div>
+        </section>
+        <br/>
+    </div>
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<!-- page_script -->
+<script th:src="@{/js/superTableScript.js}"></script>
+<script type="text/javascript">
+	function accept(){
+		layer.msg('邀请函已发送至您邮箱，去邮箱接受邀请',function(){
+		})
+	}
+	function refuse(){
+		layer.msg('拒绝团队邀请',function(){
+		})
+	}
+</script>
+</body>
+</html>

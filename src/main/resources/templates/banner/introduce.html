@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+</head>
+<body style="background: rgb(123,104,107)">
+<div class="container">
+    <div>
+        <h1>Hello, world!</h1>
+        <p>物种2000中国节点是国际物种2000项目的一个地区节点，2006年2月7日由国际物种2000秘书处提议成立，于2006年10月20日正式启动。中国科学院生物多样性委员会（BC-CAS），与其合作伙伴一起，支持和管理物种2000中国节点的建设。物种2000中国节点的主要任务是，按照物种2000标准数据格式，对在中国分布的所有生物物种的分类学信息进行整理和核对，建立和维护中国生物物种名录，为全世界使用者提供免费服务。</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+    </div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+</body>
+</html>

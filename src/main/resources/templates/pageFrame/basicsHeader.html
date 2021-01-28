@@ -1,0 +1,90 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<th:block th:fragment="copy">
+<section>
+    <!-- Logo -->
+    <a th:href="@{/}" href="/" class="logo">
+        <!-- mini logo for sidebar mini 50x50 pixels -->
+        <span class="logo-mini">D-<b>T</b></span>
+        <!-- logo for regular state and mobile devices -->
+        <span class="logo-lg">D-<b>TAXON</b></span>
+    </a>
+    <!-- Header Navbar: style can be found in header.less -->
+    <nav class="navbar navbar-static-top">
+        <!-- Sidebar toggle button-->
+        <a th:if="${not #lists.isEmpty(session.team)}" href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+        <!-- Right navbar -->
+        <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+                <!-- Message -->
+                <li th:if="${not #lists.isEmpty(session.team)}" class="dropdown messages-menu">
+                    <!-- New message amount -->
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="fa fa-envelope-o"></i>
+                        <!--<span class="label label-success" th:if="${session.unReadMessageNum} &gt; 0" th:text="${session.unReadMessageNum}"></span>-->
+                    </a>
+                    <!-- Message frame -->
+                    <ul class="dropdown-menu">
+                        <li class="header">您有 <span th:text="${session.unReadMessageNum}"></span> 封未读消息</li>
+                        <!--<li th:if="${session.unReadMessageNum} &gt; 0">-->
+                            <!--<ul class="menu">-->
+                                <!--<li>-->
+                                    <!--<a href="#">-->
+                                        <!--<div class="pull-left">-->
+                                            <!--<img th:src="@{/img/user-none-160x160.jpg}" src="/img/user-none-160x160.jpg" class="img-circle" alt="User Image">-->
+                                        <!--</div>-->
+                                        <!--<h4>-->
+                                            <!--Support Team-->
+                                            <!--<small><i class="fa fa-clock-o"></i> 5 分钟</small>-->
+                                        <!--</h4>-->
+                                        <!--<p>系统消息</p>-->
+                                    <!--</a>-->
+                                <!--</li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                        <li class="footer"><a href="#" th:href="@{/console/message}">查看所有消息</a></li>
+                    </ul>
+                </li>
+                <!-- User Account-->
+                <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img th:src="@{/img/user-none-160x160.jpg}" src="/img/user-none-160x160.jpg" class="user-image" alt="User Image">
+                        <span class="hidden-xs">个人中心</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <!-- User image -->
+                        <li class="user-header">
+                            <img th:src="@{/img/user-none-160x160.jpg}" src="/img/user-none-160x160.jpg" class="img-circle" alt="User Image">
+
+                            <p>
+                                <span sec:authentication="principal.username">UserName</span>
+                                <small sec:authorize="hasRole('ROLE_SUPER')">超级管理员</small>
+                            </p>
+                        </li>
+                        <!-- Menu Footer-->
+                        <li class="user-footer">
+                            <div th:if="${not #lists.isEmpty(session.team)}" class="pull-left">
+                                <a th:href="@{/console/user/info}"  href="#" class="btn btn-default btn-flat">账号信息</a>
+                            </div>
+                            <div class="pull-right">
+                                <a th:href="@{/logout}" class="btn btn-default btn-flat">退出</a>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!-- Control Sidebar Toggle Button -->
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-question-circle"></i></a>
+                </li> 
+            </ul>
+        </div>
+    </nav>
+</section>
+</th:block>
+</html>

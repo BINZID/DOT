@@ -1,0 +1,207 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_9" class="form-horizontal" th:action="@{/}" method="post">
+    <div class="panel panel-default taxon-details">
+      <!-- 基础信息 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <span class="btn btn-box-tool" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-cube"></i>
+              </span>
+            </div>
+            <span class="username">基础信息</span>
+            <span class="description" id="showCountTaxon"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showTaxonFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+      <!-- 引证信息 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">引证信息</span>
+            <span class="description" id="showCountCitation"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showCitationFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+      <!-- 描述信息 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">描述信息</span>
+            <span class="description" id="showCountDescription"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showDescriptionFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+	  <!-- 分布数据 -->
+      <div class="box box-widget">
+          <div class="box-header with-border">
+              <div class="user-block">
+                  <div class="box-tools">
+                      <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                          <i class="fa fa-minus"></i>
+                      </button>
+                  </div>
+                  <span class="username">分布数据</span>
+                  <span class="description" id="showCountDistributiondata"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+              </div>
+          </div>
+          <div class="box-body">
+              <div id="showDistributiondataFrame">
+                  <i class="fa fa-refresh fa-spin"></i>
+              </div>
+          </div>
+      </div>
+      <!-- 物种数据 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">物种数据</span>
+            <span class="description" id="showCountDescriptionInfo"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div>
+            <ul class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active"><a href="#show-protection"
+                                         id="show-tab-protection" aria-controls="show-protection" role="tab"
+                                         data-toggle="tab">保护数据</a></li>
+              <li role="presentation"><a href="#show-taxkey" id="show-tab-taxkey"
+                                         aria-controls="show-taxkey" role="tab" data-toggle="tab">检索表</a></li>
+              <li role="presentation"><a href="#show-traitdata" id="show-tab-traitdata"
+                                         aria-controls="show-traitdata" role="tab" data-toggle="tab">特征数据</a></li>
+            </ul>
+            <div class="tab-content">
+              <!-- 保护数据面板 -->
+              <div role="tabpanel" class="tab-pane active" id="show-protection">
+                <h4>
+                  <small>&nbsp;该物种的保护信息</small>
+                  <p>&nbsp;</p>
+                </h4>
+                <div id="showProtectionFrame">
+                  <i class="fa fa-refresh fa-spin"></i>
+                </div>
+              </div>
+              <!-- 检索表面板 -->
+              <div role="tabpanel" class="tab-pane fade" id="show-taxkey">
+                <h4>
+                  <small>&nbsp;该阶元相关的检索表</small>
+                  <p>&nbsp;</p>
+                </h4>
+                <div id="showTaxkeyFrame">
+                  <i class="fa fa-refresh fa-spin"></i>
+                </div>
+              </div>
+              <!-- 特征数据面板 -->
+              <div role="tabpanel" class="tab-pane fade" id="show-traitdata">
+                <h4>
+                  <small>&nbsp;该分类单元的特征数据</small>
+                  <p>&nbsp;</p>
+                </h4>
+                <div id="showTraitdataFrame">
+                  <i class="fa fa-refresh fa-spin"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 俗名信息 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">俗名信息</span>
+            <span class="description" id="showCountCommonname"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showCommonnameFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+      <!-- 观测记录 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">观测记录</span>
+            <span class="description" id="showCountOccurrence"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showOccurrenceFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+      <!-- 多媒体信息 -->
+      <div class="box box-widget">
+        <div class="box-header with-border">
+          <div class="user-block">
+            <div class="box-tools">
+              <button class="btn btn-box-tool" data-widget="collapse" style="width: 40px;height: 40px;float: left;font-size: 25px;">
+                <i class="fa fa-minus"></i>
+              </button>
+            </div>
+            <span class="username">多媒体信息</span>
+            <span class="description" id="showCountMultimedia"><i class="fa fa-refresh fa-spin"></i> 加载中...</span>
+          </div>
+        </div>
+        <div class="box-body">
+          <div id="showMultimediaFrame">
+            <i class="fa fa-refresh fa-spin"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 引入参考文献模态框 -->
+    <th:block th:replace="reference/showModal :: copy" />
+    <!-- 引入特征信息列表模态框 -->
+    <th:block th:replace="traitdata/showModal :: copy" />
+    <!-- 引入检索表详情模态框 -->
+    <th:block th:replace="taxkey/showModal :: copy" />
+  </form>
+</th:block>
+
+</html>

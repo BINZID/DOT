@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:添加DataSet页面
+    Description：添加DataSet页面
+    Author：BINZI
+    Created date: 2018/04/11 14:51
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+
+</head>
+
+<body>
+<!-- 主界面区 -->
+<div class="wrapper">
+    <div class="col-md-12">
+    	<p></p>
+    	<form id=thisForm class="form-horizontal" th:action="@{/console/traitset/addNew}" method="post" th:object="${thisTraitset}">
+            <!-- 引入form -->
+            <th:block th:replace="traitset/form :: copy"></th:block>
+            <p></p>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <a class="btn btn-app" onclick="clearInput();">
+                            <i class="fa fa-rotate-left"></i> <span>清空表单</span>
+                        </a>
+                        <a class="btn btn-app" onclick="addTraitset();">
+							<i class="fa fa-check"></i> <span>提交</span>
+						</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+//清空表单
+function clearInput() {
+    $('#thisForm')[0].reset();
+    $('#thisForm').data('bootstrapValidator')
+        .updateStatus('name', 'NOT_VALIDATED',null)
+        .updateStatus('remark', 'NOT_VALIDATED',null)
+        .validateField('name')
+        .validateField('remark');
+};
+</script>
+
+<script type="text/javascript">
+//前端验证错误提示
+$(document).ready(function() {
+	var warning_rename = "名称不可用";
+    //获取host
+	$("#base_url").val(window.location.href);
+    $('#thisForm').bootstrapValidator({
+        message: 'This value is not valid',
+        feedbackIcons: {
+            valid: 'glyphicon ',
+            invalid: 'glyphicon ',
+            validating: 'glyphicon glyphicon-refresh'
+        },
+        fields: {
+            'name': {
+                validators: {
+                    notEmpty: {
+                    },
+                    stringLength: {
+                        min: 1,
+                        max: 30,
+                    },
+                    callback: {
+                        message: warning_rename,
+                        callback: function (value, validator) {
+                           return $.ajax({
+                                url: '/console/traitset/rest/isRename',
+                                data: {
+                                    name: $('#name').val()
+                                },
+                                cache: false,
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data) {
+                                        validator.updateStatus('name', 'VALID', 'callback');
+                                        return true;
+                                    }else {
+                                        return false;
+                                    }
+                                },
+                                error: function () {
+                                    return false;
+                                }
+                            });
+                            return false;
+                        }
+                    },
+                }
+            },
+            'remark': {
+                validators: {
+                    stringLength: {
+                        min: 0,
+                        max: 500
+                    },
+                }
+            },
+        }
+    });
+});
+	
+</script>
+
+<script type="text/javascript">
+	function addTraitset() {
+		layer.load(2);
+		var data = $('#thisForm').serialize();
+		if ($("#thisForm").data('bootstrapValidator').isValid()){
+			$.ajax({
+				type: "POST",
+				url: "/console/traitset/rest/addNew",
+				data: data,	// 要提交的表单
+				dataType: "json",
+				contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+				success: function(rsl){
+					if (rsl.result == true) {
+						parent.$("#traitset").prepend("<option value='" + rsl.newId + "' selected='selected'>" + rsl.newTitle+"</option>");
+					    parent.layer.close(parent.layer.getFrameIndex(window.name));
+					    layer.msg("添加成功！", {time: 1000});
+					}else{
+						layer.msg("添加失败！", {time: 500}, function(){
+					        parent.layer.close(parent.layer.getFrameIndex(window.name));
+						});
+					}
+		        },
+				error: function (error) {
+				}
+			});
+		}else{
+			layer.msg('请先完成表单录入', {time : 1000,}, function() {
+	        })
+		}
+	};
+</script>
+</body>
+</html>

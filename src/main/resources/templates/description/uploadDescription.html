@@ -1,0 +1,88 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+<!-- 模态框（Modal） -->
+	<div class="modal fade bs-model-lg" id="uploadDescriptions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg=primary">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+					<h4 class="modal-title">描述信息导入</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form id="ffImport" method="post">
+	                    <div title="Excel导入操作" style="padding: 5px">
+							<input id="uploadDescription" name="uploadDescription" type="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></input>
+	                    </div>
+	                </form>
+					<div id="uploadDescription-alert-area"></div>
+					<div class="table table-responsive"><table id="uploadDescription-table-errorData"></table></div>
+				</div>
+				
+				<div class="modal-footer">
+					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="SaveImport()">下载</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- table -->
+	<div class="table table-responsive">
+		<!-- 描述信息 -->
+		<h4>
+            <b>描述信息</b>
+            <small>&nbsp;从历史资料、志书、文献、书籍、调查报告中提取的描述性文本</small>
+        </h4>
+        <!-- 文件操作 -->
+        <h4>
+	        <b>文件操作</b>
+	        <a class="btn btn-primary btn" data-toggle="modal" onclick="initFileInputForDescription('uploadDescription', '/console/description/rest/upload', 'description_table', '/console/description/rest/uploaded/')" data-target="#uploadDescriptions">
+		        <i class="fa fa-upload"></i> <span>上传</span>
+		    </a>
+		    
+		    <a class="btn btn-primary btn hidden"  th:href="@{/console/description/export}">
+		        <i class="fa fa-download"></i> <span>下载</span>
+		    </a>
+	    </h4>
+	    <!-- 本次上传的描述信息 -->
+		<h4>
+			<b>本次上传的描述信息：</b>
+		</h4>
+	<!-- 个人taxaset列表展示 -->
+	    <table
+	            id="description_table"
+	            data-locale="zh-CN"
+	            data-classes="table table-hover table-condensed"
+	            data-toggle="table"
+	            th:attr="data-url=@{/console/description/rest/uploaded/}"	
+	            data-pagination="true"
+	            data-side-pagination="server"
+	            data-page-list="[10, 20, 30, 50, 100]"
+	            data-search="true"
+	            data-show-columns="true"
+	            data-show-toggle="true"
+	            data-toolbar="#toolbar"
+	            data-show-export="false"
+	            data-show-refresh="true"
+	            data-export-types="['excel', 'txt']">
+	        <thead>
+	        <tr>
+	            <!-- <th data-field="select" data-align="center" data-sortable="false"></th> -->
+	            <th data-field="destitle" data-align="center" data-sortable="true">描述标题</th>
+	            <th data-field="describer" data-align="center" data-sortable="false">描述人</th>
+	            <th data-field="desdate" data-align="center" data-sortable="false">描述日期(年)</th>
+	            <th data-field="destypeid" data-align="center" data-sortable="false">描述类型</th>
+	            <th data-field="rightsholder" data-align="center" data-sortable="false">权利所有人</th>
+	            <th data-field="language" data-align="center" data-sortable="false">语言</th>
+	            <th data-field="expert" data-align="center" data-sortable="false">审核专家</th>
+	            <th data-field="license" data-align="center" data-sortable="false">共享协议</th>
+	            <th data-field="inputer" data-align="center" data-sortable="false">创建人</th>
+	            <th data-field="inputtime" data-align="center" data-sortable="true">创建时间</th>
+	            <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+	            <!-- <th data-field="edit" data-align="center" data-sortable="false">操作</th> -->
+	        </tr>
+	        </thead>
+	    </table>
+	</div>
+</th:block>
+</html>

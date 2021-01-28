@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:添加DataSet页面
+    Description：添加DataSet页面
+    Author：BINZI
+    Created date: 2018/04/11 14:51
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+	<!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+
+</head>
+
+<body>
+<!-- 主界面区 -->
+<div class="wrapper">
+    <div class="col-md-12">
+    	<p></p>
+    	<form id="thisForm" class="form-horizontal" th:action="@{/console/dataset/new}" method="post">
+            <input class="hidden" id="tid" name="tid" th:value="${tid}"></input>
+            <div class="form-group">
+			    <label for="user" class="col-sm-4 control-label">团队下的成员:</label>
+			    <div class="col-sm-8">
+			    	<select class="form-control select2" id="user" name="user" style="width: 100%;"></select>
+			    </div>
+			</div>
+            <p></p>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="pull-right">
+                        <a class="btn btn-app" onclick="transThisMember();">
+							<i class="fa fa-check"></i> <span>确认授权</span>
+						</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<script th:src="@{/js/taxon/selectScript.js}"></script>
+<script th:src="@{/js/teamScript.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    /*]]>*/
+</script>
+
+</body>
+</html>

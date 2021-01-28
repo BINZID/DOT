@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- bootstrap-duallistbox -->
+    <!--<link rel="stylesheet" th:href="@{/plugins/bootstrap-duallistbox/css/bootstrap-duallistbox.min.css}" type="text/css"/>-->
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- bootstrap-datepicker-->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}" href="plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css"/>
+	<!-- bootstrap-fileinput -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-fileinput/css/fileinput.min.css}" type="text/css"/>
+</head>
+
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <th:block th:replace="pageFrame/basicsHeader :: copy"></th:block>
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <th:block th:replace="pageFrame/basicsMenu :: copy"></th:block>
+    <div class="content-wrapper">
+        <section class="content-header">
+            <h1>编辑分类单元
+                <small>对已有分类单元进行修改</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/toTaxasetPage/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxaset/show/}+${thisTaxon.taxaset.id}">
+                        <i class="fa fa-cubes"></i> <span th:text="${#strings.length(thisTaxon.taxaset.tsname)<13} ? ${thisTaxon.taxaset.tsname} : ${#strings.substring(thisTaxon.taxaset.tsname,0,10)+'...'}" th:title="${thisTaxon.taxaset.tsname}">数据集名称</span></a>
+                </li>
+                <li class="active">
+                    <i class="fa fa-edit"></i>编辑
+                </li>
+            </ol>
+        </section>
+        <section class="content">
+        	<input class="hidden" id="taxonId" name="taxonId" th:value="*{thisTaxon.id}" readonly/>
+        	<input class="hidden" id="taxonRef" name="taxonRef" th:value="*{thisTaxon.refjson}" readonly/>
+        	<!-- Taxon基础数据 -->
+        	<input class="hidden" id="datasourceid" name="datasourceid" th:value="*{thisTaxon.sourcesid}" readonly/>
+        	<input class="hidden" id="tnomencode" name="tnomencode" th:value="*{thisTaxon.nomencode}" readonly/>
+        	
+            <div class="nav-tabs-custom">
+                <ul id="addSteps" class="nav nav-tabs">
+                    <li class="active">
+                        <a id="label_1" href="#tab_1" data-toggle="tab" aria-expanded="true">
+                            <span id="label_title_1" class="badge label label-primary">1&nbsp;基础信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_1" class="fa fa-chevron-right" style="color: #3c8dbc;"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_2" href="#tab_2" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_2">2&nbsp;引证信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_2" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_3" href="#tab_3" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_3">3&nbsp;描述信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_3" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_4" href="#tab_4" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_4">4&nbsp;分布数据</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_4" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_5" href="#tab_5" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_5">5&nbsp;物种数据</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_5" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_6" href="#tab_6" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_6">6&nbsp;俗名信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_6" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_7" href="#tab_7" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_7">7&nbsp;观测记录</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_7" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_8" href="#tab_8" data-toggle="tab" aria-expanded="false">
+                            <span id="label_title_8">8&nbsp;多媒体信息</span>&nbsp;&nbsp;&nbsp;
+                            <i id="lable_icon_8" class="fa fa-angle-right"></i></a>
+                    </li>
+                    <li class="">
+                        <a id="label_9" href="#tab_9" data-toggle="tab" aria-expanded="false">
+                  <span id="label_title_9">
+                    <i class="fa fa-calendar-check-o"></i>&nbsp;提交确认</span>
+                        </a>
+                    </li>
+                </ul>
+                <div id="addStepsTab" class="tab-content">
+                    <div class="tab-pane fade in active" id="tab_1">
+                        <h4>
+                            <b>基础信息</b>
+                            <small>分类单元数据所属的分类单元数据集信息</small>
+                            <p>&nbsp;</p>
+                        </h4>
+                        <th:block th:replace="taxon/form1 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <!-- <a class="btn btn-app" onclick="resetFrom(1);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(2);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane fade" id="tab_2">
+                        <h4>
+                            <b>引证信息</b>
+                            <small>分类单元名称的引证信息</small>
+                            <a role="button" class="dropdown-toggle" data-toggle="modal" data-target="#modal-citation">
+								<i class="fa fa-question-circle"></i>
+							</a>
+                            <p>&nbsp;</p>
+                        </h4>
+                        <th:block th:replace="taxon/form2 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(1);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                           <!--  <a class="btn btn-app" onclick="resetFrom(2);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(3);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    
+			          <div class="modal fade" id="modal-citation">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button id="closeTerms" type="button" class="close"
+										data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="false">&times;</span>
+									</button>
+									<h4 class="modal-title">引证信息说明</h4>
+								</div>
+								<div class="modal-body">
+									<p>
+										<b>引证信息示例：</b>
+										<small>左边为引证信息字段，右侧为对应字段的值</small>
+									</p>
+									<div class="box-body table-responsive">
+										<table id="citationtable1"
+											class="table table-hover table-condensed" data-toggle="table"
+											data-classes="table table-bordered" data-height="100%" data-width="100%"
+											data-row-style="rowStyle">
+											
+											<thead class="hidden">
+												<tr>
+													<th data-field="col1"></th>
+													<th data-field="val1"></th>							
+													<th data-field="col2"></th>							
+													<th data-field="val2"></th>							
+												</tr>
+											</thead>
+											
+											<tbody>
+												<tr>
+													<td>名称类型</td>
+													<td>accepted name </td>
+													<td>名称</td>
+													<td>Ursus arctos</td>
+												</tr>
+												<tr>
+													<td>命名信息</td>
+													<td>Linnaeus 1758</td>
+													<td>数据源</td>
+													<td>中国动物志兽纲</td>
+												</tr>		
+												<tr>
+													<td>引证内容</td>
+													<td colspan="3">1758  ursus arctos Linnaeus，Syst. Nat. 10 th ed.1：47（模式产地：瑞典）。</td>
+													<td></td>
+													<td></td>
+												</tr>		
+												<tr>
+													<td>参考文献</td>
+													<td colspan="3">高耀亭等. 1987. 中国动物志·兽纲( 第八卷: 食肉目). 北京: 科学出版社 </td>
+													<td></td>
+													<td></td>
+												</tr>		
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default pull-right"
+										data-dismiss="modal">返回</button>
+								</div>
+							</div>
+						</div>
+					</div>
+                    
+                    <div class="tab-pane fade" id="tab_3">
+                        <h4>
+                            <b>描述信息</b>
+                            <small>&nbsp;从历史资料、志书、文献、书籍、调查报告中提取的描述性文本</small>
+							<p>&nbsp;</p>
+						</h4>
+                        <th:block th:replace="taxon/form3 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(2);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(3);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(4);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane fade" id="tab_4">
+                   	 	<h4>
+                            <b>分布数据</b>
+                            <small>分布数据</small>
+                        </h4>
+                        <th:block th:replace="taxon/form4 :: copy"></th:block>
+                    
+                    
+                    <!-- 
+                        <h4>
+                            <b>分子数据</b>
+                            <small>分子数据</small>
+                        </h4>
+                        <form id="form_4" class="form-horizontal" th:action="@{/}" method="post">
+                            <div class="form-group">
+                                <label for="molecular1" class="col-sm-2 control-label">分子1:</label>
+                                <div class="col-sm-10 col-md-10">
+                                    <input type="text" class="form-control" id="molecular1" name="molecular1"
+                                           placeholder="2～80个字符"/></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="molecular2" class="col-sm-2 control-label">分子2:</label>
+                                <div class="col-sm-10 col-md-10">
+                                    <input type="text" class="form-control" id="molecular2" name="molecular2"
+                                           placeholder="2～80个字符"/></div>
+                            </div>
+                        </form>
+                         -->
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(3);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(4);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(5);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane" id="tab_5">
+                   		<h4>
+                            <b>物种数据</b>
+                            <small>物种数据</small>
+                        </h4>
+                        <th:block th:replace="taxon/form5 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(4);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(5);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(6);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane" id="tab_6">
+                        <h4>
+                            <b>俗名信息</b>
+                            <small>俗名信息</small>
+                        </h4>
+                        <th:block th:replace="taxon/form6 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(5);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(6);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(7);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane" id="tab_7">
+                        <h4>
+                            <b>观测记录</b>
+                            <small>观测记录</small>
+                        </h4>
+                        <th:block th:replace="taxon/form7 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(6);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(7);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(8);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane" id="tab_8">
+                   		<h4>
+                            <b>多媒体信息</b>
+                            <small>多媒体信息</small>
+                        </h4>
+                        <th:block th:replace="taxon/form8 :: copy"></th:block>
+                        <p>
+                        </p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(7);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <!-- <a class="btn btn-app" onclick="resetFrom(5);">
+                                <i class="fa fa-rotate-left"></i>清空表单</a> -->
+                            <a class="btn btn-app" onclick="toStep(9);">
+                                <i class="fa fa-chevron-right"></i>提交</a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div class="tab-pane" id="tab_9">
+                        <h4>
+                            <b>提交确认</b>
+                            <small>提交确认</small>
+                        </h4>
+                        <th:block th:replace="taxon/form9 :: copy"></th:block>
+                        <p></p>
+                        <div class="pull-right">
+                            <a class="btn btn-app" onclick="toStep(8);">
+                                <i class="fa fa-chevron-left"></i>上一步</a>
+                            <a class="btn btn-app" th:href="@{/console/taxon/review/submit(tid=${thisTaxon.id})}"
+                               type="submit"> <i class="fa fa-check"></i> 提交审核
+                            </a>
+                        </div>
+                        <p>&nbsp;</p>
+                        <p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <th:block th:replace="pageFrame/basicsFooter :: copy"></th:block>
+    </footer>
+    <!-- Control Sidebar -->
+    <th:block th:replace="pageFrame/basicsControl :: copy"></th:block>
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- jquery tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.js}"></script>
+<!-- bootstrap-datepicker -->
+<script th:src="@{/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+<!-- bootstrap-fileinput -->
+<script th:src="@{/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/themes/fa/theme.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
+<!-- bootstrap-duallistbox -->
+<!--<script th:src="@{/plugins/bootstrap-duallistbox/js/jquery.bootstrap-duallistbox.min.js}"></script>-->
+<!-- 引入Script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var taxonId= [[${thisTaxon.id}]];
+    /*]]>*/
+</script>
+<script th:src="@{/js/taxon/selectScript.js}"></script>
+<script th:src="@{/js/taxon/stepScript.js}"></script>
+<script th:src="@{/js/taxon/validatorScript.js}"></script>
+<script th:src="@{/js/taxon/taxonScript.js}"></script>
+<script th:src="@{/js/taxon/citationScript.js}"></script>
+<script th:src="@{/js/taxon/descriptionScript.js}"></script>
+<script th:src="@{/js/taxon/distributiondataScript.js}"></script>
+<script th:src="@{/js/taxon/protectionScript.js}"></script>
+<script th:src="@{/js/taxon/taxkeyScript.js}"></script>
+<script th:src="@{/js/taxon/traitdataScript.js}"></script>
+<script th:src="@{/js/taxon/commonameScript.js}"></script>
+<script th:src="@{/js/taxon/occurrenceScript.js}"></script>
+<script th:src="@{/js/taxon/multimediaScript.js}"></script>
+<script th:src="@{/js/taxon/editTaxon.js}"></script>
+<script th:src="@{/js/taxon/editCitation.js}"></script>
+<script th:src="@{/js/taxon/editDescription.js}"></script>
+<script th:src="@{/js/taxon/editDistributiondata.js}"></script>
+<script th:src="@{/js/taxon/editProtection.js}"></script>
+<script th:src="@{/js/taxon/editTraitdata.js}"></script>
+<script th:src="@{/js/taxon/editTaxkey.js}"></script>
+<script th:src="@{/js/taxon/editCommonname.js}"></script>
+<script th:src="@{/js/taxon/editOccurrence.js}"></script>
+<script th:src="@{/js/taxon/editMultimedia.js}"></script>
+
+<script th:src="@{/js/taxon/showTaxon.js}"></script>
+<script th:src="@{/js/taxon/showCitation.js}"></script>
+<script th:src="@{/js/taxon/showDescription.js}"></script>
+<script th:src="@{/js/taxon/showDistributiondata.js}"></script>
+<script th:src="@{/js/taxon/showProtection.js}"></script>
+<script th:src="@{/js/taxon/showTaxkey.js}"></script>
+<script th:src="@{/js/taxon/showTraitdata.js}"></script>
+<script th:src="@{/js/taxon/showCommonname.js}"></script>
+<script th:src="@{/js/taxon/showOccurrence.js}"></script>
+<script th:src="@{/js/taxon/showMultimedia.js}"></script>
+<!-- 加载状态提示 -->
+<script id="loading" type="text/x-jquery-tmpl">
+    <i class="fa fa-refresh fa-spin"></i>
+</script>
+<!-- 引入基础信息模板 -->
+<th:block th:replace="taxon/showTmpl :: copy" />
+<!-- 引入引证模板 -->
+<th:block th:replace="citation/showTmpl :: copy" />
+<!-- 引入文本描述模板 -->
+<th:block th:replace="description/showTmpl :: copy" />
+<!-- 引入分布数据模板 -->
+<th:block th:replace="distributiondata/showTmpl :: copy" />
+<!-- 引入保护数据模板 -->
+<th:block th:replace="protection/showTmpl :: copy" />
+<!-- 引入检索表模板 -->
+<th:block th:replace="taxkey/showTmpl :: copy" />
+<!-- 引入特征数据模板 -->
+<th:block th:replace="traitdata/showTmpl :: copy" />
+<!-- 引入俗名模板 -->
+<th:block th:replace="commonname/showTmpl :: copy" />
+<!-- 引入观测记录模板 -->
+<th:block th:replace="occurrence/showTmpl :: copy" />
+<!-- 引入多媒体信息模板 -->
+<th:block th:replace="multimedia/showTmpl :: copy" />
+<script th:inline="javascript">
+    //显示参考文献模态框
+    function showRef(refjson) {
+        $('#showRefTable').bootstrapTable('load', "[]");
+        $("#refModalTable").modal({
+            keyboard:true,//当按下esc键时，modal框消失
+        });
+        $.get("/console/ref/rest/buildRef",
+            {
+                "refjson":JSON.stringify(refjson)
+            },
+            function(result){
+                $('#showRefTable').bootstrapTable('load',result);
+            });
+    };
+</script>
+</body>
+</html>

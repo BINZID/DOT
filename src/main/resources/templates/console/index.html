@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <style>
+    	.topPadding{margin-left:10%; margin-right:10%}
+    	.padding{margin-left:11.5%; margin-right:10%}
+    	.main{float:left;border:1px;  width:100%;}
+    	.left{float:left;border:1px; width:49.9%;}
+    	.right {float:right;border:1px;  width:49.9%;}
+    	.lefts{float:left;border:1px solid #FFFFFF; width:33.3%;}  
+  	</style>
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+        	<h1>团队 > 
+                <span th:text="${#strings.length(team.name)<13} ? ${team.name} : ${#strings.substring(team.name,0,10)+'...'}" th:title="${team.name}">团队名称</span>
+                <small><span class="hidden" th:text="${#strings.length(team.note)<13} ? ${team.note} : ${#strings.substring(team.note,0,10)+'...'}" th:title="${team.note}">团队备注</span></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li class="active">
+                    <i class="fa fa-users"></i> <span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3><span th:text="${members}"></span><sup style="font-size: 20px">个</sup></h3>
+                            <p>成员</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <a th:href="@{/console/team/details/}+${team.id}" class="small-box-footer">
+                            查看详情 <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-3 col-xs-6">
+                    <!-- small box -->
+                    <div class="small-box bg-gray">
+                        <div class="inner">
+                            <h3><span th:text="${countDataset}"></span><sup style="font-size: 20px">个</sup></h3>
+                            <p>数据集</p>
+                        </div>
+                        <div class="icon">
+                            <i class="fa fa-database"></i>
+                        </div>
+                        <a th:href="@{/console/dataset}" class="small-box-footer">
+                            查看详情 <i class="fa fa-arrow-circle-right"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- ./col -->
+            </div>
+            <div class="row">
+                <div class="col-lg-3 col-xs-6">
+                    <div class="box box-widget widget-user">
+                        <div class="widget-user-header bg-black" style="height: 90px; background: url('/img/dataset-bg.jpg') center center;">
+                            <h3 class="widget-user-username" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" >新建数据集</h3>
+                        </div>
+                        <div class="box-body" style="min-height: 50px">
+                            <h1 class="text-center"><a onclick="createDataset()" href="javascript:void(0)"><i class="fa fa-plus"></i></a></h1>
+                        </div>
+                        <div class="box-footer no-padding">
+                            <ul class="nav nav-stacked">
+                                <li><a class="btn btn-block bg-gray" onclick="createDataset()" href="javascript:void(0)">新建</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="datasetFrame">
+                    <i class="fa fa-refresh fa-spin"></i>
+                </div>
+                <div id="loadingFrame">
+                </div>
+			</div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<script type="text/javascript">
+    //显示Dataset
+    function showDataset(offset,type) {
+        if(type=='first')
+            $("#datasetFrame").empty();
+        else if(type=='more')
+            $("#moreDatasetButton").remove();
+        $("#loading").tmpl().appendTo("#loadingFrame");
+        $.get("console/dataset/rest/datasetList/",
+            {
+                limit:10,
+                offset:offset,
+                async:true
+            },
+            function(data,status){
+                if(status){
+                    try {
+                        //配置Dataset列表
+                        $("#datasetList").tmpl(data).appendTo("#datasetFrame").ready(function () {
+                            $("#loadingFrame").remove();
+                            //配置下一页
+                            if((offset+10)<data.total)
+                                $("#moreDataset").tmpl({ offset: offset+10, type:'more'}).appendTo("#datasetFrame");
+                        });
+                    } catch (err) {
+                        $("#reLoadDataset").tmpl({ offset: 0, type:'first'}).appendTo("#datasetFrame");
+                    }
+                }
+                else{
+                    $("#reLoadDataset").tmpl({ offset: 0, type:'first'}).appendTo("#datasetFrame");
+                }
+            });
+    }
+</script>
+<!-- 加载状态提示 -->
+<script id="loading" type="text/x-jquery-tmpl">
+    <i class="fa fa-refresh fa-spin"></i>
+</script>
+<!-- 重新加载Dataset-->
+<script id="reLoadDataset" type="text/x-jquery-tmpl">
+  <button type="button" class="btn btn-default btn-xs" onclick="showDataset({{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+</script>
+<!-- 加载更多Dataset-->
+<script id="moreDataset" type="text/x-jquery-tmpl">
+  <button id="moreDatasetButton" type="button" class="btn btn-default btn-block" onclick="showDataset({{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+  <br/>
+</script>
+<!-- 构造DataSet -->
+<script id="datasetList" type="text/x-jquery-tmpl">
+    {{each(i,dataset) rows}}
+        <div class="col-lg-3 col-xs-6">
+            <div class="box box-widget widget-user">
+                <div class="box-header bg-gray center" style="height: 50px;">
+                    <h3 class="widget-user-username" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap;" >{{= dataset.dsname}} 
+						&nbsp;<small>{{= dataset.dsabstract}}<small>
+					</h3>
+                </div>
+				<div th:if="${team.leader} eq ${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+                	<div id="{{= dataset.id}}" class="box-body" style="min-height: 102px; background: url('{{= dataset.bgurl}}') center center;" onclick="changeBg('{{= dataset.id}}')">
+					</div>
+                </div>
+				<div th:if="${team.leader} ne ${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+                	<div class="box-body" style="min-height: 135px; background: url('{{= dataset.bgurl}}') center center;">
+                	</div>
+                </div>
+
+                <div class="box-footer no-padding">
+                    <ul class="nav nav-stacked">
+						<li>
+                        	<div class="main">
+                            	<div class="lefts">
+                                	<a class="btn btn-block bg-gray" href="console/taxaset/toTaxasetPage/{{= dataset.id}}">分类单元集</a>
+                            	</div>
+                            	<div class="lefts">
+                            		<a class="btn btn-block bg-gray" href="console/taxtree/toTaxtreePage/{{= dataset.id}}">分类树</a>
+                                </div>
+                                <div class="lefts">
+                                	<a class="btn btn-block bg-gray" href="javascript:void(0)" onclick="building()">进化树</a>
+                                </div>
+                        	</div>
+                        </li>
+						<li th:if="${team.leader} eq ${session.SPRING_SECURITY_CONTEXT.authentication.principal.id}">
+							<div class="main">
+                        		<div class="left">
+                                	<a class="btn btn-block bg-gray" href="console/dataset/edit/{{= dataset.id}}">修改</a>
+                                </div>
+                                <div class="right">
+                                	<a class="btn btn-block bg-gray" onclick="removeObject('{{= dataset.id}}', 'dataset')">删除</a >
+                                </div>
+                       		</div>
+                        </li>
+							
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        showDataset(0,'first');
+    });
+</script>
+
+<script type="text/javascript">
+//AddDatasetLayer
+function createDataset(){
+    var width=$(window).width();
+    var height=$(window).height();
+    var layer_width="90%";
+    var layer_height="90%";
+    if(width>760){
+        layer_width="500px";
+        layer_height="500px";
+    }
+    layer.open({
+        type: 2,
+        title:'<h4>新建数据集</h4>',
+        fixed: false, //不固定
+        area: [layer_width, layer_height],
+        content: '/console/dataset/add/mark'
+    });
+}
+</script>
+
+<script type="text/javascript">
+
+//特征图片的弹出层(管理|上传)
+function changeBg(id) {
+	var width = $(window).width();
+	var height = $(window).height();
+	var layer_width = "90%";
+	var layer_height = "90%";
+	if (width > 760) {
+		layer_width = "700px";
+		layer_height = "500px";
+	}
+
+	layer.confirm('更换数据集背景图片', {
+		title : false,
+		scroller : false,
+		skin : 'layui-layer-lan',
+		btn : [ '确认', '取消' ]
+	// 按钮
+	}, function() {
+		layer.closeAll();
+		layer.open({
+			type : 2,
+			title : '<h4>图片选择</h4>',
+			fixed : false, // 不固定
+			area : [ layer_width, layer_height ],
+			content : '/console/dataset/changeBg/' + id + "/" + 'dataset'
+		});
+
+	}, function() {
+		layer.closeAll();
+	    layer.msg('操作取消', function(){
+	    });
+	});
+}
+	
+</script>
+<script type="text/javascript">
+//构造开发提示
+function building() {
+    layer.msg('正在开发', function(){
+    });
+}
+</script>
+</body>
+</html>

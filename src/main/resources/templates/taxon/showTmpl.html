@@ -1,0 +1,44 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 重新加载基础信息-->
+    <script id="reLoadTaxon" type="text/x-jquery-tmpl">
+      <button type="button" class="btn btn-default btn-xs" onclick="showTaxon('{{= taxonid}}');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+    </script>
+    <!-- 构造基础信息 -->
+    <script id="taxonList" type="text/x-jquery-tmpl">
+        <dl class="dl-horizontal col-md-6">
+            <dt>学名:</dt>
+            <dd><i><small>{{= scientificname}}</small></i></dd>
+            <dt>命名信息:</dt>
+            <dd><small>{{= authorstr}}</small></dd>
+            <dt>种加词/亚种加词:</dt>
+            <dd><small>{{= epithet}}</small></dd>
+            <dt>命名法规:</dt>
+            <dd><small>{{= nomencode}}</small></dd>
+            <dt>分类等级:</dt>
+            <dd><small>{{= rank}}</small></dd>
+        </dl>
+        <div class="col-md-6">
+            <dl class="dl-horizontal">
+                <dt>数据源:</dt>
+                <dd><small>{{= datasources}}</small></dd>
+                <dt>所属分类单元集:</dt>
+                <dd><small>{{= taxaset.tsname}}</small></dd>
+                <dt>备注:</dt>
+                <dd><span>{{= remark}}</span></dd>
+                {{if refjson!='none'}}
+                    <dt>参考文献:</dt>
+                    <dd>
+                        <button type="button" class="btn btn-default btn-xs"
+                                onclick="showRef({{= refjson}});">
+                            <i class="fa fa-list-ol"></i> 查看参考文献
+                        </button>
+                    </dd>
+                {{/if}}
+
+
+            </dl>
+        </div>
+</script>
+</th:block>
+</html>

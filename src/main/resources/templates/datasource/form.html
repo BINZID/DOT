@@ -1,0 +1,129 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:Datasource添加/编辑时的form页
+    Description：超级管理员权限可见的用户添加/编辑时的form页
+    Author：BINZI
+    Created date: 2018/05/28 15:56
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<th:block th:fragment="copy" >
+
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" id="errorMsg" th:value="${errorMsg}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{inputer}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisDatasource.inputtime)}">
+        <input class="hidden" th:field="*{inputtime}" readonly="readonly"></input>
+    </div>
+	    
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="title" class="col-sm-4 control-label">* 数据源名称:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{title}" type="text" class="form-control" id="title" name="title" placeholder="为数据源指定的名称"></input>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="dType" class="col-sm-4 control-label">* 数据源类型:</label>
+			    <div class="col-sm-8">
+			    	<select th:field="*{dType}" class="form-control select2" id="dType" name="dType" style="width: 100%;">
+			            <option selected value =""></option>
+			            <option value ="1">数据库</option>
+			            <option value ="2">网页</option>
+			            <option value ="3">期刊专著</option>
+			            <option value ="4">其他</option>
+				</select>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="versions" class="col-sm-4 control-label">* 数据源版本:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{versions}" type="text" class="form-control" id="versions" name="versions" placeholder="数据源版本"></input>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="dVerifier" class="col-sm-4 control-label">* 审核专家:</label>
+			    <div class="col-sm-8">
+			    	<select th:field="*{dVerifier}" class="form-control select2" id="dVerifier" name="dVerifier" style="width: 100%;"></select>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="creater" class="col-sm-4 control-label">* 创建人:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{creater}" type="text" class="form-control" id="creater" name="creater" placeholder="数据源创建人或机构"></input>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="createtime" class="col-sm-4 control-label">* 创建时间:</label>
+			    <div class="col-sm-8">
+			    	<input type="text" th:field="*{createtime}" class="form-control datepicker" id="createtime" name="createtime" placeholder="数据源创建时间"></input>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="dRightsholder" class="col-sm-4 control-label">版权所有者:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{dRightsholder}" type="text" class="form-control" id="dRightsholder" name="dRightsholder" placeholder="数据的版权持有者或机构"></input>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="dCopyright" class="col-sm-4 control-label">版权声明:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{dCopyright}" type="text" class="form-control" id="dCopyright" name="dCopyright" placeholder="对所属版权的声明文本"></input>
+			    </div>
+			</div>
+		</div>		
+		
+	    <div class="col-md-12">
+			<div class="form-group">
+			    <label for="dAbstract" class="col-sm-2 control-label">* 数据源摘要:</label>
+			    <div class="col-sm-10 col-md-10">
+			        <textarea th:field="*{dAbstract}" id="dAbstract" name="dAbstract" class="form-control" placeholder="描述该数据源的基本信息" rows="4"></textarea>
+			    </div>
+			</div>
+		</div>	  
+		  
+	    <div class="col-md-12">
+			<div class="form-group">
+			    <label for="dKeyword" class="col-sm-2 control-label">关键字:</label>
+			    <div class="col-sm-10 col-md-10">
+			        <input th:field="*{dKeyword}" type="text" class="form-control" id="dKeyword" name="dKeyword" placeholder="一系列描述数据源的关键字"></input>
+			    </div>
+			</div>
+		</div>
+		
+	    <div class="col-md-12">
+			<div class="form-group">
+			    <label for="dLink" class="col-sm-2 control-label">数据源链接:</label>
+			    <div class="col-sm-10 col-md-10">
+			        <input th:field="*{dLink}" type="text" class="form-control" id="dLink" name="dLink" placeholder="数据源的网络链接"></input>
+			    </div>
+			</div>
+		</div>
+		    
+	    <div class="col-md-12">
+		    <div class="form-group">
+		        <label for="info" class="col-sm-2 control-label">说明/备注:</label>
+		        <div class="col-sm-10 col-md-10">
+		            <textarea th:field="*{info}" id="info" name="info" class="form-control" placeholder="0~500个字符" rows="4"></textarea>
+		        </div>
+		    </div>
+		</div>
+    
+</th:block>
+</html>

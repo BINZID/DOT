@@ -1,0 +1,91 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<!-- 模态框（Modal） -->
+	<div class="modal fade bs-model-lg" id="uploadExperts" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg=primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title">专家信息导入</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form id="ffImport" method="post">
+	                    <div title="Excel导入操作" style="padding: 5px">
+							<input id="uploadExpert" name="uploadExpert" type="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></input>
+	                    </div>
+	                </form>
+
+					<div id="uploadExpert-alert-area"></div>
+                    <div class="table table-responsive"><table id="uploadExpert-table-area"></table></div>
+                    <div class="table table-responsive"><table id="uploadExpert-table-errorData"></table></div>
+				</div>
+				
+				<div class="modal-footer">
+					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="SaveImport()">下载</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- table -->
+	<div class="table table-responsive">
+		<!-- 审核专家 -->
+		<h4>
+            <b>审核专家</b>
+            <small>公共数据，为分类单元提供数据支持</small>
+        </h4>
+        <!-- 文件操作 -->
+        <h4>
+	        <b>文件操作</b>
+	        <a class="btn btn-primary btn" data-toggle="modal" onclick="initFileInputForExpert('uploadExpert', '/console/expert/rest/upload', 'expert_table', '/console/expert/rest/uploaded/')" data-target="#uploadExperts">
+		        <i class="fa fa-upload"></i> <span>上传</span>
+		    </a>
+		    
+		    <a class="btn btn-primary btn hidden"  th:href="@{/console/expert/export}">
+		        <i class="fa fa-download"></i> <span>下载</span>
+		    </a>
+	    </h4>
+		<!-- 本次上传的审核专家 -->
+		<h4>
+			<b>本次上传的审核专家：</b>
+		</h4>
+		<table
+			id="expert_table"
+			data-locale="zh-CN"
+			data-classes="table table-hover table-condensed"
+			data-toggle="table"
+			th:attr="data-url=@{/console/expert/rest/uploaded/}"
+			data-pagination="true"
+			data-side-pagination="server"
+			data-page-list="[10, 20, 30, 50, 100]"
+			data-search="true"
+			data-show-columns="true"
+			data-show-toggle="true"
+			data-toolbar="#toolbar"
+			data-show-export="false"
+			data-show-refresh="true"
+			data-export-types="['excel', 'txt']">
+			<thead>
+			<tr>
+			<!-- <th data-field="select" data-align="center" data-sortable="false"></th> -->
+				<th data-field="b.serialNum" data-align="left" data-sortable="true">序号</th>
+				<th data-field="cnName" data-align="center" data-sortable="true">专家姓名</th>
+			    <th data-field="enName" data-align="center" data-sortable="true">专家姓名(英)</th>
+			    <th data-field="expEmail" data-align="center" data-sortable="true">电子邮箱</th>
+			    <th data-field="cnCompany" data-align="center" data-sortable="true">所在单位</th>
+			    <th data-field="enCompany" data-align="center" data-sortable="true">所在单位(英)</th>
+			    <th data-field="cnAddress" data-align="center" data-sortable="true">单位地址</th>
+			    <th data-field="enAddress" data-align="center" data-sortable="true">单位地址(英)</th>
+			    <th data-field="cnHomePage" data-align="center" data-sortable="false">专家主页</th>
+			    <th data-field="enHomePage" data-align="center" data-sortable="false">专家主页(英)</th>
+			    <th data-field="expInfo" data-align="center" data-sortable="true">简介</th>
+			    <!-- <th data-field="edit" data-align="center" data-sortable="false">操  作</th> -->
+			</tr>
+			</thead>
+		</table>
+	</div>
+</th:block>
+
+</html>

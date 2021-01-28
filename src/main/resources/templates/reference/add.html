@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+</head>
+
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- 主界面区 -->
+<div class="wrapper">
+    <!-- 引入Header -->
+    <header id="header" class="main-header">
+        <th:block th:replace="pageFrame/basicsHeader :: copy"></th:block>
+    </header> 
+    <!-- 引入左侧用户操作菜单-->
+    <th:block th:replace="pageFrame/basicsMenu :: copy"></th:block>
+    <!-- 显示区 -->
+    <div class="content-wrapper">
+        <!-- 内容区 -->
+        <section class="container content-header">
+            <h1>
+                新建参考文献
+                <small>添加一个新的参考文献</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <!-- 
+                <li>
+                    <a th:href="@{/console/dataset/show/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                 -->
+                <li><a th:href="@{/console/ref}" href="/"><i class="fa fa-list-ol"></i> 参考文献管理</a></li>
+                <li class="active"><i class="fa fa-plus"></i> 新建</li>
+            </ol>
+        </section>
+        <!-- 内容区 -->
+        <section class="container content">
+            <div class="well">
+                <form id="thisForm" class="form-horizontal" th:action="@{/console/ref/save}" method="post" th:object="${thisRef}">
+                    <div>
+                    </div>
+                    <!-- 引入form -->
+                    <th:block th:replace="reference/form :: copy"></th:block>
+                    <p></p>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="pull-right">
+                                <a class="btn btn-app" th:href="@{/console/ref}" href="/console/ref">
+                                    <i class="fa fa-chevron-left"></i> <span>取消编辑</span>
+                                </a>
+                                <a class="btn btn-app" onclick="clearInput();">
+                                    <i class="fa fa-rotate-left"></i> <span>清空表单</span>
+                                </a>
+                                <button type="submit" class="btn btn-app">
+                                    <i class="fa fa-check"></i> <span>提交</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <th:block th:replace="pageFrame/basicsFooter :: copy"></th:block>
+    </footer>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+
+<!-- jquery tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.js}"></script>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- 引入Script -->
+<script th:src="@{/js/refScript.js}"></script>
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    /*]]>*/
+</script>
+
+</body>
+</html>

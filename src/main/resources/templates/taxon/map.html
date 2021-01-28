@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:控制台首页
+    Description：控制台首页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- basicsCss -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- map-->
+    <link rel="stylesheet" href="http://cache.amap.com/lbs/static/main1119.css"/>
+    <!-- 引入css -->
+    <style>
+        #mapLocality{
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            background: #fff none repeat scroll 0 0;
+            border: 1px solid #ccc;
+            margin: 10px auto;
+            padding: 10px;
+            font-family: "Microsoft Yahei", "Î¢ÈíÑÅºÚ", "Pinghei";
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-leaf fixed layout-top-nav">
+<!-- 主界面区 -->
+<div id="map" style="height: 760px;">
+
+</div>
+<div id="mapLocality">
+    <p><i class="fa fa-map-marker"></i> <span id="locality_map"></span></p>
+    <button type="button" class="btn btn-success btn-xs" onclick="parent.layer.close(parent.layer.getFrameIndex(window.name));">确定</button>
+</div>
+<!-- 搜索框 -->
+<div id="myPageTop">
+    <table>
+        <tr>
+            <td>
+                <label>请输入关键字：</label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="tipinput"/>
+            </td>
+        </tr>
+    </table>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+
+<!-- map -->
+<script type="text/javascript" src='//webapi.amap.com/maps?v=1.4.2&key=7def2ebf39d6a572596a052bac5804c5&plugin=AMap.ToolBar,AMap.Autocomplete,AMap.PlaceSearch'></script>
+<!-- UI组件库 1.0 -->
+<script src="//webapi.amap.com/ui/1.0/main.js?v=1.0.11"></script>
+
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var occurrenceId= [[${occurrenceId}]];
+    var forType= [[${forType}]];
+    /*]]>*/
+    var map = new AMap.Map('map', {
+        zoom: 12,
+        resizeEnable: true
+    });
+    //输入提示
+    var autoOptions = {
+        input: "tipinput"
+    };
+    var auto = new AMap.Autocomplete(autoOptions);
+    var placeSearch = new AMap.PlaceSearch({
+        map: map
+    });  //构造地点查询类
+    AMap.event.addListener(auto, "select", select);//注册监听，当选中某条记录时会触发
+    function select(e) {
+        placeSearch.setCity(e.poi.adcode);
+        placeSearch.search(e.poi.name);  //关键字查询查询
+    }
+    AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
+        var positionPicker = new PositionPicker({
+            mode: 'dragMap',
+            map: map
+        });
+
+        positionPicker.on('success', function(positionResult) {
+            //document.getElementById('province').value=positionResult.regeocode.addressComponent.province;
+            //document.getElementById('county').value=positionResult.regeocode.addressComponent.district;
+            document.getElementById('locality_map').innerHTML=positionResult.address;
+            parent.$('#'+forType+'_province_'+occurrenceId).val(positionResult.regeocode.addressComponent.province);
+            parent.$('#'+forType+'_city_'+occurrenceId).val(positionResult.regeocode.addressComponent.city);
+            parent.$('#'+forType+'_county_'+occurrenceId).val(positionResult.regeocode.addressComponent.district);
+            parent.$('#'+forType+'_locality_'+occurrenceId).val(positionResult.address.substr(positionResult.address.lastIndexOf(positionResult.regeocode.addressComponent.district)+positionResult.regeocode.addressComponent.district.length));
+            parent.$('#'+forType+'_location_'+occurrenceId).val(positionResult.address);
+            parent.$('#'+forType+'_lat_'+occurrenceId).val(positionResult.position.lat);
+            parent.$('#'+forType+'_lng_'+occurrenceId).val(positionResult.position.lng);
+            //parent.getElementById('occurrence_province_'+occurrenceId).innerHTML=positionResult.province;
+            //document.getElementById('lngid').value=positionResult.position.lng;
+            //document.getElementById('latid').value=positionResult.position.lat;
+            /* document.getElementById('lnglat').innerHTML = positionResult.position;
+            document.getElementById('address').innerHTML = positionResult.address;
+            document.getElementById('nearestJunction').innerHTML = positionResult.nearestJunction;
+            document.getElementById('nearestRoad').innerHTML = positionResult.nearestRoad;
+            document.getElementById('nearestPOI').innerHTML = positionResult.nearestPOI; */
+        });
+        positionPicker.on('fail', function(positionResult) {
+            /* document.getElementById('lnglat').innerHTML = ' ';
+            document.getElementById('address').innerHTML = ' ';
+            document.getElementById('nearestJunction').innerHTML = ' ';
+            document.getElementById('nearestRoad').innerHTML = ' ';
+            document.getElementById('nearestPOI').innerHTML = ' '; */
+        });
+        var onModeChange = function(e) {
+            positionPicker.setMode(e.target.value)
+        }
+        /*  var startButton = document.getElementById('start');
+         var stopButton = document.getElementById('stop');
+         var dragMapMode = document.getElementsByName('mode')[0];
+         var dragMarkerMode = document.getElementsByName('mode')[1];
+         AMap.event.addDomListener(startButton, 'click', function() {
+             positionPicker.start(map.getBounds().getSouthWest())
+         })
+         AMap.event.addDomListener(stopButton, 'click', function() {
+             positionPicker.stop();
+         })
+         AMap.event.addDomListener(dragMapMode, 'change', onModeChange)
+         AMap.event.addDomListener(dragMarkerMode, 'change', onModeChange); */
+        positionPicker.start();
+        map.panBy(0, 1);
+    });
+</script>
+
+</body>
+</html>

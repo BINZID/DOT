@@ -1,0 +1,212 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<form id="form_3" class="form-horizontal" th:action="@{/}" method="post">
+		<div>
+			<div class="hidden">
+				<input id="descriptions" th:value="${thisTaxon.descriptions}"></input>
+			</div>
+			<div class="tab-content">
+				<!-- 文本数据面板 -->
+				<div role="tabpanel" class="tab-pane active" id="description">
+					<div id="newDescription"></div>
+					<a class="btn btn-app" onclick="addDescription ();"> <i
+						class="fa fa-plus"></i>添加新描述
+					</a> 
+					<input class="hidden" id="countDescription" name="countDescription" value="0"></input>
+					<!-- 文本数据模板 -->
+					<script id="descriptionForm" type="text/x-jquery-tmpl">
+                        <form class="panel panel-default" id="descriptionForm_${num}" th:action="@{/}" method="post">
+							<input class="hidden" id="descriptionId_${num}" name="descriptionId_${num}"></input>
+                          <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                              <i class="fa fa-check-circle hidden" id="descriptionStatus_${num}"></i>
+                              <a id="descriptionCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#descriptionCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的描述</a>
+                              <a role="button" class="pull-right" onclick="removeDescription(${num});">
+                                <i class="fa fa-remove"></i>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="descriptionCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="destitle_${num}" class="col-sm-4 control-label">* 描述标题:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="destitle_${num}" name="destitle_${num}" placeholder="描述标题" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="destypeid_${num}" class="col-sm-4 control-label">* 描述类型:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="destypeid_${num}" name="destypeid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="desdate_${num}" class="col-sm-4 control-label">描述时间:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="desdate_${num}" name="desdate_${num}" placeholder="描述时间，一般为年份" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="describer_${num}" class="col-sm-4 control-label">描述人:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="describer_${num}" name="describer_${num}" placeholder="描述人" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="language_${num}" class="col-sm-4 control-label">* 描述语言:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="language_${num}" name="language_${num}" style="width: 100%;">
+										 <option selected value =""></option>
+										 <option value ="1">中文</option>
+                     				     <option value ="2">英语</option>
+                     				     <option value ="3">法语</option>
+                     				     <option value ="4">俄罗斯语</option>
+                     				     <option value ="5">西班牙语</option>
+                     				     <option value ="6">其他</option>
+									</select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="descriptionsourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="descriptionsourcesid_${num}" name="descriptionsourcesid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="rightsholder_${num}" class="col-sm-4 control-label">权利所有人:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="rightsholder_${num}" name="rightsholder_${num}" placeholder="描述的权利所有人" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="licenseid_${num}" class="col-sm-4 control-label">* 共享协议:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="licenseid_${num}" name="licenseid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="descontent_${num}" class="col-sm-2 control-label">* 描述原文:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <textarea class="form-control" rows="3" id="descontent_${num}" name="descontent_${num}" placeholder="描述原文"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="relation_${num}" class="col-sm-2 control-label">关系:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <div class="input-group" id="relation">
+                                      <select class="form-control select2 col-sm-6 col-md-6" id="relationDes_${num}" name="relationDes_${num}" style="width: 100%;">
+										
+									  </select>
+                                      <div class="input-group-btn">
+                                        <button type="button" id="relationBtn_${num}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">选择关系
+                                          <span class="fa fa-caret-down"></span></button>
+                                        <ul class="dropdown-menu">
+                                          <li>
+                                            <a onclick="selectRelation(${num},0,'无关系');">无关系</a></li>
+                                          <li>
+                                            <a onclick="selectRelation(${num},1,'的 翻译');">的 翻译</a></li>
+                                          <li>
+                                            <a onclick="selectRelation(${num},2,'的 总结');">的 总结</a></li>
+                                          <li>
+                                            <a onclick="selectRelation(${num},3,'的 说明');">的 说明</a></li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <input class="hidden" id="relationId_${num}" name="relationId_${num}"></input>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="descriptionremark_${num}" class="col-sm-2 control-label">备注:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <input type="text" class="form-control" id="descriptionremark_${num}" name="descriptionremark_${num}" placeholder="备注信息" /></div>
+                                </div>
+                              </div>
+
+                              <input class="hidden" id="descDescReferences_${num}" name="descDescReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countDescriptionReferences_${num}" name="countDescriptionReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countDescReferences_${num}" name="countDescReferences_${num}" value="0"></input>
+                              
+	                          <div class="col-md-12">
+	                              <div class="form-group">
+	                                  <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					                  <div class="col-sm-2 col-md-2">
+		      		                 	<select class="form-control select2" id="descriptionSearchPara_${num}" name="descriptionSearchPara_${num}" style="width: 100%;">
+					                  		<option selected="selected"></option>
+					                  		<option value="refstr">完整题录</option>
+					                  		<option value="pyear">发表年代</option>
+					                  		<option value="title">题目</option>
+					                  		<option value="author">作者</option>
+					                  	</select>
+	          		                  </div>	
+	                                  <div class="col-sm-4 col-md-4">
+	                         		  <input type="text" class="form-control" id="descriptionPyear_${num}" name="descriptionPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	                                  </div>
+	                              </div>
+	                          </div>
+
+							  <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="refjson" class="col-sm-2 control-label"></label>
+                                  <div class="col-sm-10 col-md-10 table-responsive">
+                                    <table class="table table-hover table-condensed">
+                                      <tbody id="newDescriptionReferences_${num}"></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="addDescriptionReferences (${num});">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button type="button" class="btn btn-primary pull-right" onclick="submitDescription(${num});">确认</button></div>
+                          </div>
+                        </form>
+                    </script>
+					<!-- 文本数据的参考文献模板 -->
+					<script id="descriptionReferencesForm" type="text/x-jquery-tmpl">
+                        <tr id="descriptionReferencesForm_${dnum}_${num}">
+                          <td><label class="control-label">[${num}]</label><td>
+                          <div class="form-group">
+                            <div class="col-sm-8 col-md-8 col-xs-12">
+                              <div class="input-group">
+                                <select class="form-control select2" id="descriptionReferences_${dnum}_${num}" name="descriptionReferences_${dnum}_${num}" style="width: 100%;"></select>
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-default dropdown-toggle" onclick="removeDescriptionReferences(${dnum},${num});">
+                                    <i class="fa fa-remove"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="descriptionReferencesPageS_${dnum}_${num}" name="descriptionReferencesPageS_${dnum}_${num}" placeholder="起始页" /></div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="descriptionReferencesPageE_${dnum}_${num}" name="descriptionReferencesPageE_${dnum}_${num}" placeholder="终止页" /></div>
+                          </td>
+                        </tr>
+                    </script>
+				</div>
+				
+			</div>
+		</div>
+	</form>
+</th:block>
+
+</html>

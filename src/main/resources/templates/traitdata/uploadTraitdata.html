@@ -1,0 +1,91 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<!-- 模态框（Modal） -->
+	<div class="modal fade bs-model-lg" id="uploadTraitdatas" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg=primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title">特征数据导入</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form id="ffImport" method="post">
+	                    <div title="Excel导入操作" style="padding: 5px">
+							<input id="uploadTraitdata" name="uploadTraitdata" type="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></input>
+	                    </div>
+	                </form>
+					<div id="uploadTraitdata-alert-area"></div>
+					<div class="table table-responsive"><table id="uploadTraitdata-table-errorData"></table></div>
+				</div>
+				
+				<div class="modal-footer">
+					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="SaveImport()">下载</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- table -->
+	<div class="table table-responsive">
+		<!-- 特征数据 -->
+		<h4>
+            <b>术语集</b>
+			<small>
+		    	<select class="form-control select2" id="traitset" name="traitset" style="width: 15%;">
+					<option selected value=""></option>
+				</select>
+		    </small>
+        </h4>
+        <!-- 文件操作 -->
+        <h4>
+	        <b>文件操作</b>
+	        <a class="btn btn-primary btn" data-toggle="modal" onclick="initFileInputForTraitdata('uploadTraitdata', '/console/traitdata/rest/upload', 'traitdata_table', '/console/traitdata/rest/uploaded/')" data-target="#uploadTraitdatas">
+		        <i class="fa fa-upload"></i> <span>上传</span>
+		    </a>
+		    <a class="btn btn-primary btn hidden"  th:href="@{/console/traitdata/export}">
+		        <i class="fa fa-download"></i> <span>下载</span>
+		    </a>
+			
+	    </h4>
+	    <!-- 本次上传的特征数据 -->
+		<h4>
+			<b>本次上传的特征数据：</b>
+		</h4>
+	    
+		<!-- 个人taxaset列表展示 -->
+	    <table
+	            id="traitdata_table"
+	            data-locale="zh-CN"
+	            data-classes="table table-hover table-condensed"
+	            data-toggle="table"
+	            th:attr="data-url=@{/console/traitdata/rest/uploaded/}"	
+	            data-pagination="true"
+	            data-side-pagination="server"
+	            data-page-list="[10, 20, 30, 50, 100]"
+	            data-search="true"
+	            data-show-columns="true"
+	            data-show-toggle="true"
+	            data-toolbar="#toolbar"
+	            data-show-export="false"
+	            data-show-refresh="true"
+	            data-export-types="['excel', 'txt']">
+	        <thead>
+	        <tr>
+	            <!-- <th data-field="select" data-align="center" data-sortable="false"></th> -->
+	            <th data-field="traitontology" data-align="center" data-sortable="false">术语</th>
+	            <th data-field="traitProperty" data-align="center" data-sortable="false">属性</th>
+	            <th data-field="traitValue" data-align="center" data-sortable="false">值</th>
+	            <th data-field="traitUnit" data-align="center" data-sortable="false">单位</th>
+	            <th data-field="traitBase" data-align="center" data-sortable="false">测量依据</th>
+	            <th data-field="expert" data-align="center" data-sortable="false">审核专家</th>
+	            <th data-field="inputer" data-align="center" data-sortable="false">创建人</th>
+	            <th data-field="inputtime" data-align="center" data-sortable="true">创建时间</th>
+	            <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+	            <!-- <th data-field="edit" data-align="center" data-sortable="false">操作</th> -->
+	        </tr>
+	        </thead>
+	    </table>
+	</div>
+</th:block>
+</html>

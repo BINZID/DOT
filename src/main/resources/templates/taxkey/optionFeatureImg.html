@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:特征图片查看/管理页面
+    Description：特征图片查看/管理页面
+    Author：BINZI
+    Created date: 2018/08/09 10:43
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+</head>
+<body>    
+	<!-- 内容区 -->
+	<section class="content">
+	    <!-- table -->
+	    <div class="table table-responsive">
+	    <!-- 个人taxaset列表展示 -->
+	        <table
+	        		id="results_table"
+                    data-locale="zh-CN"
+                    data-classes="table table-hover table-condensed"
+                    data-toggle="table"
+                    th:attr="data-url=@{console/keyitem/rest/featureImgList}"	
+                    data-pagination="true"
+                    data-side-pagination="server"
+                    data-page-list="[10, 20, 30, 50, 100]"
+                    data-search="true"
+                    data-show-export="false"
+                    data-export-types="['excel', 'txt']">
+	            <thead>
+	            <tr>
+					<!-- 遍历JSON数据 -->
+	                <th data-field="featureimgjson" data-align="center" data-sortable="true">特征图片</th>
+	                <th data-field="edit" data-align="center" data-sortable="false" data-width="1%">操作</th> 
+	            </tr>
+	            </thead>
+	        </table>
+	    </div>
+	</section>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script th:src="@{/js/taxon/taxkeyScript.js}"></script>
+</body>
+<script type="text/javascript">
+//显示大图
+function showLargeImage(url) {
+    var imageData={
+        "title": "", //标题
+        "id": 1, //id
+        "start": 0, //初始显示的图片序号，默认0
+        "data": [   //相册包含的图片，数组格式
+            {
+                "alt": "",
+                "pid": 1, //图片id
+                "src": url, //原图地址
+                "thumb": "" //缩略图地址
+            }
+        ]
+    };
+    layer.photos({
+        photos: imageData
+        ,anim: 5
+    });
+}
+
+</script>
+</html>

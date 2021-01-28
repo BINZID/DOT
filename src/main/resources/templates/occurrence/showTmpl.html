@@ -1,0 +1,61 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 重新加载观测记录-->
+    <script id="reLoadOccurrence" type="text/x-jquery-tmpl">
+      <button type="button" class="btn btn-default btn-xs" onclick="showOccurrence('{{= taxonid}}',{{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+    </script>
+    <!-- 加载更多观测记录-->
+    <script id="moreOccurrence" type="text/x-jquery-tmpl">
+      <button id="moreOccurrenceButton" type="button" class="btn btn-default btn-block btn-xs" onclick="showOccurrence('{{= taxonid}}',{{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+    </script>
+    <!-- 构造观测记录 -->
+    <script id="occurrenceList" type="text/x-jquery-tmpl">
+    {{each(i,occurrence) rows}}
+        <div class="col-md-6">
+            <div class="panel panel-default" id="occurrenceForm_{{= occurrence.id}}">
+                <div class="panel-heading" role="tab" id="heading1">
+                    <h4 class="panel-title">
+                        <a id="occurrenceCollapseTitle_{{= occurrence.id}}" role="button" data-toggle="collapse" data-parent="#accordion" href="#occurrenceCollapse_{{= occurrence.id}}" aria-expanded="true" aria-controls="collapse1">
+                            <span id="occurrenceName_{{= occurrence.id}}">{{= occurrence.eventdate}}</span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="occurrenceCollapse_{{= occurrence.id}}" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>记录日期:</dt>
+                            <dd><small>{{= occurrence.eventdate}}</small></dd>
+                            <dt>观测类型:</dt>
+                            <dd><small>{{= occurrence.type}}</small></dd>
+                            <dt>数据源:</dt>
+                            <dd><small>{{= occurrence.sourcesid}}</small></dd>
+                            <dt>观测地点:</dt>
+                            <dd><small>{{= occurrence.location}}</small></dd>
+                            <dt>国家:</dt>
+                            <dd><small>{{= occurrence.country}}</small></dd>
+                            <dt>省/洲:</dt>
+                            <dd><small>{{= occurrence.province}}</small></dd>
+                            <dt>城市:</dt>
+                            <dd><small>{{= occurrence.city}}</small></dd>
+                            <dt>县/区:</dt>
+                            <dd><small>{{= occurrence.county}}</small></dd>
+                            <dt>小地名:</dt>
+                            <dd><small>{{= occurrence.locality}}</small></dd>
+                            <dt>坐标:</dt>
+                            <dd><small>( 经度：{{= occurrence.lng}} , 纬度：{{= occurrence.lat}} )</small></dd>
+                            <dt>参考文献:</dt>
+                            <dd>
+                                <button type="button" class="btn btn-default btn-xs"
+                                        onclick="showRef({{= occurrence.refjson}});">
+                                    <i class="fa fa-list-ol"></i> 查看参考文献
+                                </button>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+</th:block>
+</html>

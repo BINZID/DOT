@@ -1,0 +1,99 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:Datasource添加/编辑时的form页
+    Description：超级管理员权限可见的用户添加/编辑时的form页
+    Author：BINZI
+    Created date: 2018/05/28 15:56
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<th:block th:fragment="copy" >
+
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input id="errorMsg" class="hidden" th:value="${errorMsg}" readonly="readonly"></input>
+<!--     <input class="hidden" id="id" class="hidden" th:value="${thisExpert.id}" readonly="readonly"></input> -->
+    
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="cnName" class="col-sm-4 control-label">* 专家姓名:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{cnName}" type="text" class="form-control" id="cnName" name="cnName" placeholder="专家中文名"/>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="enName" class="col-sm-4 control-label">专家姓名:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{enName}" type="text" class="form-control" id="enName" name="enName" placeholder="专家英文名"/>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="cnCompany" class="col-sm-4 control-label">* 单位名称:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{cnCompany}" type="text" class="form-control" id="cnCompany" name="cnCompany" placeholder="专家所在单位中文名称"/>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="enCompany" class="col-sm-4 control-label">单位名称:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{enCompany}" type="text" class="form-control" id="enCompany" name="enCompany" placeholder="专家所在单位英文名称"/>
+			    </div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="cnAddress" class="col-sm-4 control-label">* 单位地址:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{cnAddress}" type="text" class="form-control" id="cnAddress" name="cnAddress" placeholder="单位地址(中文)"/>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="enAddress" class="col-sm-4 control-label">单位地址:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{enAddress}" type="text" class="form-control" id="enAddress" name="enAddress" placeholder="单位地址(英文)"/>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="cnHomePage" class="col-sm-4 control-label">* 专家主页:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{cnHomePage}" type="text" class="form-control" id="cnHomePage" name="cnHomePage" placeholder="专家主页(中文)"/>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="enHomePage" class="col-sm-4 control-label">专家主页:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{enHomePage}" type="text" class="form-control" id="enHomePage" name="enHomePage" placeholder="专家主页(英文)"/>
+			    </div>
+			</div>
+		</div>		
+		<div class="col-md-6">
+			<div class="form-group">
+			    <label for="expEmail" class="col-sm-4 control-label">* 专家邮箱:</label>
+			    <div class="col-sm-8">
+			        <input th:field="*{expEmail}" type="email" class="form-control" id="expEmail" name="expEmail" placeholder="专家主页邮箱"/>
+			    </div>
+			</div>
+		</div>		
+		 
+	    <div class="col-md-12">
+		    <div class="form-group">
+		        <label for="expInfo" class="col-sm-2 control-label">说明/备注:</label>
+		        <div class="col-sm-10 col-md-10">
+		            <textarea th:field="*{expInfo}" id="expInfo" name="expInfo" class="form-control" placeholder="专家信息简介" rows="4"></textarea>
+		        </div>
+		    </div>
+		</div>
+	   
+</th:block>
+</html>

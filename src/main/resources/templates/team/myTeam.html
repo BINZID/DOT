@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:团队管理的首页
+    Description：团队管理首页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, team-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE&nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:substituteby="pageFrame/basicsCss :: copy" />
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                团队管理
+                <small>在这里您可以对您的团队成员进行管理</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li class="active"><i class="fa fa-teams"></i> 团队管理</li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+        	<input id="Permission" name="Permission" th:value="${Permission}" class="hidden" readonly="readonly"></input>
+            <div class="box box-default box-solid">
+                <!-- box-header -->
+                <div class="box-header with-border">
+                    <h3 class="box-title">操作</h3>
+                    <!-- box-tools -->
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- box-body -->
+                <div class="box-body">
+                    <a class="btn btn-app" th:href="@{/console/team/add}" href="/team/add">
+                        <i class="fa fa-plus"></i> 新建
+                    </a>
+                    <a class="btn btn-app" onclick="editSelectObject('team');">
+                        <i class="fa fa-edit"></i> 修改
+                    </a>
+                    <a class="btn btn-app" onclick="removeSelectObject('team');">
+                        <i class="fa fa-remove"></i> 删除
+                    </a>
+                    <a class="btn btn-app" onclick="inviteObject('team');">
+                        <i class="fa fa-user-plus"></i> 邀请
+                    </a>
+                </div>
+            </div>
+            <!-- table -->
+            <div class="table table-responsive">
+                <table
+                        id="results_table"
+                        data-locale="zh-CN"
+                        data-classes="table table-hover table-condensed"
+                        data-toggle="table"
+                        th:attr="data-url=@{/console/team/rest/list}"
+                        data-pagination="true"
+                        data-side-pagination="server"
+                        data-page-list="[10, 20, 30, 50, 100]"
+                        data-search="true"
+                        data-show-columns="true"
+                        data-show-toggle="true"
+                        data-toolbar="#toolbar"
+                        data-show-export="false"
+                        data-show-refresh="true"
+                        data-export-types="['excel', 'txt']">
+                    <thead>
+                    <tr>
+                        <th data-field="select" data-align="center" data-sortable="false"></th>
+                        <th data-field="name" data-align="center" data-sortable="true">团队名称</th>
+                        <th data-field="leader" data-align="center" data-sortable="true">团队负责人</th>
+                        <th data-field="members" data-align="center" data-sortable="false">团队成员</th>
+                        <th data-field="adddate" data-align="center" data-sortable="true">建立时间</th>
+                        <th data-field="edit" data-align="center" data-sortable="false">操作</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script type="text/javascript">
+    if($('#Permission').val())
+    	layer.msg($('#Permission').val());
+</script>
+</body>
+</html>

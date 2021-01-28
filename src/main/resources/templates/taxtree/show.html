@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <!-- 引入zTree -->
+    <!--<link rel="stylesheet" th:href="@{/plugins/zTree/css/zTreeStyle/zTreeStyle.css}" type="text/css"/>-->
+    <link rel="stylesheet" th:href="@{/plugins/zTree/css/metroStyle/metroStyle.css}" type="text/css"/>
+    <style type="text/css">
+        div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;padding: 2px;}
+        div#rMenu ul li{
+            margin: 0;
+            padding: 0 5px;
+            cursor: pointer;
+            list-style: none outside none;
+            background-color: #DFDFDF;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+        	<h1>分类树 > 
+                <span th:text="${thisTaxtree.treename}">分类树名称</span>
+                <small><span th:text="${#strings.length(thisTaxtree.treeinfo)<13} ? ${thisTaxtree.treeinfo} : ${#strings.substring(thisTaxtree.treeinfo,0,10)+'...'}" th:title="${thisTaxtree.treeinfo}">分类树备注</span></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxtree/toTaxtreePage/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li class="active"><i class="fa fa fa-sitemap"></i> <span th:text="${#strings.length(thisTaxtree.treename)<13} ? ${thisTaxtree.treename} : ${#strings.substring(thisTaxtree.treename,0,10)+'...'}" th:title="${thisTaxtree.treename}">树名称</span></li>
+            </ol>
+        </section>
+        <section class="content">
+            <div class="col-md-4">
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-file-text-o"></i> 分类树信息</h3>
+                    </div>
+                    <!-- box-body -->
+                    <div class="box-body">
+                        <dl class="dl-horizontal taxon-details">
+                            <dt>分类树名称:</dt>
+                            <dd><span th:text="${thisTaxtree.treename}"></span></dd>
+                            <dt>分类树简介:</dt>
+                            <dd><span th:text="${#strings.length(thisTaxtree.treeinfo)<13} ? ${thisTaxtree.treeinfo} : ${#strings.substring(thisTaxtree.treeinfo,0,10)+'...'}" th:title="${thisTaxtree.treeinfo}"></span></dd>
+                            
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-sitemap"></i> 分类树结构</h3>
+                    </div>
+                    <!-- box-body -->
+                    <div class="box-body">
+                        <ul id="taxTree" class="ztree" style="min-height: 50px"></ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rMenu">
+                <ul>
+                    <li id="m_add" onclick="addTreeNode();">增加节点</li>
+                    <li id="m_del" onclick="removeTreeNode();">删除节点</li>
+                </ul>
+            </div>
+
+            <!-- table -->
+            <div class="table table-responsive">
+
+            </div>
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<script th:src="@{/plugins/zTree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/plugins/zTree/js/jquery.ztree.excheck.js}"></script>
+<script th:src="@{/plugins/zTree/js/jquery.ztree.exedit.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var taxTreeId = [[${thisTaxtree.id}]];
+    /*]]>*/
+    var setting = {
+    		 view: {
+    		        addHoverDom: addHoverDom,
+    		        removeHoverDom: removeHoverDom,
+    		    },
+    		edit: {
+    	        enable: true,
+    	        showRemoveBtn: true,
+    	        showRenameBtn: true
+    	    },
+        data: {
+            key: {
+                title:"title"
+            }
+        },
+        view: {
+            fontCss : {'font-style':'italic'},
+            nameIsHTML: true
+        },
+        async: {
+            enable: true,
+            type:"get",
+            url:"/console/taxtree/rest/showChildren",
+            //contentType: "application/json",
+            autoParam:["id", "name", "title"],
+            otherParam:{"taxtreeId":taxTreeId},
+            dataFilter: filter
+        },
+        callback:{
+            // beforeAsync: zTreeBeforeAsync, // 异步加载事件之前得到相应信息
+            onAsyncError: zTreeOnAsyncError, //加载错误的fun
+            onAsyncSuccess: zTreeOnAsyncSuccess,//异步加载成功的fun
+            beforeClick:beforeClick //捕获单击节点之前的事件回调函数
+        }
+    };
+
+    function filter(treeId, parentNode, childNodes) {
+        if (!childNodes) return null;
+        for (var i=0, l=childNodes.length; i<l; i++) {
+            childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+        }
+        return childNodes;
+    }
+    function beforeClick(treeId,treeNode){
+        if(!treeNode.isParent){
+            //alert("请选择父节点");
+            return false;
+        }else{
+            return true;
+        }
+    }
+    
+    
+    var newCount = 1;
+    function addHoverDom(treeId, treeNode) {
+    	alert("012" + treeId)
+        var sObj = $("#" + treeNode.tId + "_span");
+        if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
+        var addStr = "<span class='button add' id='addBtn_" + treeNode.tId
+            + "' title='add node' onfocus='this.blur();'></span>";
+        sObj.after(addStr);
+        var btn = $("#addBtn_"+treeNode.tId);
+        if (btn) btn.bind("click", function(){
+            var zTree = $.fn.zTree.getZTreeObj("taxTree");
+            zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"new node" + (newCount++)});
+            return false;
+        });
+    };
+    function removeHoverDom(treeId, treeNode) {
+    	alert("013" + treeId)
+        $("#addBtn_"+treeNode.tId).unbind().remove();
+    };
+    
+    
+    function zTreeOnAsyncError(event, treeId, treeNode){
+        alert("加载失败!");
+    }
+    function zTreeOnAsyncSuccess(event, treeId, treeNode, msg){
+    }
+    $(document).ready(function(){
+        //var csrfs=$("input[name='_csrf']").val();
+        //alert(csrfs);
+        $(document).ajaxSend(function(e, xhr, options) {
+            //xhr.setRequestHeader("X-CSRF-TOKEN", csrfs);
+        });
+        $.fn.zTree.init($("#taxTree"), setting);
+    });
+
+    //显示taxon详情
+    function showTaxon(taxonId) {
+        layer.msg('是否查看该分类单元详情？', {
+            time: 0 //不自动关闭
+            ,btn: ['查看', '取消']
+            ,yes: function(index){
+                layer.close(index);
+                window.open("console/taxon/show/"+taxonId);
+            }
+        });
+    }
+</script>
+</body>
+</html>

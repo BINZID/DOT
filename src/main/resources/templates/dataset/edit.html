@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:控制台首页
+    Description：控制台首页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+
+	Version 0.0.1
+	Copyright © 2017-2018 The Research Group of Biodiversity Informatics. All rights reserved.
+	Failed to convert property value of type 'java.lang.String' to required type 'java.util.Date' for property 'createdDate'; 
+	nested exception is org.springframework.core.convert.ConversionFailedException: 
+	Failed to convert from type [java.lang.String] to type [@javax.persistence.Temporal java.util.Date] for value '2018-04-17 10:38:39.0'; 
+	nested exception is java.lang.IllegalArgumentException;
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+	<!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+</head>
+
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- 主界面区 -->
+<div class="wrapper">
+    <!-- 引入Header -->
+    <header id="header" class="main-header">
+        <th:block th:replace="pageFrame/basicsHeader :: copy"></th:block>
+    </header>
+    <!-- 引入左侧用户操作菜单-->
+    <th:block th:replace="pageFrame/basicsMenu :: copy"></th:block>
+    <!-- 显示区 -->
+    <div class="content-wrapper">
+        <!-- 内容区 -->
+        <section class="container content-header">
+            <h3>
+                <span>编辑数据集</span><br/>
+                <small>在这里您可以对一个已有的数据集信息进行修改</small>
+            </h3>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/console/user/info}" href="/"><i class="fa fa-user"></i> <span>我的数据</span></a></li>
+                <li><a th:href="@{/console/dataset}" href="user"><i class="fa fa-cubes"></i> <span>数据集管理</span></a></li>
+                <li class="active"><i class="fa fa-edit"></i> <span>编辑数据集</span></li>
+            </ol>
+        </section>
+        <!-- 内容区 -->
+        <section class="container content">
+            <div class="well">
+                <form id="thisForm" class="form-horizontal" th:action="@{/console/dataset/save}" method="post" th:object="${thisDataset}">
+                    <!-- 引入form -->
+                    <th:block th:replace="dataset/form :: copy"></th:block>
+                    <p></p>
+                    <div class="form-group">
+                        <div class="col-sm-12">
+                            <div class="pull-right">
+                                <a class="btn btn-app" th:href="@{/console/dataset}" href="/console/dataset">
+                                    <i class="fa fa-chevron-left"></i> <span>取消编辑</span>
+                                </a>
+                                <a class="btn btn-app" onclick="clearInput();">
+                                    <i class="fa fa-rotate-left"></i> <span>清空表单</span>
+                                </a>
+                                <button type="submit" class="btn btn-app">
+                                    <i class="fa fa-check"></i> <span>提交</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <th:block th:replace="pageFrame/basicsFooter :: copy"></th:block>
+    </footer>
+</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script th:src="@{/js/datasetScript.js}"></script>
+<script th:src="@{/js/taxon/selectScript.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    var status = [[${thisDataset.status}]];
+    var lisenceid= [[${thisDataset.lisenceid}]];
+    /*]]>*/
+    
+    /* 回显审核专家 */
+    if (null != lisenceid) {
+		$.get("/console/license/rest/editLicense/"+lisenceid, function(data){
+			$("#lisenceid").append(new Option(data.text, lisenceid, false, true));
+			$("#lisenceid").trigger("change");
+		});
+	}
+	$("#status").val(status).trigger('change');
+</script>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_5" class="form-horizontal" th:action="@{/}" method="post">
+		<div>
+			<ul class="nav nav-tabs" role="tablist">
+				<li role="presentation" class="active"><a href="#protection"
+					id="tab-protection" aria-controls="protection" role="tab"
+					data-toggle="tab">保护数据</a></li>
+				<li role="presentation"><a href="#taxkey" id="tab-taxkey"
+					aria-controls="taxkey" role="tab" data-toggle="tab">检索表</a></li>
+				<li role="presentation"><a href="#traitdata" id="tab-traitdata"
+					aria-controls="traitdata" role="tab" data-toggle="tab">特征数据</a></li>
+			</ul>
+			<div class="tab-content">
+				<!-- 保护数据面板 -->
+				<div role="tabpanel" class="tab-pane active" id="protection">
+					<h4>
+						<small>&nbsp;该物种的保护信息</small>
+						<p>&nbsp;</p>
+					</h4>
+					<div id="newProtection"></div>
+					<a class="btn btn-app" onclick="addProtection ();"> <i
+						class="fa fa-plus"></i>添加新的保护数据
+					</a> <input class="hidden" id="countProtection" name="countProtection"
+						value="0"></input>
+					<!-- 保护数据模板 -->
+					<script id="protectionForm" type="text/x-jquery-tmpl">
+                        <form class="panel panel-default" id="protectionForm_${num}" th:action="@{/}" method="post">
+							<input class="hidden" id="protectionId_${num}" name="protectionId_${num}"></input>
+                          <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                              <i class="fa fa-check-circle hidden" id="protectionStatus_${num}"></i>
+                              <a id="protectionCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#protectionCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的保护数据</a>
+                              <a role="button" class="pull-right" onclick="removeProtection(${num});">
+                                <i class="fa fa-remove"></i>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="protectionCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="standardname_${num}" class="col-sm-2 control-label">* 保护级别:</label>
+                                  <div class="col-sm-4">
+                                    <select class="form-control select2" id="standardname_${num}" name="standardname_${num}" style="width: 100%;">
+										<option value="">- 请选择保护标准 -</option>
+									</select>
+                                  </div>
+                                  <div class="col-sm-2">
+                                    <select class="form-control select2" id="version_${num}" name="version_${num}" style="width: 100%;">
+										<option value="">- 请先选择保护标准 -</option>
+									</select>
+                                  </div>
+                                  <div class="col-sm-4">
+                                    <select class="form-control select2" id="protlevel_${num}" name="protlevel_${num}" style="width: 100%;">
+										<option value="">- 请先选择保护标准 -</option>
+									</select>
+                                  </div>
+                                </div>
+                              </div>
+							  <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="protectionsourcesid_${num}" class="col-sm-2 control-label">* 数据源:</label>
+                                  <div class="col-sm-10">
+                                    <select class="form-control select2" id="protectionsourcesid_${num}" name="protectionsourcesid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="proassessment_${num}" class="col-sm-2 control-label">评估依据:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <textarea class="form-control" rows="3" id="proassessment_${num}" name="proassessment_${num}" placeholder="评估依据"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+							  <input class="hidden" id="descProtReferences_${num}" name="descProtReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countProtectionReferences_${num}" name="countProtectionReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countProtReferences_${num}" name="countProtReferences_${num}" value="0"></input>  
+							 
+							  <div class="col-md-12">
+	                              <div class="form-group">
+	                                  <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					                  <div class="col-sm-2 col-md-2">
+		      		                 	<select class="form-control select2" id="protectionSearchPara_${num}" name="protectionSearchPara_${num}" style="width: 100%;">
+					                  		<option selected="selected"></option>
+					                  		<option value="refstr">完整题录</option>
+					                  		<option value="pyear">发表年代</option>
+					                  		<option value="title">题目</option>
+					                  		<option value="author">作者</option>
+					                  	</select>
+	          		                  </div>
+	                                  <div class="col-sm-4 col-md-4">
+	                         		  <input type="text" class="form-control" id="protectionPyear_${num}" name="protectionPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	                                  </div>
+	                              </div>
+	                          </div>
+
+							  <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="refjson" class="col-sm-2 control-label"></label>
+                                  <div class="col-sm-10 col-md-10 table-responsive">
+                                    <table class="table table-hover table-condensed">
+                                      <tbody id="newProtectionReferences_${num}"></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="addProtectionReferences (${num});">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <button type="button" class="btn btn-primary pull-right" onclick="submitProtection(${num});">确认</button></div>
+                          </div>
+                        </form>
+                    </script>
+					<!-- 保护数据参考文献模板 -->
+					<script id="protectionReferencesForm" type="text/x-jquery-tmpl">
+                        <tr id="protectionReferencesForm_${pnum}_${num}">
+                          <td><label class="control-label">[${num}]</label><td>
+                          <div class="form-group">
+                            <div class="col-sm-8 col-md-8 col-xs-12">
+                              <div class="input-group">
+                                <select class="form-control select2" id="protectionReferences_${pnum}_${num}" name="protectionReferences_${pnum}_${num}" style="width: 100%;"></select>
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-default dropdown-toggle" onclick="removeProtectionReferences(${pnum},${num});">
+                                    <i class="fa fa-remove"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="protectionReferencesPageS_${pnum}_${num}" name="protectionReferencesPageS_${pnum}_${num}" placeholder="起始页" /></div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="protectionReferencesPageE_${pnum}_${num}" name="protectionReferencesPageE_${pnum}_${num}" placeholder="终止页" /></div>
+                          </td>
+                        </tr>
+                    </script>
+				</div>
+				<!-- 检索表面板 -->
+				<div role="tabpanel" class="tab-pane fade" id="taxkey">
+					<h4>
+						<small>&nbsp;该阶元相关的检索表</small>
+						<p>&nbsp;</p>
+					</h4>
+					<div id="newTaxkey"></div>
+					<a class="btn btn-app" onclick="addTaxkey ();"> <i
+						class="fa fa-plus"></i>添加新的检索表
+					</a> <input class="hidden" id="countTaxkey" name="countTaxkey"
+						value="0"></input>
+					<!-- 检索表说明示例 -->
+					<div class="modal fade" id="modal-taxkey">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button id="closeTerms" type="button" class="close"
+										data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+									<h4 class="modal-title">检索表说明</h4>
+								</div>
+								<div class="modal-body">
+									<p>
+										<b>双项式检索表：</b>
+									</p>
+									<p>
+										<small>左边的数字序号为特征排序(互斥的一组特征序号相同)同组中在前的特征其同级排序靠前；文字描述为特征内容；最右侧为分支序号或指向的分类单元
+										</small>
+									</p>
+									<div class="box-body table-responsive">
+										<table id="keytable1"
+											class="table table-hover table-condensed" data-toggle="table"
+											data-classes="table table-no-bordered" data-height="350"
+											data-row-style="rowStyle">
+											<thead class="hidden">
+												<tr>
+													<th data-field="orderid"></th>
+													<th data-field="item"></th>
+													<th data-field="ellipsis"></th>
+													<th data-field="branchid"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1.</td>
+													<td>植物体无根、茎、叶的分化，无胚</td>
+													<td>…………………………………</td>
+													<td>2</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>植物体有根、茎、叶的分化，有胚</td>
+													<td>…………………………………</td>
+													<td>4</td>
+												</tr>
+												<tr>
+													<td>2.</td>
+													<td>由藻类和菌类所组成的共生体</td>
+													<td>…………………………………</td>
+													<td>地衣植物门</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>非藻类和菌类所组成的共生体</td>
+													<td>…………………………………</td>
+													<td>3</td>
+												</tr>
+												<tr>
+													<td>3.</td>
+													<td>植物体有叶绿素或其他色素，为自养生活方式</td>
+													<td>…………………………………</td>
+													<td>藻类植物门</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>植物体无叶绿素或其他色素，为异养生活方式</td>
+													<td>…………………………………</td>
+													<td>菌类植物门</td>
+												</tr>
+												<tr>
+													<td>4.</td>
+													<td>植物体有茎、叶，而无真根</td>
+													<td>…………………………………</td>
+													<td>苔藓植物门</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>植物体有茎、叶，而有真根</td>
+													<td>…………………………………</td>
+													<td>5</td>
+												</tr>
+												<tr>
+													<td>5.</td>
+													<td>产生孢子</td>
+													<td>…………………………………</td>
+													<td>蕨类植物门</td>
+												</tr>
+												<tr>
+													<td></td>
+													<td>产生种子</td>
+													<td>…………………………………</td>
+													<td>种子植物门</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<p>
+										<b>单项式检索表：</b>
+									</p>
+									<p>
+										<small>左边的数字序号为特征排序；括号里的数字为分支序号；文字描述为特征内容；最右侧为指向的分类单元</small>
+									</p>
+									<div class="box-body table-responsive">
+										<table id="keytable2"
+											class="table table-hover table-condensed" data-toggle="table"
+											data-classes="table table-no-bordered" data-height="350"
+											data-row-style="rowStyle">
+											<thead class="hidden">
+												<tr>
+													<th data-field="orderid"></th>
+													<th data-field="item"></th>
+													<th data-field="ellipsis"></th>
+													<th data-field="branchid"></th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr>
+													<td>1(6)</td>
+													<td>植物体无根、茎、叶的分化，无胚</td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>2(5)</td>
+													<td>非藻类和菌类所组成的共生体</td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>3(4)</td>
+													<td>植物体有叶绿素或其他色素，为自养生活方式</td>
+													<td>…………………………………</td>
+													<td>藻类植物门</td>
+												</tr>
+												<tr>
+													<td>4(3)</td>
+													<td>植物体无叶绿素或其他色素，为异养生活方式</td>
+													<td>…………………………………</td>
+													<td>菌类植物门</td>
+												</tr>
+												<tr>
+													<td>5(2)</td>
+													<td>由藻类和菌类所组成的共生体</td>
+													<td>…………………………………</td>
+													<td>地衣植物门</td>
+												</tr>
+												<tr>
+													<td>6(1)</td>
+													<td>植物体有根、茎、叶的分化，有胚</td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>7(8)</td>
+													<td>植物体有茎、叶，而无真根</td>
+													<td>…………………………………</td>
+													<td>苔藓植物门</td>
+												</tr>
+												<tr>
+													<td>8(7)</td>
+													<td>植物体有茎、叶，而有真根</td>
+													<td></td>
+													<td></td>
+												</tr>
+												<tr>
+													<td>9(10)</td>
+													<td>产生孢子</td>
+													<td>…………………………………</td>
+													<td>蕨类植物门</td>
+												</tr>
+												<tr>
+													<td>10(9)</td>
+													<td>产生种子</td>
+													<td>…………………………………</td>
+													<td>种子植物门</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default pull-left"
+										data-dismiss="modal">返回</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- 检索表模板 -->
+					<script id="taxkeyForm" type="text/x-jquery-tmpl">
+                        <form class="panel panel-default" id="taxkeyForm_${num}" th:action="@{/}" method="post">
+							<input class="hidden" id="taxkeyId_${num}" name="taxkeyId_${num}"></input>
+							<input class="hidden" id="keyitemId_${num}" name="keyitemId_${num}"></input>
+                          <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                              <i class="fa fa-check-circle hidden" id="taxkeyStatus_${num}"></i>
+                              <a id="taxkeyCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#taxkeyCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的检索表</a>
+                              <a role="button" class="pull-right" onclick="removeTaxkey(${num});">
+                                <i class="fa fa-remove"></i>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="taxkeyCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+						
+							<div class="col-md-6">
+							  <div class="form-group">
+								<label for="keytitle_${num}" class="col-sm-4 control-label">* 检索表类型:</label>
+								<div class="col-sm-7">
+								  <select class="form-control select2" id="keytypes_${num}" name="keytypes_${num}" style="width: 100%;">
+									<option selected value ="1">双向式(平行式)</option>
+									<option value ="2">单项式(连续平行式)</option>
+									<option disabled value ="3">定距式(退格式/包孕式)</option>
+								  </select>
+								</div>
+								<div class="col-sm-1">
+								  <a role="button" class="dropdown-toggle" data-toggle="modal" data-target="#modal-taxkey">
+                                    <i class="fa fa-question-circle"></i>
+                                  </a>
+								</div>
+							  </div>
+
+                                <div class="form-group">
+                                  <label for="keytitle_${num}" class="col-sm-4 control-label">* 检索表名:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="keytitle_${num}" name="keytitle_${num}" placeholder="检索表名称" /></div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="abstraction_${num}" class="col-sm-2 control-label">* 摘要:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <textarea class="form-control" rows="3" id="abstraction_${num}" name="abstraction_${num}" placeholder="摘要"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <input class="hidden" id="keytype_${num}" name="keytype_${num}" value="1"></input>
+
+                              <div class="col-md-12">
+                                <div class="box box-default box-solid">
+
+                              <p></p>
+                              <div class="text-center">
+                                <div class="btn-group hidden">
+                                  <a type="reset" class="btn btn-default active" id="taxkeyType1_${num}" onclick="changetaxkeyType(${num},1);">双项式(平行式)</a>
+                                  <a type="reset" class="btn btn-default" id="taxkeyType2_${num}" onclick="changetaxkeyType(${num},2);">单项式(连续平行式)</a>
+                                  <button type="button" class="btn btn-default disabled" id="taxkeyType3_${num}" onclick="changetaxkeyType(${num},3);">定距式(退格式/包孕式)</button>
+                                </div>
+                                <a role="button" class="dropdown-toggle hidden" data-toggle="modal" data-target="#modal-taxkey">
+                                  <i class="fa fa-question-circle"></i>
+                                </a>
+                              </div>
+                                  <div class="box-body table-responsive">
+ 								
+										<table
+ 											  id="keytable_${num}"
+ 											  data-locale="zh-CN"
+											  class="table table-hover table-condensed"
+  											  data-classes="table table-no-bordered"
+ 											  data-toggle="table"
+                        					  data-row-style="rowStyle">
+                                        <thead class="hidden">
+                                          <tr>
+                                              <th data-field="orderid">特征排序</th>
+                                              <th data-field="item">特征内容</th>
+                                              <th data-field="ellipsis">省略号</th>
+                                              <th data-field="branchid">分支序号</th>
+                                              <th data-field="images">特征图片</th>
+                                              <th data-field="edit"></th>
+                                          </tr>
+                                        </thead>
+                                      </table>
+                                  </div>
+                                  <div class="box-footer">
+                                    <div class="col-md-5">
+                                      <div class="form-group">
+                                        <label for="orderid_${num}" class="col-sm-4 control-label">* 特征排序:</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="orderid_${num}" name="orderid_${num}" placeholder="特征序号，用于排序" /></div>
+                                      </div>
+                                      <div class="form-group" id="inputinnerorder_${num}">
+                                        <label for="innerorder_${num}" class="col-sm-4 control-label">* 同级排序:</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="innerorder_${num}" name="innerorder_${num}" placeholder="同一级检索特征排序" /></div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="branchid_${num}" class="col-sm-4 control-label">* 分支序号:</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="branchid_${num}" name="branchid_${num}" onclick="taxonIsNull(${num});" placeholder="指向下一层特征分支的序号" /></div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="taxonid_${num}" class="col-sm-4 control-label">* 指向分类单元:</label>
+                                        <div class="col-sm-8">
+                                          <select class="form-control select2" id="taxonid_${num}" name="taxonid_${num}" allowClear=true style="width: 100%;">
+
+                                          </select>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="col-md-7">
+                                      <div class="form-group">
+                                        <label for="item_${num}" class="col-sm-2 control-label">* 特征:</label>
+                                        <div class="col-sm-10 col-md-10">
+                                          <textarea class="form-control" rows="5" id="item_${num}" name="item_${num}" placeholder="特征"></textarea>
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    <button type="button" class="btn btn-default pull-right" onclick="submitKeyitem(${num});">加入检索表</button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button type="button" class="btn btn-primary pull-right hidden" onclick="submitTaxkey(${num});">确认</button>
+                            </div>
+                          </div>
+                        </form>
+                    </script>
+				</div>
+				<!-- 特征数据面板 -->
+				<div role="tabpanel" class="tab-pane fade" id="traitdata">
+					<h4>
+						<small>&nbsp;该分类单元的特征数据</small>
+						<p>&nbsp;</p>
+					</h4>
+					<div id="newTraitdata"></div>
+					<a class="btn btn-app" onclick="addTraitdata ();"> <i
+						class="fa fa-plus"></i>添加新的特征数据
+					</a> <input class="hidden" id="countTraitdata" name="countTraitdata"
+						value="0"></input>
+					<!-- 特征数据模板 -->
+					<script id="traitdataForm" type="text/x-jquery-tmpl">
+                        <form class="panel panel-default" id="traitdataForm_${num}" th:action="@{/}" method="post">
+							<input class="hidden" id="traitdataId_${num}" name="traitdataId_${num}" readonly="readonly"></input>
+                          <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                              <i class="fa fa-check-circle hidden" id="traitdataStatus_${num}"></i>
+                              <a id="traitdataCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#traitdataCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的特征数据</a>
+                              <a role="button" class="pull-right" onclick="removeTraitdata(${num});">
+                                <i class="fa fa-remove"></i>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="traitdataCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+                              <div class="col-md-6">
+                                <div class="form-group" >
+                                  <label for="trainsetid_${num}" class="col-sm-4 control-label">* 术语集:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="trainsetid_${num}" name="trainsetid_${num}" style="width: 100%;">
+									</select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="trainsetid_${num}" class="col-sm-3 control-label">* 数据源:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="trainSourcesid_${num}" name="trainSourcesid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="trainsetid_${num}" class="col-sm-2 control-label">描述:</label>
+                                  <div class="col-sm-4">
+                                    <select class="form-control select2" id="desid_${num}" name="desid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+							   
+							   <input class="hidden" id="descTraitValue_${num}" name="descTraitValue_${num}" value="0"></input>
+                               <input class="hidden" id="countTraitdataValue_${num}" name="countTraitdataValue_${num}" value="0"></input>
+							   <input class="hidden" id="countTraitValue_${num}" name="countTraitValue_${num}" value="0"></input>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="traitontology" class="col-sm-2 control-label">* 特征描述详情:</label>
+                                  <div class="col-sm-10 col-md-10 table-responsive">
+                                    <table class="table table-hover table-condensed">
+                                      <tbody id="newTraitdataValue_${num}"></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="addTraitdataValue (${num});">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+							  <input class="hidden" id="descTraitReferences_${num}" name="descTraitReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countTraitdataReferences_${num}" name="countTraitdataReferences_${num}" value="0"></input>
+							  <input class="hidden" id="countTraitReferences_${num}" name="countTraitReferences_${num}" value="0"></input>
+
+							  <div class="col-md-12">
+	                              <div class="form-group">
+	                                  <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					                  <div class="col-sm-2 col-md-2">
+		      		                 	<select class="form-control select2" id="traitdataSearchPara_${num}" name="traitdataSearchPara_${num}" style="width: 100%;">
+					                  		<option selected="selected"></option>
+					                  		<option value="refstr">完整题录</option>
+					                  		<option value="pyear">发表年代</option>
+					                  		<option value="title">题目</option>
+					                  		<option value="author">作者</option>
+					                  	</select>
+	          		                  </div>
+	                                  <div class="col-sm-4 col-md-4">
+	                         		  <input type="text" class="form-control" id="traitdataPyear_${num}" name="traitdataPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	                                  </div>
+	                              </div>
+	                          </div>
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="refjson" class="col-sm-2 control-label"></label>
+                                  <div class="col-sm-10 col-md-10 table-responsive">
+                                    <table class="table table-hover table-condensed">
+                                      <tbody id="newTraitdataReferences_${num}"></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="addTraitdataReferences (${num});">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                              <button type="button" class="btn btn-primary pull-right" onclick="submitTraitdata(${num});">确认</button></div>
+                          </div>
+                        </form>
+                    </script>
+					<!-- 特征数据描述模板 -->
+					<script id="traitdataValueForm" type="text/x-jquery-tmpl">
+                        <tr id="traitdataValueForm_${tnum}_${num}">
+                          <td>
+                              <div class="form-group">
+                                <div class="col-sm-3 col-md-3 col-xs-12">
+                                  <div class="input-group">
+                                    <select class="form-control select2" id="traitontology_${tnum}_${num}" name="traitontology_${tnum}_${num}" style="width: 100%;">
+										<option value="">请先选择特征所属的大类</option>
+									</select>
+                                    <div class="input-group-btn">
+                                      <button type="button" class="btn btn-default dropdown-toggle" onclick="removeTraitdataValue(${tnum},${num});">
+                                        <i class="fa fa-remove"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="col-sm-2 col-md-2 col-xs-12">
+								  <select class="form-control select2" id="traitdataProperty_${tnum}_${num}" name="traitdataProperty_${tnum}_${num}" style="width: 100%;">
+								  </select>
+                                </div>
+                                <div class="col-sm-2 col-md-2 col-xs-12">
+                                  <input type="text" class="form-control" id="traitdataValue_${tnum}_${num}" name="traitdataValue_${tnum}_${num}" placeholder="该属性的值" />
+                                </div>
+								<div class="col-sm-2 col-md-2 col-xs-12">
+                                  <select class="form-control select2" id="traitdataUnit_${tnum}_${num}" name="traitdataUnit_${tnum}_${num}" style="width: 100%;">
+									<option disabled selected value></option>
+                      				<option value ="1">毫米(mm)</option>
+                      				<option value ="2">厘米(cm)</option>
+                      				<option value ="3">克(g)</option>
+                      				<option value ="4">千克(kg)</option>
+								  </select>
+                                </div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+                                  <input type="text" class="form-control" id="traitdataBase_${tnum}_${num}" name="traitdataBase_${tnum}_${num}" placeholder="测量依据（如5只雌鸟的平均体重）" />
+                                </div>
+								  
+                              </div>
+                          </td>
+                        </tr>
+                    </script>
+					<!-- 特征数据参考文献模板 -->
+					<script id="traitdataReferencesForm" type="text/x-jquery-tmpl">
+                        <tr id="traitdataReferencesForm_${tnum}_${num}">
+                          <td><label class="control-label">[${num}]</label></td>
+                          <td><div class="form-group">
+                            <div class="col-sm-8 col-md-8 col-xs-12">
+                              <div class="input-group">
+                                <select class="form-control select2" id="traitdataReferences_${tnum}_${num}" name="traitdataReferences_${tnum}_${num}" style="width: 100%;"></select>
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-default dropdown-toggle" onclick="removeTraitdataReferences(${tnum},${num});">
+                                    <i class="fa fa-remove"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="traitdataReferencesPageS_${tnum}_${num}" name="traitdataReferencesPageS_${tnum}_${num}" placeholder="起始页" /></div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="traitdataReferencesPageE_${tnum}_${num}" name="traitdataReferencesPageE_${tnum}_${num}" placeholder="终止页" /></div></div>
+                          </td>
+                        </tr>
+                    </script>
+				</div>
+			</div>
+		</div>
+  </form>
+</th:block>
+</html>

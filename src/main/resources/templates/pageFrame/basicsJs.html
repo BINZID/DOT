@@ -1,0 +1,75 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<a href="#0" class="cd-top">Top</a>
+    <!-- jQuery 3 -->
+    <script th:src="@{/bowerComponents/jquery/jquery.min.js}" src="bowerComponents/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap 3.3.7 -->
+    <script th:src="@{/bowerComponents/bootstrap/js/bootstrap.min.js}" src="bowerComponents/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script th:src="@{/bowerComponents/jquery-slimscroll/jquery.slimscroll.min.js}" src="bowerComponents/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script th:src="@{/bowerComponents/fastclick/lib/fastclick.js}" src="bowerComponents/fastclick/lib/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script th:src="@{/bowerComponents/AdminLTE/js/adminlte.min.js}" src="bowerComponents/AdminLTE/dist/js/adminlte.min.js"></script>
+    <!-- Bootstrap-table 1.10.1 -->
+    <script th:src="@{/plugins/bootstrap-table/js/bootstrap-table.js}"></script>
+    <script th:src="@{/plugins/bootstrap-table/locale/bootstrap-table-zh-CN.js}"></script>
+    <script th:src="@{/plugins/bootstrap-table/js/bootstrap-table-pagejump.js}"></script>
+    <!-- Headroom -->
+    <script th:src="@{/plugins/headroom/headroom.min.js}" src="plugins/headroom/headroom.min.js"></script>
+    <!-- 引入goTop -->
+    <script th:src="@{/plugins/goTop/js/main.js}"></script>
+    <!-- Layer 3.0.1 -->
+    <script th:src="@{/plugins/layer/layer.js}"></script>
+    <!-- ocupload-1.1.2 -->
+    <script th:src="@{/plugins/Ocupload/jquery.ocupload-1.1.2.js}"></script>
+    <!-- page_script -->
+    <script>
+        //初始化Menu
+        /* (function() {
+            var header = document.querySelector("#header");
+
+            if(window.location.hash) {
+                header.classList.add("headroom--unpinned");
+            }
+
+            var headroom = new Headroom(header, {
+                tolerance: {
+                    down : 5,
+                    up : 1
+                },
+                offset : 1,
+                classes: {
+                    "initial": "animated",
+                    "pinned": "swingInX",
+                    "unpinned": "swingOutX"
+                }
+            });
+            headroom.init();
+
+        }()); */
+        //初始化组件
+        $( document ).ready( function() {
+            $("#changeSkin").click(function(){
+                var thisSkin=$('body').attr('class');
+                if(thisSkin.indexOf("skin-light") >= 0 )
+                {
+                    $('body').removeClass("skin-light");
+                    $('body').addClass("skin-dark")
+                }
+                else{
+                    $('body').removeClass("skin-dark");
+                    $('body').addClass("skin-light")
+                }
+            });
+        } );
+    </script>
+    <script type="text/javascript">
+		//构造开发提示
+		function building() {
+		    layer.msg('正在开发', function(){
+		    });
+		}
+	</script>
+</th:block>
+</html>

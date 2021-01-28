@@ -1,0 +1,248 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_8" class="form-horizontal" th:action="@{/}" method="post">
+    <div>
+      <div id="newMultimedia"></div>
+      <a class="btn btn-app" onclick="addMultimedia();">
+        <i class="fa fa-plus"></i>添加新多媒体</a>
+    </div>
+    <input class="hidden" id="countMultimedia" name="countMultimedia" value="0"></input>
+    <script id="multimediaForm" type="text/x-jquery-tmpl">
+      <form class="panel panel-default" id="multimediaForm_${num}" th:action="@{/}" method="post">
+    	<input class="hidden" id="multimediaId_${num}" name="multimediaId_${num}" readonly="readonly"></input>
+    	<input class="hidden" id="multimediaPath_${num}" name="multimediaPath_${num}"></input>
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <i class="fa fa-check-circle hidden" id="multimediaStatus_${num}"></i>
+            <a id="multimediaCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#multimediaCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">
+              <i id="multimediaName_${num}">新的多媒体</i>
+              <span id="multimediaAuthor_${num}"></span>
+            </a>
+            <a role="button" class="pull-right" onclick="removeMultimedia(${num});">
+              <i class="fa fa-remove"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="multimediaCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="multimedia_title_${num}" class="col-sm-4 control-label">标题:</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="multimedia_title_${num}" name="multimedia_title_${num}" placeholder="多媒体信息标题" /></div>
+              </div>
+            
+              <div class="form-group">
+                <label for="multimediaSourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="multimediaSourcesid_${num}" name="multimediaSourcesid_${num}" style="width: 100%;">
+                  </select>
+                </div>
+              </div>
+            
+              <div class="form-group">
+                <label for="multimedia_rightsholder_${num}" class="col-sm-4 control-label">版权人:</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="multimedia_rightsholder_${num}" name="multimedia_rightsholder_${num}" placeholder="版权人" /></div>
+              </div>
+            
+              <div class="form-group">
+                <label for="multimedia_licenseid_${num}" class="col-sm-4 control-label">* 共享协议:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="multimedia_licenseid_${num}" name="multimedia_licenseid_${num}" style="width: 100%;"></select>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-6">
+			  <div class="form-group">
+                <label for="multimedia_desid_${num}" class="col-sm-2 control-label">* 媒体类型:</label>
+                <div class="col-sm-10">
+                  <select class="form-control select2" id="media_type_${num}" name="media_type_${num}" style="width: 100%;">
+					  <option disabled selected value></option>
+                      <option value ="1">图片</option>
+                      <option value ="2">音频</option>
+                      <option value ="3">视频</option>
+                      <option value ="4">表格</option>
+                      <option value ="5">文本文件</option>
+                      <option value ="6">地图资源</option>
+				  </select>
+                </div>
+              </div>
+
+			  <div class="form-group">
+				<label for="item_${num}" class="col-sm-2 control-label">图注:</label>
+				<div class="col-sm-10 col-md-10">
+ 					<textarea class="form-control" rows="5" id="multimedia_context_${num}" name="multimedia_context_${num}" placeholder="特征"></textarea>
+				</div>
+			  </div>
+			</div>
+
+			<div class="col-md-12" id="oldpath_${num}">
+  				<div class="form-group">
+					<label for="oldpath_${num}" class="col-sm-2 control-label">原始路径:</label>
+					<div class="col-sm-10 col-md-10">
+ 						<input type="text" class="form-control" id="multimedia_oldpath_${num}" name="multimedia_oldpath_${num}" placeholder="媒体文件的原始路径" /></div>
+			  	</div>
+			</div>
+
+			<div class="col-md-12" id="locationInfo_${num}">
+              <div class="box box-default box-solid">
+              <div class="text-center">
+                 拍摄地点信息
+              </div>
+              <p></p>
+                <div class="box-footer">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_country_${num}" class="col-sm-4 control-label">* 国家:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="multimedia_country_${num}" name="multimedia_country_${num}" value="中国" placeholder="观测点所在国家" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_map_${num}" class="col-sm-4 control-label"><i class="fa fa-map-marker"></i></label>
+                      <div class="col-sm-8">
+                        <a class="btn btn-block btn-default" onclick="selectImageCoordinates(${num});">
+                           地图选点(当前仅支持国内)
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_province_${num}" class="col-sm-4 control-label">省/洲:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="multimedia_province_${num}" name="multimedia_province_${num}" placeholder="观测点所在省/洲" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_city_${num}" class="col-sm-4 control-label">城市:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="multimedia_city_${num}" name="multimedia_city_${num}" placeholder="观测点所在城市" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_county_${num}" class="col-sm-4 control-label">县/区:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="multimedia_county_${num}" name="multimedia_county_${num}" placeholder="观测点所在县/区" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="multimedia_locality_${num}" class="col-sm-4 control-label">小地名:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="multimedia_locality_${num}" name="multimedia_locality_${num}" placeholder="观测点所在的小地名" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="multimedia_location_${num}" class="col-sm-2 control-label">观测地点:</label>
+                      <div class="col-sm-10 col-md-10">
+                        <textarea class="form-control" rows="2" id="multimedia_location_${num}" name="multimedia_location_${num}" placeholder="观测地点（全）"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group has-feedback">
+                        <label for="local" class="col-md-2 control-label">地理信息：</label>
+                        <div id="local">
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <span class="input-group-addon">经度</span>
+                                    <input id="multimedia_lng_${num}" class="form-control" placeholder="十进制小数" name="multimedia_lng_${num}" value="" data-bv-field="lng_${num}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <span class="input-group-addon">纬度</span>
+                                    <input id="multimedia_lat_${num}" class="form-control" placeholder="十进制小数" name="multimedia_lat_${num}" value="" data-bv-field="lat_${num}" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<input class="hidden" id="descMediaReferences_${num}" name="descMediaReferences_${num}" value="0"></input>
+            <input class="hidden" id="countMultimediaReferences_${num}" name="countMultimediaReferences_${num}" value="0"></input>
+            <input class="hidden" id="countMediaReferences_${num}" name="countMediaReferences_${num}" value="0"></input>
+
+			<div class="col-md-12">
+	      		<div class="form-group">
+	          		<label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					<div class="col-sm-2 col-md-2">
+		      			<select class="form-control select2" id="multimediaSearchPara_${num}" name="multimediaSearchPara_${num}" style="width: 100%;">
+							<option selected="selected"></option>
+							<option value="refstr">完整题录</option>
+							<option value="pyear">发表年代</option>
+							<option value="title">题目</option>
+							<option value="author">作者</option>
+						</select>
+	          		</div>
+	          		<div class="col-sm-4 col-md-4">
+						<input type="text" class="form-control" id="multimediaPyear_${num}" name="multimediaPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	          		</div>
+	      		</div>
+	  		</div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="refjson" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10 col-md-10 table-responsive">
+                  <table class="table table-hover table-condensed">
+                    <tbody id="newMultimediaReferences_${num}"></tbody>
+                  </table>
+                  <button type="button" class="btn btn-default btn-sm" onclick="addMultimediaReferences (${num});">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+			<div class="col-md-12">
+			  <div class="col-sm-2 "></div>
+              <div class="form-group col-sm-10 col-md-10">
+                  <div class="file-loading">
+                      <input id="input-fa_${num}" name="upload-fa[]" type="file" multiple>
+                  </div>
+              </div>
+              <div class="form-group">
+              		<a id = "file_${num}">
+              		</a>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary pull-right" onclick="submitMultimedia(${num});">确认</button></div>
+        </div>
+      </form>
+    </script>
+    <script id="multimediaReferencesForm" type="text/x-jquery-tmpl">
+      <tr id="multimediaReferencesForm_${mnum}_${num}">
+        <td><label class="control-label">[${num}]</label><td>
+        <div class="form-group">
+          <div class="col-sm-8 col-md-8 col-xs-12">
+            <div class="input-group">
+              <select class="form-control select2" id="multimediaReferences_${mnum}_${num}" name="multimediaReferences_${mnum}_${num}" style="width: 100%;"></select>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" onclick="removeMultimediaReferences(${mnum},${num});">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="multimediaReferencesPageS_${mnum}_${num}" name="multimediaReferencesPageS_${mnum}_${num}" placeholder="起始页" /></div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="multimediaReferencesPageE_${mnum}_${num}" name="multimediaReferencesPageE_${mnum}_${num}" placeholder="终止页" /></div>
+        </td>
+      </tr>
+    </script>
+  </form>
+</th:block>
+
+</html>

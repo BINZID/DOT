@@ -1,0 +1,153 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_1" class="form-horizontal" th:action="@{/console/taxon/add}" method="post">
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" th:field="*{thisTaxon.id}" th:value = ${thisTaxon.id} ></input>
+    <input class="hidden" th:field="*{thisTaxon.inputtime}"></input>
+	<input class="hidden" id="refId" name="refId" readonly="readonly"></input>
+	<input class="hidden" th:field="*{thisTaxon.orderNum}" id="orderNum" name="orderNum" readonly="readonly"></input>
+    <div class="">
+    	
+      <div class="col-md-5">
+        <div class="form-group">
+          <label for="scientificname" class="col-sm-4 control-label">* 学名:</label>
+          <div class="col-sm-8">
+            <input th:field="*{thisTaxon.scientificname}" type="text" class="form-control" id="scientificname" name="scientificname" onblur="handleScientificname()" placeholder="拉丁名" />
+          </div>
+        </div>
+      
+        <div class="form-group">
+          <label for="chname" class="col-sm-4 control-label">中文名:</label>
+          <div class="col-sm-8">
+            <input th:field="*{thisTaxon.chname}" type="text" class="form-control" id="chname" name="chname" placeholder="中文名" />
+          </div>
+        </div>
+    
+        <div class="form-group">
+          <label for="authorstr" class="col-sm-4 control-label">命名信息:</label>
+          <div class="col-sm-8">
+            <input th:field="*{thisTaxon.authorstr}" type="text" class="form-control" id="authorstr" name="authorstr" placeholder="命名人和命名年代" />
+          </div>
+        </div>
+      
+        <div class="form-group">
+          <label for="epithet" class="col-sm-4 control-label">种加词/亚种加词:</label>
+          <div class="col-sm-8">
+            <input th:field="*{thisTaxon.epithet}" type="text" class="form-control" id="epithet" name="epithet" placeholder="种加词/亚种加词" />
+          </div>
+        </div>
+      
+        <div class="form-group">
+          <label for="nomencode" class="col-sm-4 control-label">命名法规:</label>
+          <div class="col-sm-8">
+          		<select class="form-control select2" id="nomencode" name="nomencode" style="width: 100%;">
+                      <option selected value ="ICZN">ICZN</option>
+                      <option value ="ICBN">ICBN</option>
+            	</select>
+          </div>
+        </div>
+     
+        <div class="form-group hidden">
+          <label for="tci" class="col-sm-4 control-label">tci:</label>
+          <div class="col-sm-8">
+            <input th:field="*{thisTaxon.tci}" type="text" class="form-control" id="tci" name="tci" placeholder="taxon concept identifier (taxon 概念标识)" />
+          </div>
+        </div>
+      </div>
+      
+      <div class="col-md-7">
+	      <div class="form-group">
+	          <label for="rank" class="col-sm-2 control-label">* 分类等级:</label>
+	          <div class="col-sm-8">
+	            <select th:field="*{thisTaxon.rank.id}" class="form-control select2" id="rank" name="rank.id" style="width: 100%;">
+	            	<option selected th:value = "${thisTaxon.rank.id}" th:text="${thisTaxon.rank.enname}"></option>
+	            </select>
+	          </div>
+	        </div>
+	     
+	        <div class="form-group">
+	          <label for="sourcesid" class="col-sm-2 control-label">* 数据源:</label>
+	          <div class="col-sm-8">
+	            <select class="form-control select2" id="sourcesid" name="sourcesid" style="width: 100%;">
+	            </select>
+	          </div>
+	        </div>
+      
+	      <div class="form-group">
+	          <label for="taxaset" class="col-sm-2 control-label">* 所属分类单元集:</label>
+	          <div class="col-sm-8">
+	            <select th:field="*{thisTaxon.taxaset.id}" class="form-control select2" id="taxaset" name="taxaset.id" style="width: 100%;">
+					<option selected th:value = "${thisTaxon.taxaset.id}" th:text="${thisTaxon.taxaset.tsname}"></option>
+	            </select>
+	          </div>
+	        </div>
+      
+	        <div class="form-group">
+	          <label for="remark" class="col-sm-2 control-label">备注:</label>
+	          <div class="col-sm-8 col-md-8">
+	          	<textarea th:field="*{thisTaxon.remark}" class="form-control" id="remark" name="remark" placeholder="备注信息" rows="5"></textarea>
+	          </div>
+	        </div>
+      </div>
+      <input class="hidden" id="descTaxonReferences" name="descTaxonReferences" value="0"></input>
+      <input class="hidden" id="countReferences" name="countReferences" value="0"></input>
+      <input class="hidden" id="countTaxonReferences" name="countTaxonReferences" value="0"></input>
+      <div class="col-md-10">
+	      <div class="form-group">
+	          <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+			  <div class="col-sm-2 col-md-2">
+		      	<select class="form-control select2" id="searchPara" name="searchPara" style="width: 100%;">
+					<option selected="selected"></option>
+					<option value="refstr">完整题录</option>
+					<option value="pyear">发表年代</option>
+					<option value="title">题目</option>
+					<option value="author">作者</option>
+				</select>
+	          </div>				
+	          <div class="col-sm-4 col-md-4">
+				  <input type="text" class="form-control" id="pyear" name="pyear" placeholder="请根据选择的字段输入值，检索参考文献"></input>      
+	          </div>
+	      </div>
+	  </div>
+      <div class="col-md-12">
+        <div class="form-group">
+	          <label for="refjson" class="col-sm-1 control-label"></label>
+          <div class="col-sm-10 col-md-10">
+            <div class="" id="refjson">
+              <div class="table-responsive">
+                <table class="table table-hover table-condensed" id="refTable">
+                  <tbody id="newReferences"></tbody>
+                </table>
+                <button type="button" class="btn btn-default btn-sm" onclick="addReferences();"><i class="fa fa-plus"></i></button>
+              </div>
+              <script id="referencesForm" type="text/x-jquery-tmpl">
+                <tr id="referencesForm_${num}">
+                <td><label class="control-label">[${num}]</label><td>
+                  <td class="form-group">
+                    <div class="col-sm-8 col-md-8 col-xs-12">
+                      <div class="input-group">
+                        <select class="form-control select2" id="references_${num}" name="references_${num}" style="width: 100%;">
+
+						</select>
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" onclick="removeReferences (${num});"><i class="fa fa-remove"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-xs-6">
+                      <input type="text" class="form-control" id="referencesPageS_${num}" name="referencesPageS_${num}" placeholder="起始页"  required/>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-xs-6">
+                      <input type="text" class="form-control" id="referencesPageE_${num}" name="referencesPageE_${num}" placeholder="终止页"  required/>
+                    </div>
+                  </td>
+                </tr>
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+  </form>
+</th:block>
+</html>

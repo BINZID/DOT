@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:发信箱页
+    Description：发信箱页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE&nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:substituteby="pageFrame/basicsCss :: copy" />
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                消息管理
+                <small>在这里您可以查看系统内所有的消息记录</small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li class="active"><i class="fa fa-envelope"></i> 消息管理</li>
+            </ol>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="box box-solid">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">操作</h3>
+                            <div class="box-tools">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="box-body no-padding">
+                            <ul class="nav nav-pills nav-stacked">
+                                <li>
+                                    <a href="#" th:href="@{/console/message}"><i class="fa fa-inbox"></i> 收信箱
+                                        <span class="label label-primary pull-right" th:if="${session.unReadMessageNum} &gt; 0" th:text="${session.unReadMessageNum}"></span>
+                                    </a>
+                                </li>
+                                <li class="active"><a href="#" th:href="@{/console/message/sent}"><i class="fa fa-mail-forward"></i> 发信箱</a></li>
+                                <li><a href="#" th:href="@{/console/message/compose}"><i class="fa fa-file-text-o"></i> 写信</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="box">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">发件箱</h3>
+                        </div>
+                        <div class="box-body no-padding">
+                            <div class="mailbox-controls">
+                                <div class="table table-responsive">
+                                    <table
+                                            id="results_table"
+                                            data-locale="zh-CN"
+                                            data-classes="table table-hover table-condensed"
+                                            data-toggle="table"
+                                            th:attr="data-url=@{/console/message/rest/sent}"
+                                            data-pagination="true"
+                                            data-side-pagination="server"
+                                            data-page-list="[10, 20, 30, 50, 100]"
+                                            data-search="true"
+                                            data-show-columns="true"
+                                            data-show-toggle="true"
+                                            data-toolbar="#toolbar"
+                                            data-show-export="false"
+                                            data-show-refresh="true"
+                                            data-export-types="['excel', 'txt']">
+                                        <thead>
+                                        <tr>
+                                            <th data-field="title" data-align="center" data-sortable="true">标题</th>
+                                            <th data-field="sender" data-align="center" data-sortable="true">发件人</th>
+                                            <th data-field="addressee" data-align="center" data-sortable="true">收件人</th>
+                                            <th data-field="sendtime" data-align="center" data-sortable="true">发送时间</th>
+                                            <th data-field="type" data-align="center" data-sortable="true">类别</th>
+                                            <th data-field="status" data-align="center" data-sortable="true">消息状态</th>
+                                        </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer no-padding">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<!-- page_script -->
+<script th:src="@{/js/superTableScript.js}"></script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 重新加载保护数据-->
+    <script id="reLoadProtection" type="text/x-jquery-tmpl">
+      <button type="button" class="btn btn-default btn-xs" onclick="showProtection('{{= taxonid}}',{{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+    </script>
+    <!-- 加载更多保护数据-->
+    <script id="moreProtection" type="text/x-jquery-tmpl">
+      <button id="moreProtectionButton" type="button" class="btn btn-default btn-block btn-xs" onclick="showProtection('{{= taxonid}}',{{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+    </script>
+    <!-- 构造保护数据 -->
+    <script id="protectionList" type="text/x-jquery-tmpl">
+    {{each(i,protection) rows}}
+        <div class="col-md-6">
+            <div class="panel panel-default" id="protectionForm_{{= protection.id}}">
+                <div class="panel-heading" role="tab" id="heading1">
+                    <h4 class="panel-title">
+                        <a id="protectionCollapseTitle_{{= protection.id}}" role="button" data-toggle="collapse" data-parent="#accordion" href="#protectionCollapse_{{= protection.id}}" aria-expanded="true" aria-controls="collapse1">
+                            <span id="protectionName_{{= protection.id}}">{{= protection.protectstandard.standardname}}({{= protection.protectstandard.version}}) {{= protection.protectstandard.protlevel}}</span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="protectionCollapse_{{= protection.id}}" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>保护级别:</dt>
+                            <dd><small>{{= protection.protectstandard.standardname}}({{= protection.protectstandard.version}}) {{= protection.protectstandard.protlevel}}</small></dd>
+                            <dt>保护评估:</dt>
+                            <dd><small>{{= protection.proassessment}}</small></dd>
+                            <dt>数据源:</dt>
+                            <dd><small>{{= protection.sourcesid}}</small></dd>
+                            <dt>参考文献:</dt>
+                            <dd>
+                                <button type="button" class="btn btn-default btn-xs"
+                                        onclick="showRef({{= protection.refjson}});">
+                                    <i class="fa fa-list-ol"></i> 查看参考文献
+                                </button>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+</th:block>
+</html>

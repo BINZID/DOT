@@ -1,0 +1,203 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_7" class="form-horizontal" th:action="@{/}" method="post">
+    <div>
+      <div id="newOccurrence"></div>
+      <a class="btn btn-app" onclick="addOccurrence ();">
+        <i class="fa fa-plus"></i>添加新观测记录</a>
+    </div>
+    <input class="hidden" id="countOccurrence" name="countOccurrence" value="0"></input>
+    <script id="occurrenceForm" type="text/x-jquery-tmpl">
+      <form class="panel panel-default" id="occurrenceForm_${num}" th:action="@{/}" method="post">
+    	<input class="hidden" id="occurrenceId_${num}" name="occurrenceId_${num}" readonly="readonly"></input>
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <i class="fa fa-check-circle hidden" id="occurrenceStatus_${num}"></i>
+            <a id="occurrenceCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#occurrenceCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">
+              <i id="occurrenceName_${num}">新的观测记录</i>
+              <span id="occurrenceAuthor_${num}"></span>
+            </a>
+            <a role="button" class="pull-right" onclick="removeOccurrence(${num});">
+              <i class="fa fa-remove"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="occurrenceCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="rdate" class="col-sm-4 control-label">* 记录日期:</label>
+                  <div class="col-sm-8 col-md-8">
+                      <input type="text" class="form-control datepicker" id="eventdate_${num}" name="eventdate_${num}" placeholder="记录日期，如：2018-12-12" />
+                  </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="occurrence_type_${num}" class="col-sm-4 control-label">* 观测类型:</label>
+                <div class="col-sm-8">
+					<select class="form-control select2" id="occurrence_type_${num}" name="occurrence_type_${num}" style="width: 100%;">
+                      <option disabled selected value></option>
+                      <option value ="1">人工观测</option>
+                      <option value ="2">机器探测</option>
+                      <option value ="3">标本记录</option>
+                  	</select>                
+				</div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="occurrenceSourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="occurrenceSourcesid_${num}" name="occurrenceSourcesid_${num}" style="width: 100%;">
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-12">
+              <div class="box box-default box-solid">
+              <div class="text-center">
+                 观测地点信息
+              </div>
+              <p></p>
+                <div class="box-footer">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_country_${num}" class="col-sm-4 control-label">国家:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="occurrence_country_${num}" name="occurrence_country_${num}" placeholder="观测点所在国家" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_map_${num}" class="col-sm-4 control-label"><i class="fa fa-map-marker"></i></label>
+                      <div class="col-sm-8">
+                        <a class="btn btn-block btn-default" onclick="selectCoordinates(${num});">
+                           地图选点(当前仅支持国内)
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_province_${num}" class="col-sm-4 control-label">省/洲:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="occurrence_province_${num}" name="occurrence_province_${num}" placeholder="观测点所在省/洲" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_city_${num}" class="col-sm-4 control-label">城市:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="occurrence_city_${num}" name="occurrence_city_${num}" placeholder="观测点所在城市" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_county_${num}" class="col-sm-4 control-label">县/区:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="occurrence_county_${num}" name="occurrence_county_${num}" placeholder="观测点所在县/区" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="occurrence_locality_${num}" class="col-sm-4 control-label">小地名:</label>
+                      <div class="col-sm-8">
+                        <input type="text" class="form-control" id="occurrence_locality_${num}" name="occurrence_locality_${num}" placeholder="观测点所在的小地名" /></div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group">
+                      <label for="occurrence_location_${num}" class="col-sm-2 control-label">观测地点:</label>
+                      <div class="col-sm-10 col-md-10">
+                        <textarea class="form-control" rows="2" id="occurrence_location_${num}" name="occurrence_location_${num}" placeholder="观测地点（全）"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <div class="form-group has-feedback">
+                        <label for="local" class="col-md-2 control-label">地理信息：</label>
+                        <div id="local">
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <span class="input-group-addon">经度</span>
+                                    <input id="occurrence_lng_${num}" class="form-control" placeholder="十进制小数" name="occurrence_lng_${num}" value="" data-bv-field="lng_${num}" type="text">
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="input-group">
+                                    <span class="input-group-addon">纬度</span>
+                                    <input id="occurrence_lat_${num}" class="form-control" placeholder="十进制小数" name="occurrence_lat_${num}" value="" data-bv-field="lat_${num}" type="text">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+			<input class="hidden" id="descOccuReferences_${num}" name="descOccuReferences_${num}" value="0"></input>
+            <input class="hidden" id="countOccurrenceReferences_${num}" name="countOccurrenceReferences_${num}" value="0"></input>
+			<input class="hidden" id="countOccuReferences_${num}" name="countOccuReferences_${num}" value="0"></input>
+
+			<div class="col-md-12">
+	      		<div class="form-group">
+	          		<label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					<div class="col-sm-2 col-md-2">
+		      			<select class="form-control select2" id="occurrenceSearchPara_${num}" name="occurrenceSearchPara_${num}" style="width: 100%;">
+							<option selected="selected"></option>
+							<option value="refstr">完整题录</option>
+							<option value="pyear">发表年代</option>
+							<option value="title">题目</option>
+							<option value="author">作者</option>
+						</select>
+	          		</div>
+	          		<div class="col-sm-4 col-md-4">
+						<input type="text" class="form-control" id="occurrencePyear_${num}" name="occurrencePyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	          		</div>
+	      		</div>
+	  		</div>
+
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="refjson" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10 col-md-10 table-responsive">
+                  <table class="table table-hover table-condensed">
+                    <tbody id="newOccurrenceReferences_${num}"></tbody>
+                  </table>
+                  <button type="button" class="btn btn-default btn-sm" onclick="addOccurrenceReferences (${num});">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary pull-right" onclick="submitOccurrence(${num});">确认</button></div>
+        </div>
+      </form>
+    </script>
+    <script id="occurrenceReferencesForm" type="text/x-jquery-tmpl">
+      <tr id="occurrenceReferencesForm_${onum}_${num}">
+        <td><label class="control-label">[${num}]</label><td>
+        <div class="form-group">
+          <div class="col-sm-8 col-md-8 col-xs-12">
+            <div class="input-group">
+              <select class="form-control select2" id="occurrenceReferences_${onum}_${num}" name="occurrenceReferences_${onum}_${num}" style="width: 100%;"></select>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" onclick="removeOccurrenceReferences(${onum},${num});">
+                  <i class="fa fa-remove"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="occurrenceReferencesPageS_${onum}_${num}" name="occurrenceReferencesPageS_${onum}_${num}" placeholder="起始页" /></div>
+          <div class="col-sm-2 col-md-2 col-xs-6">
+            <input type="text" class="form-control" id="occurrenceReferencesPageE_${onum}_${num}" name="occurrenceReferencesPageE_${onum}_${num}" placeholder="终止页" /></div>
+        </td>
+      </tr>
+    </script>
+  </form>
+</th:block>
+
+</html>

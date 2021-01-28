@@ -1,0 +1,145 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_2" class="form-horizontal" th:action="@{/}" method="post">
+    <div>
+      <div id="newCitation"></div>
+      <a class="btn btn-app" onclick="addCitation ();">
+        <i class="fa fa-plus"></i>添加新引证</a>
+    </div>
+    <input class="hidden" id="countCitation" name="countCitation" value="0"></input>
+    <script id="citationForm" type="text/x-jquery-tmpl">
+      <form class="panel panel-default" id="citationForm_${num}" th:action="@{/}" method="post">
+    	<input class="hidden" id="citationId_${num}" name="citationId_${num}"></input>
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <i class="fa fa-check-circle hidden" id="citationStatus_${num}"></i>
+            <a id="citationCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#citationCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的引证</a>
+            <a role="button" class="pull-right" onclick="removeCitation(${num});">
+              <i class="fa fa-remove"></i>
+            </a>
+          </h4>
+        </div>
+        <div id="citationCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+			<div class="col-md-6">
+              <div class="form-group">
+                <label for="nametype_${num}" class="col-sm-4 control-label">* 名称类型:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="nametype_${num}" name="nametype_${num}" style="width: 100%;">
+                      <option disabled selected value></option>
+                      <option value ="1">accepted name</option>
+                      <option value ="2">ambiguous synonym</option>
+                      <option value ="3">misapplied name</option>
+                      <option value ="4">provisionally accepted name</option>
+                      <option value ="5">synonym</option>
+                      <option value ="6">uncertain name</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="sciname_${num}" class="col-sm-4 control-label">* 名称:</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="sciname_${num}" name="sciname_${num}" placeholder="分类单元的名称" /></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="authorship_${num}" class="col-sm-4 control-label">* 命名信息:</label>
+                <div class="col-sm-8">
+                  <input type="text" class="form-control" id="authorship_${num}" name="authorship_${num}" placeholder="命名人和命名年代" /></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="citationSourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                <div class="col-sm-8">
+                  <select class="form-control select2" id="citationSourcesid_${num}" name="citationSourcesid_${num}" style="width: 100%;">
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label for="citationstr_${num}" class="col-sm-2 control-label">引证内容:</label>
+                <div class="col-sm-10 col-md-10">
+                  <textarea class="form-control" rows="3" id="citationstr_${num}" name="citationstr_${num}" placeholder="引证内容原文"></textarea>
+                </div>
+              </div>
+            </div>
+			<input class="hidden" id="descCitatReferences_${num}" name="descCitatReferences_${num}" value="0"></input>
+            <input class="hidden" id="countCitationReferences_${num}" name="countCitationReferences_${num}" value="0"></input>
+            <input class="hidden" id="countCitatReferences_${num}" name="countCitatReferences_${num}" value="0"></input>
+            
+			<div class="col-md-12">
+	      		<div class="form-group">
+	          		<label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					<div class="col-sm-2 col-md-2">
+		      			<select class="form-control select2" id="citationSearchPara_${num}" name="citationSearchPara_${num}" style="width: 100%;">
+							<option selected="selected"></option>
+							<option value="refstr">完整题录</option>
+							<option value="pyear">发表年代</option>
+							<option value="title">题目</option>
+							<option value="author">作者</option>
+						</select>
+	          		</div>	
+	          		<div class="col-sm-4 col-md-4">
+						<input type="text" class="form-control" id="citationPyear_${num}" name="citationPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	          		</div>
+	      		</div>
+	  		</div>
+
+			<div class="col-md-12">
+              <div class="form-group">
+                <label for="refjson" class="col-sm-2 control-label"></label>
+                <div class="col-sm-10 col-md-10 table-responsive">
+                  <table class="table table-hover table-condensed">
+                    <tbody id="newCitationReferences_${num}"></tbody>
+                  </table>
+                  <button type="button" class="btn btn-default btn-sm" onclick="addCitationReferences (${num});">
+                    <i class="fa fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary pull-right" onclick="submitCitation(${num});">确认</button></div>
+        </div>
+      </form>
+    </script>
+    <script id="citationReferencesForm" type="text/x-jquery-tmpl">
+        <tr id="citationReferencesForm_${cnum}_${num}">
+          <td><label class="control-label">[${num}]</label><td>
+          <div class="form-group">
+            <div class="col-sm-8 col-md-8 col-xs-12">
+              <div class="input-group">
+                <select class="form-control select2" id="citationReferences_${cnum}_${num}" name="citationReferences_${cnum}_${num}" style="width: 100%;"></select>
+                <div class="input-group-btn">
+                  <button type="button" id="citationReferencesBtn_${cnum}_${num}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">选择参考类型
+                    <span class="fa fa-caret-down"></span></button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <a onclick="selectCitationReferences(${cnum},${num},0,'原始文献');">原始文献</a></li>
+                    <li>
+                      <a onclick="selectCitationReferences(${cnum},${num},1,'其他文献');">其他文献</a></li>
+                  </ul>
+                </div>
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" onclick="removeCitationReferences(${cnum},${num});">
+                    <i class="fa fa-remove"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-xs-6">
+              <input type="text" class="form-control" id="citationReferencesPageS_${cnum}_${num}" name="citationReferencesPageS_${cnum}_${num}" placeholder="起始页" /></div>
+            <div class="col-sm-2 col-md-2 col-xs-6">
+              <input type="text" class="form-control" id="citationReferencesPageE_${cnum}_${num}" name="citationReferencesPageE_${cnum}_${num}" placeholder="终止页" /></div>
+              <input class="hidden" id="citationReferencesType_${cnum}_${num}" name="citationReferencesId_${cnum}_${num}" required></input>
+          </td>
+        </tr>
+    </script>
+  </form>
+</th:block>
+
+</html>

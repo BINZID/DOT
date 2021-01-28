@@ -1,0 +1,115 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- bootstrapValidator -->
+    <script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+    <th:block th:if="${#locale.getLanguage().equals('zh')}">
+        <script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+    </th:block>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var warning_name= [[#{warning_name}]];
+        /*]]>*/
+    </script>
+    <script>
+        function submitForm() {
+            var options = {url:base+'login', type:'post',cache:false, dataType:'json',
+                success:function(data){
+                    if(data.result=='Login Success' || data.result=='登录成功'){
+                        layer.msg(data.result,
+                            {
+                                time: 500, //1.5s后自动关闭
+                            },
+                            function(){
+                                window.location.reload();//刷新当前页面.
+                            });
+                    }
+                    else{
+                        layer.msg(data.result, function(){
+                            if(data.result=='该账户未激活' || data.result=='This account was not activated'){
+                                window.location.href=base+"register/success";
+                            }
+                        });
+                    }
+                },
+                error:function(){
+                    layer.msg("页面会话时间过长，自动刷新后请重新登录",
+                        {
+                            time: 1500, //1.5s后自动关闭
+                        },
+                        function(){
+                            window.location.reload();//刷新当前页面.
+                        });
+                }
+            }
+            $("#login_form").ajaxSubmit(options);
+            return false;
+        }
+        $(document).ready(function() {
+            //获取host
+            $("#base_url").val(window.location.host);
+            $('#login_form').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon ',
+                    invalid: 'glyphicon ',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    rename: {
+                        selector: '#username',
+                        validators: {
+                            notEmpty: {
+                            },
+                            stringLength: {
+                                min: 2,
+                                max: 30,
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: warning_name
+                            },
+                        }
+                    },
+                    'password': {
+                        validators: {
+                            notEmpty: {
+                            },
+                            stringLength: {
+                                min: 5,
+                                max: 20,
+                            },
+                        }
+                    },
+                    'token': {
+                        validators: {
+                            notEmpty: {
+                            },
+                            stringLength: {
+                                min: 4,
+                                max: 4,
+                            },
+                            regexp: {
+                                regexp: /^[a-zA-Z0-9_\.]+$/,
+                                message: warning_name
+                            },
+                        }
+                    },
+                }
+            });
+        });
+    </script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var please_login= [[#{please_login}]];
+        /*]]>*/
+    </script>
+    <script>
+        //构造登录提示
+        function pleaseLogin() {
+            layer.msg(please_login, function(){
+            });
+            $("#modal-login").modal()
+        }
+    </script>
+</th:block>
+</html>

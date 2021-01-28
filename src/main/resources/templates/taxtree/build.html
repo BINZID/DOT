@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/images/logo-black.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <base th:href="@{/}"/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <!-- 引入zTree -->
+    <link rel="stylesheet" th:href="@{/plugins/zTree/css/metroStyle/metroStyle.css}" type="text/css"/>
+    <style type="text/css">
+        div#rMenu {position:absolute; visibility:hidden; top:0; background-color: #555;padding: 2px;}
+        div#rMenu ul li{
+            margin: 0;
+            padding: 0 5px;
+            cursor: pointer;
+            list-style: none outside none;
+            background-color: #DFDFDF;
+        }
+        .outBoxLeft{
+        	height: 652px;
+        	overflow-y: auto;
+        }
+        .outBoxRight{
+        	height: 535px;
+        	overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="hold-transition skin-dark fixed sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <header id="header" class="main-header">
+        <!-- 引入Header -->
+        <span th:replace="pageFrame/basicsHeader :: copy" />
+    </header>
+    <!-- 引入 Left side column. contains the sidebar -->
+    <span th:replace="pageFrame/basicsMenu :: copy" />
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>分类树 > 
+                <span th:text="${thisTaxtree.treename}">分类树名称</span>
+                <small class="hidden"><span th:text="${#strings.length(thisTaxtree.treeinfo)<13} ? ${thisTaxtree.treeinfo} : ${#strings.substring(thisTaxtree.treeinfo,0,10)+'...'}" th:title="${thisTaxtree.treeinfo}">分类树备注</span></small>
+            </h1>
+            <ol class="breadcrumb">
+                <li><a th:href="@{/}" href="/"><i class="fa fa-home"></i> 首页</a></li>
+                <li>
+                    <a th:href="@{/console/}+${session.teamId}" href="/">
+                        <i class="fa fa-users"></i><span th:text="${#strings.length(session.teamName)<13} ? ${session.teamName} : ${#strings.substring(session.teamName,0,10)+'...'}" th:title="${session.teamName}" >团队名称</span></a>
+                </li>
+                <li>
+                    <a th:href="@{/console/taxtree/toTaxtreePage/}+${session.datasetID}">
+                        <i class="fa fa-database"></i><span th:text="${#strings.length(session.datasetName)<13} ? ${session.datasetName} : ${#strings.substring(session.datasetName,0,10)+'...'}" th:title="${session.datasetName}">数据集名称</span></a>
+                </li>
+                <li class="active"><i class="fa fa fa-sitemap"></i> <span th:text="${#strings.length(thisTaxtree.treename)<13} ? ${thisTaxtree.treename} : ${#strings.substring(thisTaxtree.treename,0,10)+'...'}" th:title="${thisTaxtree.treename}">树名称</span></li>
+            </ol>
+        </section>
+        <section class="content">
+            <form class="hidden" th:action="@{/}" method="post"></form>
+            <div class="col-md-6">
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title" th:text="${#strings.length(thisTaxtree.treename)<13} ? ${thisTaxtree.treename} : ${#strings.substring(thisTaxtree.treename,0,10)+'...'}" th:title="${thisTaxtree.treename}">树名称</h3>
+					        <!-- 刷新按钮 -->
+				            <button type="button" class="btn btn-default btn-flat pull-right" title="刷新" onclick="refreshTree()">
+				            	<i class="fa fa fa-refresh"></i>
+				            </button>
+					        <!-- 添加父节点按钮 -->
+				            <button type="button" class="btn btn-default btn-flat pull-right" onclick="addNewTaxon('null', 'prev')" title="添加父级节点">
+				            	<i class="fa fa-plus-square-o"></i>
+				            </button>
+				            <div class="col-md-5 pull-right">
+		                        <!-- 搜索框 -->
+						        <select class="form-control select2" id="noteName" name="noteName" style="width: 100%;">
+								</select>
+		                        <div class="input-group-btn hidden">
+		                        	<button type="button" class="btn btn-default dropdown-toggle" onclick="searchTree()"><i class="glyphicon glyphicon-search"></i></button>
+		                        </div>
+		                    </div>
+				            
+	                    <div class="hidden">
+		                    <input id="taxaTreeId" name="taxaTreeId" th:value="${thisTaxtree.id}" placeholder="树Id"></input>								<!-- 树Id -->
+						    <input id="taxonId" name="taxonId" readonly="readonly" placeholder="新建节点(分类单元)Id"></input>									<!-- 新建节点(分类单元)Id -->
+						    <input id="targetTaxonId" name="targetTaxonId" readonly="readonly" placeholder="新建节点(分类单元)的父节点Id|修改的目标节点的Id"></input>	<!-- 新建节点(分类单元)的父节点 -->
+		                    <input id="num" name="num" readonly="readonly" placeholder="新建|修改的节点层数/深度">												<!-- 新建|修改的节点层数/深度 -->			
+	                    </div>
+                    </div>
+                    <!-- 修改节点的树逻辑 -->
+                    <div class="hidden" id="pNodesDiv">
+                    </div>
+                    <!-- box-body -->
+                    <div class="box-body">
+                        <div class="row hidden">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-flat" onclick="selectAllLeftTree()"
+                                                data-toggle="tooltip" title="全选" data-widget="chat-pane-toggle" data-original-title="全选">
+                                            <i class="fa fa-check-square-o"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-flat" onclick="noSelectAllLeftTree()"
+                                                data-toggle="tooltip" title="全不选" data-widget="chat-pane-toggle" data-original-title="全不选">
+                                            <i class="fa fa-square-o"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-flat" onclick="refreshLeftTree()"
+                                                data-toggle="tooltip" title="刷新" data-widget="chat-pane-toggle" data-original-title="刷新">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" class="btn btn-default btn-flat" onclick="removeSelectTaxon()"
+                                            data-toggle="tooltip" title="删除选中项" data-widget="chat-pane-toggle" data-original-title="删除选中项">
+                                        <i class="fa fa-remove"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <ul id="leftTree" class="ztree outBoxLeft" style="min-height: 50px"></ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="box box-default box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">备选分类单元</h3>
+                    </div>
+                    <!-- box-body -->
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select class="form-control select2" id="treeType" name="treeType" style="width: 100%;">
+                                        <option value="taxon">从分类单元选择</option>
+                                        <option value="taxtree">从已有分类树选择</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 hidden">
+                                <div class="form-group">
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-default btn-flat" onclick="selectAllRightTree()"
+                                                data-toggle="tooltip" title="全选" data-widget="chat-pane-toggle" data-original-title="全选">
+                                            <i class="fa fa-check-square-o"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-flat" onclick="noSelectAllRightTree()"
+                                                data-toggle="tooltip" title="全不选" data-widget="chat-pane-toggle" data-original-title="全不选">
+                                            <i class="fa fa-square-o"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-default btn-flat" onclick="refreshRightTree()"
+                                                data-toggle="tooltip" title="刷新" data-widget="chat-pane-toggle" data-original-title="刷新">
+                                            <i class="fa fa-refresh"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" class="btn btn-default btn-flat" onclick="toThisTaxtree()"
+                                            data-toggle="tooltip" title="将选中项放入分类树" data-widget="chat-pane-toggle" data-original-title="将选中项放入分类树">
+                                        <i class="fa fa-arrow-left"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 treeType-taxtree" style="display:none;">
+                                <div class="form-group">
+                                    <select class="form-control select2" id="taxtreeId" name="taxtreeId" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 treeType-taxon">
+                                <div class="form-group">
+                                    <select class="form-control select2" id="taxasetId" name="taxasetId" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 treeType-taxon">
+                                <div class="form-group">
+                                    <select class="form-control select2" id="rankId" name="rankId" style="width: 100%;">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group treeType-taxon">
+                                <!--<label for="scientificname" class="col-sm-2 control-label">学名筛选:</label>-->
+                                <div class="col-sm-12 col-md-12">
+                                    <input type="text" class="form-control" id="taxonName" name="taxonName" placeholder="学名筛选"/>
+                                </div>
+                            </div>
+                        </div>
+                        <ul id="rightTree" class="ztree outBoxRight">请选择分类单元范围</ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="rMenu">
+                <ul>
+                    <li id="m_add" onclick="addTreeNode();">增加节点</li>
+                    <li id="m_del" onclick="removeTreeNode();">删除节点</li>
+                </ul>
+            </div>
+
+            <!-- table -->
+            <div class="table table-responsive">
+
+            </div>
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+<script th:src="@{/plugins/zTree/js/jquery.ztree.core.js}"></script>
+<script th:src="@{/plugins/zTree/js/jquery.ztree.excheck.js}"></script>
+<script th:src="@{/plugins/zTree/js/jquery.ztree.exedit.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var taxTreeId = [[${thisTaxtree.id}]];
+    /*]]>*/
+</script>
+<!-- 加载处理tree的通用方法 -->
+<script th:src="@{/js/taxtree/treeScript.js}"></script>
+<!-- 加载备选tree的选项方法 -->
+<script th:src="@{/js/taxtree/selectScript.js}"></script>
+<!-- 加载构造当前Taxtree方法 -->
+<script th:src="@{/js/taxtree/buildThisTaxtree.js}"></script>
+<!-- 加载构造备选taxonTree方法 -->
+<script th:src="@{/js/taxtree/buildTaxonTree.js}"></script>
+<!-- 加载构造当前OtherTaxonTree方法 -->
+<script th:src="@{/js/taxtree/buildOtherTaxTree.js}"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+    });
+    // select2选中option
+    $("#noteName").on("select2:select",function(data){
+    	$('#searchNodesDiv').html("");								// 清空树结构
+    	var taxaTreeId = $("#taxaTreeId").val();				// 树Id
+    	var targetTaxonId = $("#noteName option:checked").val();// 检索目标节点
+    	// 异步请求获取树结构
+    	$.get(
+			"/console/taxtree/rest/parentTreeNodesId", 
+			{ targetTaxonId: targetTaxonId, taxaTreeId: taxaTreeId },
+			function(msg){
+    			var num = msg.num;
+    			if(targetTaxonId.length > 0){
+    	    		$.ajaxSetup({async:false});
+    	    		$.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+    	    		searchParentNode(num, msg.nodeArr);				// 递归解析树结构
+    	    		selectNode(targetTaxonId);
+    	    		$.ajaxSetup({async:true});
+    	    	}else{
+    	    		$.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+    	    	}
+			});
+    });
+
+	// 递归：展开节点并选中子节点
+    function searchParentNode(num, nodeArr){
+    	if(num > 0){
+    		var pNode = nodeArr[num - 1];
+    		expandNode(pNode);
+    		selectNode(pNode);
+    		searchParentNode(num - 1, nodeArr);
+    	}
+    }
+</script>
+
+<script type="text/javascript">
+// 显示taxon详情
+function showTaxon(taxonId) {
+    window.open("console/taxon/show/"+taxonId, "_blank");
+}
+
+// 刷新树
+function refreshTree(){
+	var taxaTreeId = $("#taxaTreeId").val();
+	var targetTaxonId = $("#targetTaxonId").val();
+	if(targetTaxonId.length > 0){
+		$.ajaxSetup({async:false});
+		$.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+		var num = $("#num").val();
+		hasParentNode(num);				// 递归解析树结构
+		selectNode(targetTaxonId);
+		$.ajaxSetup({async:true});
+	 /* $('#pNodesDiv').html("");		// 清空树结构	
+		$("#targetTaxonId").val("");	// 清空修改的目标节点
+		$("#num").val("");				// 清空修改目标节点的深度 */
+	}else{
+		$.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+	}
+}
+
+// 递归：展开节点并选中子节点
+function hasParentNode(num){
+	if(num > 0){
+		var pNode = $("#pNode" + (num - 1)).val();
+		expandNode(pNode);
+		selectNode(pNode);
+		hasParentNode(num - 1);
+	}
+}
+
+// 获取修改节点的树结构，设置到隐藏域
+function parentNoteTree(targetTaxonId){
+	var taxaTreeId = $("#taxaTreeId").val();
+	$.get(
+		"/console/taxtree/rest/parentTreeNodesId", 
+		{ targetTaxonId: targetTaxonId, taxaTreeId: taxaTreeId },
+		function(msg){
+			var div = parent.$("#pNodesDiv"); 
+			var num = msg.num;
+			$("#targetTaxonId").val(targetTaxonId);
+			$("#num").val(num);
+			for(var i = 0; i < num; i++){
+				var input = document.createElement("input");
+				input.setAttribute('type', 'text');     
+				input.setAttribute('id', 'pNode' + (i + 1));  	//设置Id属性  
+				input.setAttribute('name', 'pNode' + (i + 1));  //设置name属性  
+				input.setAttribute('readonly', 'readonly');  	//设置文本为只读类型  
+				input.value = msg.nodeArr[i];					//设置值
+				div.append(input);								//追加到指定的Div
+			}
+		});
+}
+
+</script>
+
+
+<script type="text/javascript">
+/* 分类树新建分类单元layer弹出层 */
+function addNewTaxon(targetTaxonId, moveType) {
+    var width=$(window).width();
+    var height=$(window).height();
+    var layer_width="90%";
+    var layer_height="90%";
+    if(width>760){
+    	layer_width="760px";
+    	layer_height="700px";
+    }
+    layer.open({
+		type: 2,
+		title:'<h4>新建分类单元</h4>',
+		fixed: true, //不固定
+		area: [layer_width, layer_height],
+		content: '/console/taxon/addNewTaxon/' + taxTreeId + '/' + targetTaxonId + '/' + moveType,
+		end: function () {
+			$.ajaxSetup({async:false});
+			$.fn.zTree.init($("#leftTree"), settingThisTaxtree);
+			var num = $("#num").val();
+			hasParentNode(num);			// 递归解析树结构
+			selectNode($("#targetTaxonId").val());
+		  	expandNode($("#targetTaxonId").val());
+		    selectNode($("#taxonId").val());
+			$.ajaxSetup({async:true});
+			$('#pNodesDiv').html("");
+			$("#targetTaxonId").val("");
+			$("#num").val("");
+	    }
+	});
+}
+</script>
+<script type="text/javascript">
+/* 展开父级节点*/
+function expandNode(this_id) {
+    var zTree = $.fn.zTree.getZTreeObj("leftTree");
+        nodes = zTree.getNodesByParam("id", this_id, null);
+    if(nodes!=null){
+    	zTree.selectNode(nodes[0], true);
+        zTree.expandNode(nodes[0], true, null, null);
+    }else{
+        alert("error");
+    }
+}
+/* 选定子节点*/
+function selectNode(this_id) {
+    var zTree = $.fn.zTree.getZTreeObj("leftTree");
+    nodes = zTree.getNodesByParam("id", this_id, null);
+    if(nodes!=null){
+        zTree.selectNode(nodes[0], true);
+    }else{
+        alert("error");
+    }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+	<!-- 模态框（Modal） -->
+	<div class="modal fade bs-model-lg" id="uploadRefs" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header bg=primary">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+					<h4 class="modal-title">参考文献导入</h4>
+				</div>
+				
+				<div class="modal-body">
+					<form id="ffImport" method="post">
+	                    <div title="Excel导入操作" style="padding: 5px">
+							<input id="uploadRef" name="uploadRef" type="file" accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></input>
+	                    </div>
+	                </form>
+                    <div id="uploadRef-alert-area"></div>
+                    <div class="table table-responsive"><table id="uploadRef-table-area"></table></div>
+                    <div class="table table-responsive"><table id="uploadRef-table-errorData"></table></div>
+				</div>
+				
+				<div class="modal-footer">
+					<!-- <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="SaveImport()">下载</button> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- table -->
+	<div class="table table-responsive">
+		<!-- 参考文献 -->
+		<h4>
+            <b>参考文献</b>
+            <small>个人账户所有的参考文献列表，为分类单元提供数据支持</small>
+        </h4>
+        <!-- 文件操作 -->
+        <h4>
+            <b>文件操作</b>
+            <a class="btn btn-primary btn" data-toggle="modal" onclick="initFileInputForRef('uploadRef', '/console/ref/rest/upload', 'ref_table', '/console/ref/rest/uploaded/')" data-target="#uploadRefs">
+		        <i class="fa fa-upload"></i> <span>上传</span>
+		    </a>
+		    
+	        <a class="btn btn-primary btn hidden"  th:href="@{/console/ref/export}">
+		        <i class="fa fa-download"></i> <span>下载</span>
+		    </a>
+        </h4>
+		<!-- 本次上传的参考文献 -->
+		<h4>
+			<b>本次上传的参考文献：</b>
+		</h4>
+		<table
+			id="ref_table"
+		    data-locale="zh-CN"
+		    data-classes="table table-hover table-condensed"
+		    data-toggle="table"
+		    th:attr="data-url=@{/console/ref/rest/uploaded/}"
+		    data-pagination="true"
+		    data-side-pagination="server"
+		    data-page-list="[10, 20, 30, 50, 100]"
+		    data-search="true"
+		    data-show-columns="true"
+		    data-show-toggle="true"
+		    data-toolbar="#toolbar"
+		    data-show-export="false"
+            data-sort-name="synchdate"
+            data-sort-order="desc"
+		    data-show-refresh="true"
+		    data-export-types="['excel', 'txt']">
+			<thead>
+			<tr>
+				<th data-field="b.serialNum" data-align="left" data-sortable="true">序号</th>
+	            <th data-field="author" data-align="center" data-sortable="true" data-formatter="formatAuthor">作者</th>
+	            <th data-field="pyear" data-align="center" data-sortable="true">发表日期</th>
+				<th data-field="title" data-align="center" data-sortable="true" data-formatter="formatTitle">题目</th>
+	            <th data-field="journal" data-align="center" data-sortable="true" data-formatter="formatJournal">期刊/专著名</th>
+	            <th data-field="refstr" data-align="center" data-sortable="true">完整题录</th>
+	            <th data-field="volume" data-align="center" data-sortable="true">卷</th>
+	            <th data-field="period" data-align="center" data-sortable="true">期</th>
+	            <th data-field="press" data-align="center" data-sortable="true">出版社</th>
+	            <th data-field="version" data-align="center" data-sortable="true">版本</th>
+	            <th data-field="ptype" data-align="center" data-sortable="true">类型</th>
+	            <th data-field="inputer" data-align="center" data-sortable="true">录入人</th>
+	            <th data-field="inputtime" data-align="center" data-sortable="true">录入时间</th>
+	            <th data-field="synchdate" data-align="center" data-sortable="true">更新时间</th>
+			</tr>
+			</thead>
+		</table>
+	</div>
+</th:block>
+</html>

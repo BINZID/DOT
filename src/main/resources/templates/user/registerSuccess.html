@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:控制台首页
+    Description：控制台首页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">D-TAXON&nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <span th:replace="pageFrame/basicsCss :: copy" />
+    <!-- Banner-->
+    <link rel="stylesheet" th:href="@{/css/banner.css}" href="css/banner.css"/>
+</head>
+<body class="hold-transition skin-leaf fixed layout-top-nav">
+<!-- Site wrapper -->
+<div class="wrapper">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Main content -->
+        <section class="content container">
+            <div class="register-box">
+                <div class="register-logo">
+                    <span>D-<b>TAXON</b></span>
+                </div>
+
+                <div class="register-box-body">
+                    <p class="login-box-msg">注册成功</p>
+                    <p>
+                        <h4>
+                            <span>您已注册成功，账号尚未激活，请去您填写的注册邮箱</span>
+                            	（<b th:text="${session.registerEmail}"></b>）
+                            <span>点击激活链接完成后续步骤。</span>
+                        </h4>
+                    </p>
+                    <p>
+                        <h4>如您未收到激活邮件，请把此网站的官方邮箱</h4>
+                            <h4>(<span th:text="${session.adminEmail}"></span>)</h4>
+                        <h4>加入白名单，防止被系统拦截。</h4>
+                    </p>
+                    <div class="social-auth-links text-center">
+                        <p>- OR -</p>
+                        <form id="register_form" th:action="@{/register/new}" action="register/new" method="post">
+                            <input class="hidden" type="text" th:value="${session.registerEmail}" id="email" name="email" readonly="readonly"></input>
+                            
+                            <!-- 验证码 -->
+				            <div class="form-group has-feedback">
+				                <input type="text" class="form-control" id="token" name="token" autocomplete="off" placeholder="请输入下方验证码">
+				                <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
+				                <p></p>
+				                <div>
+				                    <i>
+				                        <img style="height:32px;" id="codeImg" alt="点击更换" title="点击更换" th:src="@{/captchaImg}"/>
+				                        <a href="javascript:void(0);" onclick="reImg()">看不清，换一张</a>
+				                    </i>
+				                </div>
+				            </div>
+                            
+                            <div class="row">
+                            </div>
+                        </form>
+                        <a href="javascript:void(0);" onclick="resendActiveEmail();" class="text-center dropdown-toggle">重新发送激活邮件</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="">
+        <span th:replace="pageFrame/basicsFooter :: copy" />
+    </footer>
+    <!-- Control Sidebar -->
+    <span th:replace="pageFrame/basicsControl :: copy" />
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- 引入js【body末尾引入js文件会使页面加载更快】 -->
+<span th:replace="pageFrame/basicsJs :: copy" />
+
+
+<div th:if="${#lists.isEmpty(session.SPRING_SECURITY_CONTEXT)}">
+    <span th:replace="user/loginJs :: copy" />
+	<!-- bootstrapValidator -->
+	<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+	<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+</div>
+<script>
+    
+    function reImg() {
+        var img = document.getElementById("codeImg");
+        img.src = "captchaImg";
+        document.getElementById('codeImg').src = '/captchaImg?code=' + Math.random();
+    }
+
+    function resendActiveEmail() {
+        $.post("register/rest/resendActiveEmail",
+            {
+                "_csrf":$('input[name="_csrf"]').val(),
+                "token":$('#token').val(),
+                "email":$('#email').val(),
+            },
+            function(result){
+                if(result=='Send Success' || result=='发送成功'){
+                    layer.msg(result,
+                        {
+                            time: 1500, //1.5s后自动关闭
+                        },
+                        function(){
+                            window.location.href=base+"/";
+                        });
+                }else{
+                    layer.msg(result, function(){
+                    });
+                }
+            });
+    }
+</script>
+</body>
+</html>

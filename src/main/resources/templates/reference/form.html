@@ -1,0 +1,345 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:Reference添加/编辑时的form页
+    Description：超级管理员权限可见的用户添加/编辑时的form页
+    Author：BINZI
+    Created date: 2018/05/28 15:56
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<th:block th:fragment="copy" >
+
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" id="errorMsg" th:value="${errorMsg}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{inputer}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisRef.inputtime)}">
+        <input class="hidden" th:field="*{inputtime}" readonly="readonly"></input>
+    </div>
+    
+    <div class="col-md-6">
+	    <div class="form-group">
+	        <label for="ptype" class="col-sm-4 control-label">* 文献类型:</label>
+	        <a role="button" class="dropdown-toggle" data-toggle="modal" data-target="#modal-ref">
+				<i class="fa fa-question-circle"></i>
+			</a>
+	        <div class="col-sm-8">
+	        	<select class="form-control select2" id="ptype" name="ptype" style="width: 100%;">
+	                <option selected value ="1">期刊[J]</option>
+	                <option value ="2">专著[M]</option>
+	                <option value ="3">论文集[C]</option>
+	                <option value ="4">其他</option>
+				</select>
+	        </div>
+	    </div>
+	</div>
+
+	<div class="col-md-12">
+	    <div class="form-group">
+	        <label for="title" class="col-sm-2 control-label">* 完整题录:</label>
+	        <div class="col-sm-8">
+	        	<input th:field="*{refstr}" type="text" class="form-control" id="refstr" name="refstr" placeholder="未被拆分的原始题录文本"></input>
+	        </div>
+	        <div class="col-sm-2">
+	        	<button type="button" class="btn btn-primary" onclick="handleRefstr();">
+                    <span>自动解析</span>
+                </button>
+	        </div>
+	    </div>
+	</div>
+	
+	 	<div class="col-md-6" id="refAuthor">
+		 	<div class="form-group">
+		        <label for="author" class="col-sm-4 control-label">* 作者:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{author}" type="text" class="form-control" id="author" name="author" placeholder="文献的作者"/>
+		        </div>
+		    </div>
+		</div>
+
+	 	<div class="col-md-6" id="refTitle">
+		    <div class="form-group">
+		        <label for="title" class="col-sm-4 control-label">* 题目:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{title}" type="text" class="form-control" id="title" name="title" placeholder="文献标题"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refVersion">
+		    <div class="form-group">
+		        <label id="referenceVersion" for="version" class="col-sm-4 control-label">版本:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{version}" type="text" class="form-control" id="version" name="version" placeholder="专著、论文集、软件的版本"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refJournal">
+		    <div class="form-group">
+		        <label id="referenceJournal" for="journal" class="col-sm-4 control-label">刊 / 论文集名:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{journal}" type="text" class="form-control" id="journal" name="journal" placeholder="期刊/专著名称"/>
+		        </div>
+		    </div>
+		</div>
+	
+		<div class="col-md-6" id="refPyear">
+		    <div class="form-group">
+		        <label for="pyear" class="col-sm-4 control-label">* 发表年代:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{pyear}" type="text" class="form-control" id="pyear" name="pyear" placeholder="文献资料发表时间"/>
+		        </div>
+		    </div>
+		</div>
+
+		<div class="col-md-6" id="refTranslator">
+		 	<div class="form-group">
+		        <label id="referenceTranslator" for="translator" class="col-sm-4 control-label">译/编者:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{translator}" type="text" class="form-control" id="translator" name="translator" placeholder="专著、论文集的编译者"/>
+		        </div>
+		    </div>
+		</div>
+	 	
+	 	<div class="col-md-6" id="refVolume">
+		    <div class="form-group">
+		        <label id="referenceVolume" for="rVolume" class="col-sm-4 control-label">卷:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{rVolume}" type="text" class="form-control" id="rVolume" name="rVolume" placeholder="文献发表在期刊的某一卷"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refPeriod">
+		    <div class="form-group">
+		        <label id="referencePeriod" for="rPeriod" class="col-sm-4 control-label">期:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{rPeriod}" type="text" class="form-control" id="rPeriod" name="rPeriod" placeholder="文献发表在期刊的某一期"/>
+		        </div>
+		    </div>
+		</div>
+				
+	 	<div class="col-md-6" id="refPlace">
+		    <div class="form-group">
+		        <label for="place" class="col-sm-4 control-label">出版地:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{place}" type="text" class="form-control" id="place" name="place" placeholder="文献资料出版地"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refPress">
+		    <div class="form-group">
+		        <label for="press" class="col-sm-4 control-label">出版社:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{press}" type="text" class="form-control" id="press" name="press" placeholder="文献资料出版社"/>
+		        </div>
+		    </div>
+		</div>
+	 	
+	 	<div class="col-md-6" id="refPageStart">
+		    <div class="form-group">
+		        <label for="refs" class="col-sm-4 control-label">起始页:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{refs}" type="text" class="form-control" id="refs" name="refs" placeholder="文献的起始页码"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refPageEnd">
+		    <div class="form-group">
+		        <label for="refe" class="col-sm-4 control-label">终止页:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{refe}" type="text" class="form-control" id="refe" name="refe" placeholder="文献的终止页码"/>
+		        </div>
+		    </div>
+		</div>
+
+	<div class="col-md-12">
+	   <h4>
+           <b>参考文献补充</b>
+           <small>非必填内容</small>
+       </h4>
+       <p></p>
+    	<div class="box box-default box-solid">
+    	</div>
+    </div>
+    
+		<div class="col-md-6" id="refISBN">
+		    <div class="form-group">
+		        <label for="isbn" class="col-sm-4 control-label">文献标识:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{isbn}" type="text" class="form-control" id="isbn" name="isbn" placeholder="文献的DOI、ISBN等"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refKeywords">
+		    <div class="form-group">
+		        <label for="keywords" class="col-sm-4 control-label">关键字:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{keywords}" type="text" class="form-control" id="keywords" name="keywords" placeholder="关键字"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refTpage">
+		    <div class="form-group">
+		        <label for="tpage" class="col-sm-4 control-label">总页数:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{tpage}" type="text" class="form-control" id="tpage" name="tpage" placeholder="总页数"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-6" id="refTchar">
+		    <div class="form-group">
+		        <label for="tchar" class="col-sm-4 control-label">总字数:</label>
+		        <div class="col-sm-8">
+		            <input th:field="*{tchar}" type="text" class="form-control" id="tchar" name="tchar" placeholder="总字数"/>
+		        </div>
+		    </div>
+	    </div>
+	
+	    <div class="col-md-6" id="refLanguages">
+		    <div class="form-group">
+		        <label for="languages" class="col-sm-4 control-label">文献语言:</label>
+		        <div class="col-sm-8">
+		        	<select th:field="*{languages}" class="form-control select2" id="languages" name="languages" style="width: 100%;">
+		        		<option selected value =""></option>
+		        		<option value ="1">中文</option>
+	                    <option value ="2">英语</option>
+	                    <option value ="3">法语</option>
+	                    <option value ="4">俄语</option>
+	                    <option value ="5">西班牙语</option>
+	                    <option value ="6">其他</option>
+					</select>
+		        </div>
+		    </div>
+	    </div>
+
+		<div class="col-md-6" id="refOlang">
+		    <div class="form-group">
+		        <label for="olang" class="col-sm-4 control-label">原始语言:</label>
+		        <div class="col-sm-8">
+		        	<select th:field="*{olang}" class="form-control select2" id="olang" name="olang" style="width: 100%;">
+		        		<option selected value =""></option>
+		        		<option value ="1">中文</option>
+	                    <option value ="2">英语</option>
+	                    <option value ="3">法语</option>
+	                    <option value ="4">俄语</option>
+	                    <option value ="5">西班牙语</option>
+	                    <option value ="6">其他</option>
+					</select>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-12" id="refLink">
+		    <div class="form-group">
+		        <label id="referencerLink" for="rLink" class="col-sm-2 control-label">文献链接:</label>
+		        <div class="col-sm-10 col-md-10">
+		            <input th:field="*{rLink}" type="text" class="form-control" id="rLink" name="rLink" placeholder="文献资料在线链接地址"/>
+		        </div>
+		    </div>
+		</div>
+		
+		<div class="col-md-12" id="refRemark">
+		    <div class="form-group">
+		        <label id="referenceRemark" for="version" class="col-sm-2 control-label">备注:</label>
+		        <div class="col-sm-10 col-md-10">
+		        	<textarea th:field="*{remark}" id="remark" name="remark" class="form-control" placeholder="文献备注" rows="4"></textarea>
+		        </div>
+		    </div>
+		</div>
+	
+		<div class="modal fade" id="modal-ref">
+			<div class="modal-dialog" style="width: 65%">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button id="closeTerms" type="button" class="close"
+							data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">参考文献说明</h4>
+					</div>
+					<div class="modal-body">
+						<p>
+							<b>参考文献示例：</b>
+							<small>左边为参考文献类型，右侧为对应参考文献类型的标准格式及示例</small>
+						</p>
+						<div class="box-body table-responsive">
+							<table id="reftable1"
+								class="table table-hover table-condensed" data-toggle="table"
+								data-classes="table table-no-bordered" data-height="100%" data-width="100%"
+								data-row-style="rowStyle">
+									<tr>
+										<th data-field="type">文献类型</th>
+										<th data-field="demo">例&nbsp;&nbsp;&nbsp;&nbsp;子</th>							
+									</tr>
+	
+								<tbody>
+									
+									<tr>
+										<td rowspan=6>期刊论文</td>
+									</tr>
+									<tr>
+										<td><b>著者．题名[J]．刊名．出版年，卷（期）∶起止页码</b></td>
+									</tr>
+									<tr>
+										<td>[1]周庆荣，张泽廷，朱美文，等．固体溶质在含夹带剂超临界流体中的溶解度[J]．化工学报，1995(3)：317-323．</td>
+									</tr>
+									<tr>
+										<td>[2] Dobbs J M, Wong J M. Modification of Supercritical Fluid Phasebehavior Using Polor Coselvent [J]. Ind Eng Chem Res, 1987, 26: 56.</td>
+									</tr>		
+									<tr>
+										<td>[3]刘仲能，金文清．合成医药中间体4-甲基咪唑的研究[J]．精细化工，2002(2)：103-105．</td>
+									</tr>		
+									<tr>
+										<td>[4] Mesquita A C, Mori M N, Vieira J M, etal. Vinyl Acetate Polymerization by Ionizing Radiation [J]. Radiation Physics and Chemistry, 2002, 63: 465.</td>
+									</tr>
+											
+									<tr>
+										<td rowspan=5>专	著</td>
+									</tr>
+									<tr>
+										<td><b>著者．书名[M]．版本（第一版不录）．出版地∶出版者，出版年∶起止页码</b></td>
+									</tr>
+									<tr>
+										<td>[1] 蒋挺大．亮聚糖[M]．北京：化学工业出版社，2001：127．</td>
+									</tr>
+									<tr>
+										<td>[2] Kortun G. Reflectance Spectroscopy [M]. New York: Spring-Verlag, 1969.</td>
+									</tr>
+									<tr>
+										<td>[3] Rees, Helen. Echoes of History: Naxi Music in Modern China(历史的回声： 当代中国的纳西音乐)[M]. New York: Oxford University Press, 2000.</td>
+									</tr>
+									
+									<tr>
+										<td rowspan=4>论文集</td>
+									</tr>
+									<tr>
+										<td><b>著者．题名．编者．论文集名[C]．出版地∶出版者，出版年∶起止页码</b></td>
+									</tr>
+									<tr>
+										<td>[1]郭宏，王熊，刘宗林．膜分离技术在大豆分离蛋白生产中综合利用的研究[C]．余立新．第三届全国膜和膜过程学术报告会议论文集．北京：高等教育出版社，1999∶421-425．</td>
+									</tr>
+									<tr>
+										<td>[2] Eiben A E, vander Hauw J K. Solving 3-SAT with Adaptive Genetic Algorithms [C]. Proc 4th IEEE Conf Evolutionary Computation．Piscataway: IEEE Press, 1997: 81-86.</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-default pull-left"
+							data-dismiss="modal">返回</button> -->
+					</div>
+				</div>
+			</div>
+		</div>
+
+</th:block>
+</html>

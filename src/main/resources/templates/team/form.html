@@ -1,0 +1,37 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:团队添加/编辑时的form页
+    Description：团队添加/编辑时的form页
+    Author：WangTianshan (王天山)
+    Created date: 2017/9/15 21:35
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<div th:fragment="copy" >
+    <input id="errorMsg" class="hidden" th:value="${errorMsg}" readonly="readonly"></input>
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{mark}" id="mark" name="mark" readonly="readonly"></input>
+    <input class="hidden" th:field="*{bgurl}" readonly=""></input>
+    <input class="hidden" id="editdsname" name="editdsname" readonly="readonly" th:value="${editdsname}"></input>
+    <input class="hidden" th:field="*{leader}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisTeam.adddate)}">
+        <input class="hidden" th:field="*{adddate}" readonly="readonly"></input>
+    </div>
+    
+    <div class="form-group">
+        <label for="name" class="col-sm-2 control-label">* 团队名称:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{name}" type="text" class="form-control" id="name" name="name" placeholder="3~30个字符"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="note" class="col-sm-2 control-label">团队说明/备注:</label>
+        <div class="col-sm-10 col-md-10">
+            <textarea th:field="*{note}" id="note" name="note" class="form-control" placeholder="0~500个字符" rows="10"></textarea>
+        </div>
+    </div>
+</div>
+</html>

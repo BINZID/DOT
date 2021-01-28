@@ -1,0 +1,255 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+  <form id="form_4" class="form-horizontal" th:action="@{/}" method="post">
+		<div>
+			<ul class="nav nav-tabs hidden" role="tablist">
+				<li role="presentation" class="active"><a href="#distributiondata"
+					id="tab-distributiondata" aria-controls="distributiondata"
+					role="tab" data-toggle="tab">分布数据</a></li>
+			</ul>
+			<div class="tab-content">
+				<!-- 分布数据面板 -->
+				<div role="tabpanel" class="tab-pane active" id="distributiondata">
+					<div id="newDistributiondata"></div>
+					<a class="btn btn-app" onclick="addDistributiondata ();"> <i
+						class="fa fa-plus"></i>添加新分布数据
+					</a> 
+					<input class="hidden" id="countDistributiondata"
+						name="countDistributiondata" value="0"></input>
+					<!-- 分布数据模板 -->
+					<script id="distributiondataForm" type="text/x-jquery-tmpl">
+                        <form class="panel panel-default" id="distributiondataForm_${num}" th:action="@{/}" method="post">
+							<input class="hidden" id="disdescriptionId_${num}" name="disdescriptionId_${num}"></input>
+							<input class="hidden" id="distributiondataId_${num}" name="distributiondataId_${num}"></input>
+                          <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                              <i class="fa fa-check-circle hidden" id="distributiondataStatus_${num}"></i>
+                              <a id="distributiondataCollapseTitle_${num}" role="button" data-toggle="collapse" data-parent="#accordion" href="#distributiondataCollapse_${num}" aria-expanded="true" aria-controls="collapseOne">新的分布数据</a>
+                              <a role="button" class="pull-right" onclick="removeDistributiondata(${num});">
+                                <i class="fa fa-remove"></i>
+                              </a>
+                            </h4>
+                          </div>
+                          <div id="distributiondataCollapse_${num}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                            <div class="panel-body">
+
+							  <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="destitle_${num}" class="col-sm-4 control-label">* 描述标题:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="distitle_${num}" name="distitle_${num}" placeholder="描述标题" /></div>
+                                </div>
+                              </div>
+
+							  <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="destypeid_${num}" class="col-sm-4 control-label">* 分布类型:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="distypeid_${num}" name="distypeid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="desdate_${num}" class="col-sm-4 control-label">描述时间:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="disdate_${num}" name="disdate_${num}" placeholder="描述时间，一般为年份" /></div>
+                                </div>
+                              </div>
+							 <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="distributiondatasourcesid_${num}" class="col-sm-4 control-label">* 数据源:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="distributiondatasourcesid_${num}" name="distributiondatasourcesid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="describer_${num}" class="col-sm-4 control-label">描述人:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="discriber_${num}" name="discriber_${num}" placeholder="描述人" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="language_${num}" class="col-sm-4 control-label">* 描述语言:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="dislanguage_${num}" name="dislanguage_${num}" style="width: 100%;">
+										 <option selected value =""></option>
+										 <option value ="1">中文</option>
+                     				     <option value ="2">英语</option>
+                     				     <option value ="3">法语</option>
+                     				     <option value ="4">俄罗斯语</option>
+                     				     <option value ="5">西班牙语</option>
+                     				     <option value ="6">其他</option>
+									</select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="rightsholder_${num}" class="col-sm-4 control-label">权利所有人:</label>
+                                  <div class="col-sm-8">
+                                    <input type="text" class="form-control" id="disrightsholder_${num}" name="disrightsholder_${num}" placeholder="描述的权利所有人" /></div>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="form-group">
+                                  <label for="licenseid_${num}" class="col-sm-4 control-label">* 共享协议:</label>
+                                  <div class="col-sm-8">
+                                    <select class="form-control select2" id="dislicenseid_${num}" name="dislicenseid_${num}" style="width: 100%;"></select>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="descontent_${num}" class="col-sm-2 control-label">* 分布描述:</label>
+                                  <div class="col-sm-7 col-md-7">
+                                    <textarea class="form-control" rows="3" id="discontent_${num}" name="discontent_${num}" placeholder="分布描述"></textarea>
+                                  </div>
+								  <div class="input-group col-md-3">
+						        	<select class="form-control select2" id="parseType_${num}" name="parseType_${num}" style="width: 100%;">
+										<option selected value =""></option>
+										<option value ="1">按中国省级行政区</option>
+										<option value ="2">按中国市级行政区</option>
+										<option value ="3">按中国县级行政区</option>
+                      					<option value ="4">按中国鸟类地理区划</option>
+                      					<option value ="5">按国家解析</option>
+									</select>
+		                        	<div class="input-group-btn">
+		                        		<button type="button" class="btn btn-primary" onclick="parseGeoobject(${num})">解析</button>
+		                          	</div>
+		                    	  </div>
+                                </div>
+                              </div>
+
+							 <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="relation_${num}" class="col-sm-2 control-label">关系:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <div class="input-group" id="relation">
+                                      <select class="form-control select2 col-sm-6 col-md-6" id="disrelationDes_${num}" name="disrelationDes_${num}" style="width: 100%;">
+										
+									  </select>
+                                      <div class="input-group-btn">
+                                        <button type="button" id="disrelationBtn_${num}" class="btn btn-default dropdown-toggle" data-toggle="dropdown">选择关系
+                                          <span class="fa fa-caret-down"></span></button>
+                                        <ul class="dropdown-menu">
+                                          <li>
+                                            <a onclick="selectDisRelation(${num},0,'无关系');">无关系</a></li>
+                                          <li>
+                                            <a onclick="selectDisRelation(${num},1,'的 翻译');">的 翻译</a></li>
+                                          <li>
+                                            <a onclick="selectDisRelation(${num},2,'的 总结');">的 总结</a></li>
+                                          <li>
+                                            <a onclick="selectDisRelation(${num},3,'的 说明');">的 说明</a></li>
+                                        </ul>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                              <input class="hidden" id="disrelationId_${num}" name="disrelationId_${num}"></input>
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="descriptionremark_${num}" class="col-sm-2 control-label">备注:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <input type="text" class="form-control" id="disremark_${num}" name="disremark_${num}" placeholder="备注信息" /></div>
+                                </div>
+                              </div>
+							  <div class="col-md-12">
+       							  <p></p>
+    							  <div class="box box-default box-solid">
+    							  </div>
+    						  </div>
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="refjson" class="col-sm-2 control-label">分布地:</label>
+                                  <div class="col-sm-10">
+                                    <select class="form-control select2" multiple="multiple" name="geojson_${num}" id="geojson_${num}" data-placeholder="选择分布地(多选)"
+                                            style="width: 100%;">
+                                    </select>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="discontent_${num}" class="col-sm-2 control-label">分布地级别列表:</label>
+                                  <div class="col-sm-10 col-md-10">
+                                    <textarea class="form-control" rows="4" id="geoobjects_${num}" name="geoobjects_${num}" placeholder="通过上方下拉选选择"></textarea>
+                                  </div>
+                                </div>
+                              </div>
+
+							  <input class="hidden" id="descDistReferences_${num}" name="descDistReferences_${num}" value="0"></input>
+                              <input class="hidden" id="countDistributiondataReferences_${num}" name="countDistributiondataReferences_${num}" value="0"></input>
+							  <input class="hidden" id="countDistReferences_${num}" name="countDistReferences_${num}" value="0"></input>
+                              
+							  <div class="col-md-12">
+	                              <div class="form-group">
+	                                  <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+					                  <div class="col-sm-2 col-md-2">
+		      		                 	<select class="form-control select2" id="distributiondataSearchPara_${num}" name="distributiondataSearchPara_${num}" style="width: 100%;">
+					                  		<option selected="selected"></option>
+					                  		<option value="refstr">完整题录</option>
+					                  		<option value="pyear">发表年代</option>
+					                  		<option value="title">题目</option>
+					                  		<option value="author">作者</option>
+					                  	</select>
+	          		                  </div>	
+	                                  <div class="col-sm-4 col-md-4">
+	                         		  <input type="text" class="form-control" id="distributiondataPyear_${num}" name="distributiondataPyear_${num}" placeholder="请输入发表年代检索参考文献"></input>      
+	                                  </div>
+	                              </div>
+	                          </div>
+
+							  <div class="col-md-12">
+                                <div class="form-group">
+                                  <label for="refjson" class="col-sm-2 control-label"></label>
+                                  <div class="col-sm-10 col-md-10 table-responsive">
+                                    <table class="table table-hover table-condensed">
+                                      <tbody id="newDistributiondataReferences_${num}"></tbody>
+                                    </table>
+                                    <button type="button" class="btn btn-default btn-sm" onclick="addDistributiondataReferences(${num});">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button type="button" class="btn btn-primary pull-right" onclick="submitDistributiondata(${num});">确认</button></div>
+                          </div>
+                        </form>
+                    </script>
+					<!-- 分布数据的参考文献模板 -->
+					<script id="distributiondataReferencesForm"
+						type="text/x-jquery-tmpl">
+                        <tr id="distributiondataReferencesForm_${dinum}_${num}">
+                          <td><label class="control-label">[${num}]</label><td>
+                          <div class="form-group">
+                            <div class="col-sm-8 col-md-8 col-xs-12">
+                              <div class="input-group">
+                                <select class="form-control select2" id="distributiondataReferences_${dinum}_${num}" name="distributiondataReferences_${dinum}_${num}" style="width: 100%;"></select>
+                                <div class="input-group-btn">
+                                  <button type="button" class="btn btn-default dropdown-toggle" onclick="removeDistributiondataReferences(${dinum},${num});">
+                                    <i class="fa fa-remove"></i>
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="distributiondataReferencesPageS_${dinum}_${num}" name="distributiondataReferencesPageS_${dinum}_${num}" placeholder="起始页" /></div>
+                            <div class="col-sm-2 col-md-2 col-xs-6">
+                              <input type="text" class="form-control" id="distributiondataReferencesPageE_${dinum}_${num}" name="distributiondataReferencesPageE_${dinum}_${num}" placeholder="终止页" /></div>
+                          </td>
+                        </tr>
+                    </script>
+				</div>
+			</div>
+		</div>
+  </form>
+</th:block>
+</html>

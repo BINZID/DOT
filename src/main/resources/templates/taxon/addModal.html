@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:添加DataSet页面
+    Description：添加DataSet页面
+    Author：BINZI
+    Created date: 2018/04/11 14:51
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+</head>
+
+<body>
+    <!-- 内容区 -->
+    <div class="col-md-12">
+		 <form id=form_1 class="form-horizontal" th:action="@{/console/taxon/add}" method="post">
+		    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+		    <input class="hidden" th:field="*{thisTaxon.inputtime}"></input>
+		    <input class="hidden" th:field="*{thisTaxon.orderNum}" id="orderNum" name="orderNum" readonly="readonly"></input>
+		    <input class="hidden" id="taxTreeId" name="taxTreeId" th:value = ${taxTreeId} ></input>
+		    <input class="hidden" id="taxonId" name="taxonId" th:field="*{thisTaxon.id}" th:value = ${thisTaxon.id} ></input>
+		    <input class="hidden" id="targetTaxonId" name="targetTaxonId" th:value = ${targetTaxonId} ></input>
+		    <input class="hidden" id="moveType" name="moveType" th:value = ${moveType} ></input>
+		    <div class="">
+		    
+		      <div class="col-md-12">
+		        <div class="form-group">
+		          <label for="scientificname" class="col-sm-4 control-label">* 学名:</label>
+		          <div class="col-sm-8">
+		            <input th:field="*{thisTaxon.scientificname}" type="text" class="form-control" id="scientificname" name="scientificname" onblur="handleScientificname()" placeholder="拉丁名" />
+		          </div>
+		        </div>
+		      
+		        <div class="form-group">
+		          <label for="chname" class="col-sm-4 control-label">中文名:</label>
+		          <div class="col-sm-8">
+		            <input th:field="*{thisTaxon.chname}" type="text" class="form-control" id="chname" name="chname" placeholder="中文名" />
+		          </div>
+		        </div>
+		    
+		        <div class="form-group">
+		          <label for="authorstr" class="col-sm-4 control-label">命名信息:</label>
+		          <div class="col-sm-8">
+		            <input th:field="*{thisTaxon.authorstr}" type="text" class="form-control" id="authorstr" name="authorstr" placeholder="命名人和命名年代" />
+		          </div>
+		        </div>
+		      
+		        <div class="form-group">
+		          <label for="epithet" class="col-sm-4 control-label">种加词/亚种加词:</label>
+		          <div class="col-sm-8">
+		            <input th:field="*{thisTaxon.epithet}" type="text" class="form-control" id="epithet" name="epithet" placeholder="种加词/亚种加词" />
+		          </div>
+		        </div>
+		      
+		        <div class="form-group">
+		          <label for="nomencode" class="col-sm-4 control-label">命名法规:</label>
+		          <div class="col-sm-8">
+		          		<select class="form-control select2" id="nomencode" name="nomencode" style="width: 100%;">
+		                      <option selected value ="ICZN">ICZN</option>
+		                      <option value ="ICBN">ICBN</option>
+		            	</select>
+		          </div>
+		        </div>
+		     
+		        <div class="form-group hidden">
+		          <label for="tci" class="col-sm-4 control-label">tci:</label>
+		          <div class="col-sm-8">
+		            <input th:field="*{thisTaxon.tci}" type="text" class="form-control" id="tci" name="tci" placeholder="taxon concept identifier (taxon 概念标识)" />
+		          </div>
+		        </div>
+		        
+		        <div class="form-group">
+			          <label for="rank" class="col-sm-2 control-label">* 分类等级:</label>
+			          <div class="col-sm-8">
+			            <select th:field="*{thisTaxon.rank.id}" class="form-control select2" id="rank" name="rank.id" style="width: 100%;">
+			            	<option selected th:value = "${thisTaxon.rank.id}" th:text="${thisTaxon.rank.enname}"></option>
+			            </select>
+			          </div>
+			        </div>
+			     
+			        <div class="form-group">
+			          <label for="sourcesid" class="col-sm-2 control-label">* 数据源:</label>
+			          <div class="col-sm-8">
+			            <select class="form-control select2" id="sourcesid" name="sourcesid" style="width: 100%;">
+			            </select>
+			          </div>
+			        </div>
+		      
+			      <div class="form-group">
+			          <label for="taxaset" class="col-sm-2 control-label">* 所属分类单元集:</label>
+			          <div class="col-sm-8">
+			          	<select th:field="*{thisTaxon.taxaset.id}" class="form-control select2" id="taxaset" name="taxaset.id" style="width: 100%;">
+							<option selected th:value = "${thisTaxon.taxaset.id}" th:text="${thisTaxon.taxaset.tsname}"></option>
+			            </select>
+			          </div>
+			        </div>
+		      
+			        <div class="form-group">
+			          <label for="remark" class="col-sm-2 control-label">备注:</label>
+			          <div class="col-sm-8 col-md-8">
+			          	<textarea th:field="*{thisTaxon.remark}" class="form-control" id="remark" name="remark" placeholder="备注信息" rows="5"></textarea>
+			          </div>
+			        </div>
+		      </div>
+		      
+		      <input class="hidden" id="descTaxonReferences" name="descTaxonReferences" value="0"></input>
+		      <input class="hidden" id="countReferences" name="countReferences" value="0"></input>
+		      <input class="hidden" id="countTaxonReferences" name="countTaxonReferences" value="0"></input>
+		      <div class="col-md-10">
+			      <div class="form-group">
+			          <label for="refjson" class="col-sm-2 control-label">参考文献:</label>
+			          <div class="col-sm-4 col-md-4">
+						  <input type="text" class="form-control" id="pyear" name="pyear" placeholder="请输入发表年代检索参考文献"></input>      
+			          </div>
+			      </div>
+			  </div>
+		      <div class="col-md-12">
+		        <div class="form-group">
+			          <label for="refjson" class="col-sm-1 control-label"></label>
+		          <div class="col-sm-10 col-md-10">
+		            <div class="" id="refjson">
+		              <div class="table-responsive">
+		                <table class="table table-hover table-condensed" id="refTable">
+		                  <tbody id="newReferences"></tbody>
+		                </table>
+		                <button type="button" class="btn btn-default btn-sm" onclick="addReferences();"><i class="fa fa-plus"></i></button>
+		              </div>
+		              <script id="referencesForm" type="text/x-jquery-tmpl">
+                <tr id="referencesForm_${num}">
+                <td><label class="control-label">[${num}]</label><td>
+                  <td class="form-group">
+                    <div class="col-sm-8 col-md-8 col-xs-12">
+                      <div class="input-group">
+                        <select class="form-control select2" id="references_${num}" name="references_${num}" style="width: 100%;">
+
+						</select>
+                        <div class="input-group-btn">
+                          <button type="button" class="btn btn-default dropdown-toggle" onclick="removeReferences (${num});"><i class="fa fa-remove"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-xs-6">
+                      <input type="text" class="form-control" id="referencesPageS_${num}" name="referencesPageS_${num}" placeholder="起始页"  required/>
+                    </div>
+                    <div class="col-sm-2 col-md-2 col-xs-6">
+                      <input type="text" class="form-control" id="referencesPageE_${num}" name="referencesPageE_${num}" placeholder="终止页"  required/>
+                    </div>
+                  </td>
+                </tr>
+              </script>
+		            </div>
+		          </div>
+		        </div>
+		      </div>
+		      
+		      		<div class="form-group">
+		                <div class="col-sm-12">
+		                    <div class="pull-right">
+		                        <a class="btn btn-app" onclick="clearInput();">
+		                            <i class="fa fa-rotate-left"></i> <span>清空表单</span>
+		                        </a>
+		                        <a class="btn btn-app" onclick="addNewTaxonObj();">
+		                            <i class="fa fa-check"></i> <span>提交</span>
+		                        </a>
+		                    </div>
+		                </div>
+		            </div>
+		      </div>
+		</form>
+        
+    </div>
+<!-- 引入js -->
+
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<script>
+    var type= 'model';
+</script>
+<th:block th:if="${type} eq 'dataset'">
+    <script>
+        type= 'dataset';
+    </script>
+</th:block>
+<!-- 引入Script -->
+<script th:src="@{/js/taxasetScript.js}"></script>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<!-- page_script -->
+<script th:src="@{/js/tableScript.js}"></script>
+<script th:src="@{/js/taxon/selectScript.js}"></script>
+<script th:src="@{/js/taxon/validatorScript.js}"></script>
+<script th:src="@{/js/taxon/taxonScript.js}"></script>
+<script th:src="@{/js/taxtree/treeScript.js}"></script>
+<script th:src="@{/js/taxtree/buildThisTaxtree.js}"></script>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+/* 添加taxaset */
+function addNewTaxonObj(){
+	var taxTreeId = $('#taxTreeId').val();
+	var taxonId = $('#taxonId').val();
+	var targetTaxonId = $('#targetTaxonId').val();
+	var moveType = $('#moveType').val();
+	var obj = $('#form_1').serialize();
+	$.ajax({
+	  type: "POST",
+	  url: "/console/taxon/rest/add",
+	  data: obj,	// 要提交的表单
+	  dataType: "json",
+	  contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+	  success: function (msg) {
+		if (msg.result == true) {
+			  layer.msg("添加成功！", {time: 500}, function(){
+				  addTaxon(taxTreeId, taxonId, targetTaxonId, moveType);
+				  parent.$('#taxaTreeId').val(taxTreeId);
+				  parent.$('#taxonId').val(taxonId);
+				  parent.$('#targetTaxonId').val(targetTaxonId);
+				   
+				  var div = parent.$("#pNodesDiv"); 
+				  var num = msg.num;
+				  parent.$("#num").val(num);
+				  for(var i = 0; i < num; i++){
+					var input = document.createElement("input");
+				    input.setAttribute('type', 'text');     
+				    input.setAttribute('id', 'pNode' + (i + 1));  //设置文本为只读类型  
+				    input.setAttribute('name', 'pNode' + (i + 1));  //设置文本为只读类型  
+				    input.setAttribute('readonly', 'readonly');  //设置文本为只读类型  
+				    input.value = msg.nodeArr[i];
+				    div.append(input);  
+				  }
+			      parent.layer.close(parent.layer.getFrameIndex(window.name));
+				});
+			}else{
+				layer.msg("添加失败！", {time: 500}, function(){
+			        parent.layer.close(parent.layer.getFrameIndex(window.name));
+				});
+			}
+		}
+	});
+}
+</script>
+
+</body>
+</html>

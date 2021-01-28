@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:添加DataSet页面
+    Description：添加DataSet页面
+    Author：BINZI
+    Created date: 2018/04/11 14:51
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- Select2 4.0.3 -->
+    <link rel="stylesheet" th:href="@{/plugins/select2/css/select2.min.css}" type="text/css"/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- bootstrap-datepicker-->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css}"/>
+</head>
+
+<body>
+	<!-- 内容区 -->
+	<div class="col-md-12">
+		<p></p>
+		<form id="thisForm" class="form-horizontal" th:action="@{/console/datasource/save}" method="post" th:object="${thisDatasource}">
+			<input hidden="hidden" id="sourcesId" name="sourcesId" th:value="${sourcesId}">
+			<input hidden="hidden" id="sourcesForm" name="sourcesForm" th:value="${sourcesForm}">
+			<!-- 引入form -->
+			<th:block th:replace="datasource/form :: copy"></th:block>
+			<p></p>
+			<div class="form-group">
+				<div class="col-sm-12">
+					<div class="pull-right">
+						<a class="btn btn-app" onclick="clearInput();">
+							<i class="fa fa-rotate-left"></i> <span>清空表单</span>
+						</a>
+						<a class="btn btn-app" onclick="addDatasource();">
+							<i class="fa fa-check"></i> <span>提交</span>
+						</a>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+
+<!-- 引入Script -->
+<script th:src="@{/js/datasourceScript.js}"></script>
+<script th:src="@{/js/taxon/validatorScript.js}"></script>
+<!-- bootstrapValidator -->
+<script th:src="@{/plugins/bootstrapValidator/js/bootstrapValidator.min.js}"></script>
+<script th:src="@{/plugins/bootstrapValidator/js/language/zh_CN.js}"></script>
+<!-- Select2 4.0.3 -->
+<script th:src="@{/plugins/select2/js/select2.full.min.js}"></script>
+<script th:src="@{/plugins/select2/js/i18n/zh-CN.js}"></script>
+<!-- bootstrap-datepicker -->
+<script th:src="@{/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-datetimepicker/locales/bootstrap-datetimepicker.zh-CN.js}"></script>
+<!-- jquery.tmpl -->
+<script th:src="@{/plugins/jquery.tmpl/jquery.tmpl.min.js}"></script>
+<!-- page_script -->
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var warning_Illegal= [[#{warning_Illegal}]];
+    /*]]>*/
+</script>
+
+<script type="text/javascript">
+/* 添加Datasource */
+function addDatasource() {
+	if ($('#thisForm').data('bootstrapValidator').isValid()) {
+		var obj = $('#thisForm').serialize();
+		var sourcesId = $("#sourcesId").val();
+		var sourcesForm = $("#sourcesForm").val();
+		$.ajax({
+	        type: "POST",
+	        url: "console/datasource/rest/new",
+	        data: obj,	// 要提交的表单
+	        dataType: "json",
+	        contentType : 'application/x-www-form-urlencoded; charset=UTF-8',
+	        success: function (rsl) {
+	      	if (rsl.result == true) {
+	      		parent.$("#" + sourcesId).prepend("<option value='" + rsl.newId + "' selected='selected'>" + rsl.newTitle+"</option>");
+	            parent.$('#' + sourcesForm).data('bootstrapValidator').updateStatus(sourcesId, 'NOT_VALIDATED',null).validateField(sourcesId);
+	            parent.layer.close(parent.layer.getFrameIndex(window.name));
+	      		layer.msg("添加成功！", {time: 1000});
+				}else{
+					layer.msg("添加失败！", {time: 1000});
+				}
+	        }
+	      });
+	}else{
+		layer.msg('请先完成表单录入', {time : 1000,}, function() {
+        })
+	}
+};
+$("#title").on("change",function(e){
+	alert(e.value)
+})
+
+</script>
+</body>
+</html>

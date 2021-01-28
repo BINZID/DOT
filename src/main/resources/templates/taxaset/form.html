@@ -1,0 +1,35 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy" >
+
+    <input class="hidden" id="base_url" name="base_url" readonly="readonly"></input>
+    <input class="hidden" th:field="*{id}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{bgurl}" readonly="readonly"></input>
+    <input class="hidden" id="editdsname" name="editdsname" readonly="readonly" th:value="${editdsname}"></input>
+    <input id="errorMsg" class="hidden" th:value="${errorMsg}" readonly="readonly"></input>
+ 	<div th:if="${not #strings.isEmpty(thisTaxaset.createdDate)}">
+        <input class="hidden" th:field="*{createdDate}" readonly="readonly"></input>
+    </div>
+ 	<div th:if="${not #strings.isEmpty(thisTaxaset.synchdate)}">
+        <input class="hidden" th:field="*{synchdate}" readonly="readonly"></input>
+    </div>
+    <input class="hidden" th:field="*{status}" readonly="readonly"></input>
+    <input class="hidden" th:field="*{synchstatus}" readonly="readonly"></input>
+    <div th:if="${not #strings.isEmpty(thisTaxaset.dataset)}">
+	    <input class="hidden" th:field="*{dataset.id}" value="${thisTaxaset.dataset.id}" readonly="readonly"></input>
+    </div>
+    
+    <div class="form-group">
+        <label for="tsname" class="col-sm-2 control-label">* 分类单元集名称:</label>
+        <div class="col-sm-10 col-md-10">
+            <input th:field="*{tsname}" type="text" class="form-control" id="tsname" name="tsname" placeholder="1~30个字符"/>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="tsinfo" class="col-sm-2 control-label">说明/备注:</label>
+        <div class="col-sm-10 col-md-10">
+            <textarea th:field="*{tsinfo}" id="tsinfo" name="tsinfo" class="form-control" placeholder="0~500个字符" rows="10"></textarea>
+        </div>
+    </div>
+</th:block>
+</html>

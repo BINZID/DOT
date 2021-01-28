@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<!--
+    Title:特征图片上传页面
+    Description：特征图片上传页面
+    Author：BINZI
+    Created date: 2018/08/09 10:43
+    Copyright: The Research Group of Biodiversity Informatics (BiodInfo Group) - 中国科学院动物研究所生物多样性信息学研究组
+    Version: Html5
+ -->
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <title th:text="#{web_title}">BioIDE &nbsp;物种数据采集系统</title>
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" href="/images/logo.png" type="images/x-icon"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content=""/>
+    <!-- 引入css -->
+    <th:block th:replace="pageFrame/basicsCss :: copy"></th:block>
+    <!-- bootstrap-fileinput -->
+    <link rel="stylesheet" th:href="@{/plugins/bootstrap-fileinput/css/fileinput.min.css}" type="text/css"/>
+</head>
+
+<body>
+	<!-- 内容区 -->
+	<section class="container content">
+	<form class="form-horizontal" th:action="@{console/multimedia/rest/changeBg}" method="post" enctype="multipart/form-data">
+	    <input class="hidden" type="text" id="entityId" name="entityId" th:value="${id}">
+	    <input class="hidden" type="text" id="mark" name="mark" th:value="${mark}">
+	  	
+	  	<div class="col-md-12">
+          <div class="form-group">
+              <div class="file-loading">
+	    	  	<input class="file-loading" id="changeBg" name="changeBg" type="file" multiple>
+	    	  </div>
+          </div>
+        </div>
+	</form>
+	</section>
+<!-- 引入js -->
+<th:block th:replace="pageFrame/basicsJs :: copy"></th:block>
+<!-- bootstrap-fileinput -->
+<script th:src="@{/plugins/bootstrap-fileinput/js/fileinput.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/themes/fa/theme.min.js}"></script>
+<script th:src="@{/plugins/bootstrap-fileinput/js/locales/zh.js}"></script>
+
+</body>
+<script th:inline="javascript">
+	/*<![CDATA[*/
+	var warning_noname= [[#{warning_noname}]];
+	/*]]>*/
+</script>
+
+<script type="text/javascript">
+$(function () {
+	//初始化fileinput控件（第一次初始化）
+	$('#changeBg').fileinput({
+	    theme: "fa",
+	    language: "zh",
+	    uploadUrl: "console/multimedia/rest/changeBg",
+	    allowedFileExtensions: ['jpg', 'gif', 'png', 'img', 'jpeg'],
+	    maxFileCount:1,			//表示允许同时上传的最大文件个数
+	    maxFileSize:200,		//单位为kb，如果为0表示不限制文件大小
+	    minImageWidth:50,		//图片的最小宽度
+	    maxImageWidth:50000,	//图片的最大宽度
+	    minImageHeight:50,
+	    maxImageHeight:50000,
+	    uploadExtraData: function(previewId, index) {   //额外参数的关键点
+	        var obj = {};
+	        obj._csrf = $('input[name="_csrf"]').val();
+	        obj.entityId = $('#entityId').val();
+	        obj.mark = $('#mark').val();
+	        return obj;
+	    } 
+	}).on('fileuploaded', function(event, data, previewId, index) {
+		var code = data.response.code;
+		if (code == 1) {
+			layer.msg(data.response.message, {time: 2500}, function(){
+		  		parent.layer.close(parent.layer.getFrameIndex(window.name));
+			}); 
+			var div = parent.document.getElementById($('#entityId').val());
+			div.style.backgroundImage = 'url(' + data.response.data + ')';
+		}
+	});
+})
+
+</script>
+</html>

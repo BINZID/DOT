@@ -1,0 +1,40 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 引入参考文献模态框 -->
+    <div class="modal fade" id="taxkeyModalTable" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">检索表详情</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body table-responsive">
+                        <table
+                                id="taxkeyTable"
+                                data-locale="zh-CN"
+                                class="table table-hover table-condensed"
+                                data-classes="table table-no-bordered"
+                                data-toggle="table"
+                                data-row-style="rowStyle">
+                            <thead class="hidden">
+                            <tr>
+                                <th data-field="orderid">特征排序</th>
+                                <th data-field="item">特征内容</th>
+                                <th data-field="ellipsis">省略号</th>
+                                <th data-field="branchid">分支序号</th>
+                                <th data-field="images">特征图片</th>
+                            </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</th:block>
+</html>

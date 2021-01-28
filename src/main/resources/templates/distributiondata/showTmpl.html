@@ -1,0 +1,47 @@
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<th:block th:fragment="copy">
+    <!-- 重新加载分布数据-->
+    <script id="reLoadDistributiondata" type="text/x-jquery-tmpl">
+        <button type="button" class="btn btn-default btn-xs" onclick="showDistributiondata('{{= taxonid}}',{{= offset}},'first');" > <i class="fa fa-repeat"></i> 重新加载 </button>
+    </script>
+    <!-- 加载更多分布数据-->
+    <script id="moreDistributiondata" type="text/x-jquery-tmpl">
+      <button id="moreDistributiondataButton" type="button" class="btn btn-default btn-block btn-xs" onclick="showDistributiondata('{{= taxonid}}',{{= offset}},'more');" > <i class="fa fa-plus"></i> 加载更多 </button>
+    </script>
+    <!-- 构造分布数据 -->
+    <script id="distributiondataList" type="text/x-jquery-tmpl">
+    {{each(i,distributiondata) rows}}
+        <div class="col-md-6">
+            <div class="panel panel-default" id="distributiondataForm_{{= distributiondata.id}}">
+                <div class="panel-heading" role="tab" id="heading1">
+                    <h4 class="panel-title">
+                        <a id="distributiondataCollapseTitle_{{= distributiondata.id}}" role="button" data-toggle="collapse" data-parent="#accordion" href="#distributiondataCollapse_{{= distributiondata.id}}" aria-expanded="true" aria-controls="collapse1">
+                            <span id="distributiondataName_{{= distributiondata.id}}">{{= distributiondata.discontent}}</span>
+                        </a>
+                    </h4>
+                </div>
+                <div id="distributiondataCollapse_{{= distributiondata.id}}" class="panel-collapse collapse in" role="tabpanel">
+                    <div class="panel-body">
+                        <dl class="dl-horizontal">
+                            <dt>行政区分布地:</dt>
+                            <dd><small>{{= distributiondata.geojson}}</small></dd>
+                            <dt>分布描述原文:</dt>
+                            <dd><small>{{= distributiondata.discontent}}</small></dd>
+                            <dt>数据源:</dt>
+                            <dd><small>{{= distributiondata.sourcesid}}</small></dd>
+                            <dt>参考文献:</dt>
+                            <dd>
+                                <button type="button" class="btn btn-default btn-xs"
+                                        onclick="showRef({{= distributiondata.refjson}});">
+                                    <i class="fa fa-list-ol"></i> 查看参考文献
+                                </button>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</script>
+</th:block>
+</html>
